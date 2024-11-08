@@ -25,9 +25,11 @@
     "noUncheckedSideEffectImports": true, // Side Effect만을 위한 import 문을 사용했을 때, 해당 import가 확실하게 확인되지 않으면 오류를 발생
 
     "baseUrl": ".", // 경로 설정 기준
-    "paths": { // 경로 별칭 설정
+    "paths": {
+      // 경로 별칭 설정
       "@components/*": ["src/components/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리
