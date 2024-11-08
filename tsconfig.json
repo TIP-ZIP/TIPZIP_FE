@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "incremental": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020", // 최신 JavaScript 기능 사용
     "module": "ESNext", // Vite는 ES 모듈을 사용하므로 "esnext" 설정
@@ -22,7 +23,6 @@
     "noUnusedLocals": true, // 선언된 변수가 사용되지 않을 경우 오류를 발생
     "noUnusedParameters": true, // 함수의 매개변수가 사용되지 않으면 오류를 발생
     "noFallthroughCasesInSwitch": true, // switch문에서 case 블록에 break, return, throw 등이 없으면 오류를 발생
-    "noUncheckedSideEffectImports": true, // Side Effect만을 위한 import 문을 사용했을 때, 해당 import가 확실하게 확인되지 않으면 오류를 발생
 
     "baseUrl": ".", // 경로 설정 기준
     "paths": {
