@@ -4,13 +4,10 @@ import reset from 'styled-reset';
 const GlobalStyles = createGlobalStyle`
     ${reset}
 
-    a{
-        text-decoration: none;
-        color: inherit;
-    }
     *{
         box-sizing: border-box;
     }
+
     html, body, div, span, h1, h2, h3, h4, h5, h6, p, 
     a, dl, dt, dd, ol, ul, li, form, label, table{
         margin: 0;
@@ -19,7 +16,19 @@ const GlobalStyles = createGlobalStyle`
         font-size: 10px;
         vertical-align: baseline;
     }
+
+    html {
+        font-size: 16px; 
+        @media (min-width: 450px) and (max-width: 600px) {
+            font-size: 13px;
+        }
+        @media (max-width: 450px) {
+            font-size: 10px;
+        }
+    }
+
     body{
+        font-family: 'Pretendard';
         line-height: 1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -35,22 +44,18 @@ const GlobalStyles = createGlobalStyle`
     ol, ul{
         list-style: none;
     }
+    
+    a{
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
     button {
         border: 0;
         background: transparent;
         cursor: pointer;
     }
-
-    html {
-        font-size: 16px; 
-        @media (min-width: 450px) and (max-width: 600px) {
-            font-size: 13px;
-        }
-        @media (max-width: 450px) {
-            font-size: 10px;
-        }
-    }
-
 `;
 
 export default GlobalStyles;

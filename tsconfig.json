@@ -29,7 +29,7 @@
       // 경로 별칭 설정
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
-      "@/*": ["./src/*"]
+      "@styles/*": ["src/styles/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리
