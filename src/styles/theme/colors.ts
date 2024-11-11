@@ -9,7 +9,7 @@ type Colors = {
 
 export const colors: Colors = {
   TZ_Signature: {
-    500: '#FF4B22',
+    500: '#FF4A22',
     50: '#FEF9F5',
   },
 
@@ -17,7 +17,7 @@ export const colors: Colors = {
     1000: '#000000',
     900: '#2B2B2B',
     500: '#848891',
-    300: '#CBD0D4',
+    300: '#CBD0D5',
     100: '#F3F4F8',
     0: '#FFFFFF',
   },
