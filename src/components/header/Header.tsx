@@ -1,11 +1,13 @@
 import React from 'react';
 import * as S from './Header.Styled';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <S.Container>
       <S.ItemList>
-        <S.Logo />
+        <S.Logo onClick={() => navigate('/')} />
         <S.IconList>
           <S.Icon>
             <S.BookmarkIcon />
