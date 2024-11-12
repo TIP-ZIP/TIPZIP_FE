@@ -371,6 +371,7 @@ export const BookmarkIcon = styled.div<{ $isFilled: boolean }>`
   height: 1.28rem;
   background-image: ${({ $isFilled }) => `url(${$isFilled ? filled : empty})`};
   background-size: contain;
+  cursor: pointer;
   background-repeat: no-repeat;
   transform: scale(1.1);
 `;
