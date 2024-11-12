@@ -2,22 +2,66 @@ import React, { useState } from 'react';
 import * as S from './Home.Styled';
 
 const postsData = [
-  { id: 1, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
-  { id: 2, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
-  { id: 3, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
-  { id: 4, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
-  { id: 5, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
-  { id: 6, title: '찜기 없이, 젓가락 하나로 만두 굽는 법', image: 'Postexample.svg' },
+  {
+    id: 1,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '꾸러기',
+    bookmarks: 102,
+    isFilled: false,
+  },
+  {
+    id: 2,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '뇽뇽맘',
+    bookmarks: 12,
+    isFilled: false,
+  },
+  {
+    id: 3,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '원채영',
+    bookmarks: 500,
+    isFilled: false,
+  },
+  {
+    id: 4,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '엄경호',
+    bookmarks: 1,
+    isFilled: false,
+  },
+  {
+    id: 5,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '김철흥',
+    bookmarks: 2,
+    isFilled: false,
+  },
+  {
+    id: 6,
+    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
+    image: 'Postexample.svg',
+    profileName: '마루누나',
+    bookmarks: 199,
+    isFilled: false,
+  },
 ];
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
   const [selectedVerify, setSelectedVerify] = useState(false);
   const [selectedItem, setSelectedItem] = useState('전체');
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState('최신순');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState(postsData);
+  const [count, setCount] = useState(100);
   const categories = [
     '정리/공간 활용',
     '주방',
@@ -52,6 +96,20 @@ const Home: React.FC = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
     setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleBookmarkClick = (postId: number) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              isFilled: !post.isFilled,
+              bookmarks: post.isFilled ? post.bookmarks - 1 : post.bookmarks + 1,
+            }
+          : post,
+      ),
+    );
   };
 
   return (
@@ -112,7 +170,19 @@ const Home: React.FC = () => {
         <S.PostList>
           {posts.map((post) => (
             <S.PostItem key={post.id}>
-              <S.PostImage />
+              <S.PostImage>
+                <S.ProfileContainer>
+                  <S.ProfileImage />
+                  <S.ProfileName>{post.profileName}</S.ProfileName>
+                </S.ProfileContainer>
+                <S.BookmarkContainer>
+                  <S.BookmarkIcon
+                    $isFilled={post.isFilled}
+                    onClick={() => handleBookmarkClick(post.id)}
+                  />
+                  <S.BookmarkCount>{post.bookmarks}</S.BookmarkCount>
+                </S.BookmarkContainer>
+              </S.PostImage>
               <S.PostTitle>{post.title}</S.PostTitle>
             </S.PostItem>
           ))}

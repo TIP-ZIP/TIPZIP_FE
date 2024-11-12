@@ -6,6 +6,9 @@ import whitestar from '@assets/svgs/whiteStar.svg';
 import postImg from '@assets/svgs/postexample.svg';
 import { fontStyles } from '@styles/theme/typography';
 import plus from '@assets/svgs/plus.svg';
+import filled from '@assets/svgs/FilledBookmark.svg';
+import empty from '@assets/svgs/EmptyBookmark.svg';
+import profileImg from '@assets/svgs/defaultProfile.svg';
 
 interface SelectItemProps {
   $selected?: boolean;
@@ -114,13 +117,15 @@ export const CategoryList = styled.div`
 `;
 
 export const CategoryItem = styled.span<TagItemProps>`
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 2.8rem;
   padding: 0.8rem 1rem;
   font-size: 1rem;
   background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
   border-radius: 0.4rem;
-  color: ${({ theme }) => theme.colors.TZ_Signature[500]};
+  color: #cbd0d4;
   cursor: pointer;
   white-space: nowrap;
 
@@ -210,7 +215,7 @@ export const DropdownList = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
-  z-index: 1;
+  z-index: 2;
   padding: 0.45rem;
   overflow-x: hidden;
 `;
@@ -277,11 +282,13 @@ export const PostList = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 2.3rem 1.1rem;
   margin-top: 8.4rem;
+  padding-bottom: 6.2rem;
 `;
 
 export const PostItem = styled.div`
   width: 16rem;
   display: flex;
+  position: relative;
   flex-direction: column;
   gap: 0.8rem;
   overflow: hidden;
@@ -316,4 +323,64 @@ export const Plus = styled.div`
   bottom: 1.8rem;
   z-index: 1000;
   right: 2rem;
+`;
+
+export const ProfileContainer = styled.div`
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 1.8rem;
+  width: auto;
+  z-index: 1;
+`;
+
+export const ProfileImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  background-image: url(${profileImg});
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
+
+export const ProfileName = styled.span`
+  ${fontStyles.Caption3}
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[0]};
+`;
+
+export const BookmarkContainer = styled.div`
+  position: absolute;
+  bottom: 5.2rem;
+  right: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  z-index: 1;
+`;
+
+export const BookmarkIcon = styled.div<{ $isFilled: boolean }>`
+  width: 1.03rem;
+  height: 1.28rem;
+  background-image: ${({ $isFilled }) => `url(${$isFilled ? filled : empty})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: scale(1.1);
+`;
+
+export const BookmarkCount = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 400;
+  height: 1rem;
+  color: #fff;
 `;
