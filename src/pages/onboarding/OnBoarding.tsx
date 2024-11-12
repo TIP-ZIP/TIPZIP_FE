@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as S from './OnBoarding.styled';
+import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 const OnBoarding: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const OnBoarding: React.FC = () => {
 
   return (
     <S.Container>
-      <S.TipZipLogo color='white' />
+      <TipZipLogo color='white' />
       <S.TagLine>나에게 필요한 모든 팁을 한번에 모아!</S.TagLine>
     </S.Container>
   );
