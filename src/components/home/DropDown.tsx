@@ -17,8 +17,8 @@ const Dropdown: React.FC<DropdownProps> = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        toggleDropdown();
+      if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        toggleDropdown(); // 열려있을 때만 닫히도록 조건 추가
       }
     };
 
@@ -26,7 +26,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [toggleDropdown]);
+  }, [isOpen, toggleDropdown]);
 
   return (
     <S.DropdownContainer ref={dropdownRef}>
