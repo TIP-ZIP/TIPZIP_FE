@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as S from '@pages/home/Home.Styled';
 
 interface DropdownProps {
@@ -14,8 +14,22 @@ const Dropdown: React.FC<DropdownProps> = ({
   handleSortOptionClick,
   toggleDropdown,
 }) => {
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        toggleDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [toggleDropdown]);
+
   return (
-    <S.DropdownContainer>
+    <S.DropdownContainer ref={dropdownRef}>
       <S.DropdownButton onClick={toggleDropdown}>
         {sortOption}
         <S.Arrow $isOpen={isOpen} />
