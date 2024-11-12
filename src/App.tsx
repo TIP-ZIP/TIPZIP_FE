@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Layout from './layout/Layout';
 import OnBoarding from '@pages/OnBoarding/OnBoarding';
-import Login from '@pages/login/Login';
+import Login from '@pages/Login/Login';
 import Home from '@pages/home/Home';
 
 function App() {
