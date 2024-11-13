@@ -6,7 +6,7 @@ export default function Layout() {
   // 추후 페이지에 따른 헤더 컴포넌트 등장 여부 코드 추가
   const location = useLocation();
 
-  const restrictedPaths = ['/', '/login'];
+  const restrictedPaths = ['/', '/login', '/set-username'];
   const isRestricted = restrictedPaths.includes(location.pathname);
 
   return (
