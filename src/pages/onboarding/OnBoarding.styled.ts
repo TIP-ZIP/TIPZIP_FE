@@ -9,7 +9,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 2.4rem;
 
   background-color: ${colors.TZ_Signature[500]};
 `;
