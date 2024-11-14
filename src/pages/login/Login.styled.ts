@@ -75,10 +75,12 @@ export const SocialIcon = styled.img`
 `;
 
 export const NaverIcon = styled.img`
-  width: 4.8rem;
-  height: 4.8rem;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  transform: translateY(-50%);
 
   position: absolute;
-  top: 0.2rem;
-  left: 0.9rem;
+  top: 50%;
+  left: 2.1rem;
 `;

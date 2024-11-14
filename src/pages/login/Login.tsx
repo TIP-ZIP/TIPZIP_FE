@@ -4,7 +4,7 @@ import * as S from './Login.styled';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 import KakaoIcon from '@assets/pngs/kakao-icon.png';
-import NaverIcon from '@assets/pngs/naver-icon.png';
+import NaverIcon from '@assets/svgs/naver-icon.svg';
 import GoogleIcon from '@assets/pngs/google-icon.png';
 
 const Login: React.FC = () => {
@@ -31,4 +31,5 @@ const Login: React.FC = () => {
     </S.Container>
   );
 };
+
 export default Login;

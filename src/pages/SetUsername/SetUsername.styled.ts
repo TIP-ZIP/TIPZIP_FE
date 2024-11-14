@@ -99,7 +99,7 @@ export const Restriction = styled.div`
   color: ${colors.TZ_Monochrome[500]};
 `;
 
-export const SubmitButton = styled.button<{ $submitAvailable: boolean }>`
+export const SubmitButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 4.8rem;
   margin-bottom: 1.6rem;
@@ -111,8 +111,12 @@ export const SubmitButton = styled.button<{ $submitAvailable: boolean }>`
 
   ${({ theme }) => theme.fontStyles.Body2}
   color: ${colors.TZ_Monochrome[0]};
-  background-color: ${({ $submitAvailable }) =>
-    $submitAvailable ? `${colors.TZ_Monochrome[1000]}` : `${colors.TZ_Monochrome[300]}`};
+  background-color: ${colors.TZ_Monochrome[1000]};
 
   transition: background-color 0.12s;
+
+  &:disabled {
+    background-color: ${colors.TZ_Monochrome[300]};
+    pointer-events: none;
+  }
 `;

@@ -53,7 +53,7 @@ const SetUsername: React.FC = () => {
           • 특수문자는 사용할 수 없어요 <br /> • 12자 이내로 설정해주세요
         </S.Restriction>
       </S.InputSection>
-      <S.SubmitButton $submitAvailable={submitAvailable}>저장</S.SubmitButton>
+      <S.SubmitButton disabled={!submitAvailable}>저장</S.SubmitButton>
     </S.Container>
   );
 };
