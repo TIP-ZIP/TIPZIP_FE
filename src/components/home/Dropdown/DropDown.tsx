@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import * as S from '@pages/home/Home.Styled';
+import * as S from './Dropdown.Styled';
 
 interface DropdownProps {
   isOpen: boolean;
@@ -39,7 +39,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           {['최신순', '오래된 순', '인기순'].map((option) => (
             <S.DropdownItem
               key={option}
-              selected={sortOption === option}
+              $selected={sortOption === option}
               onClick={() => handleSortOptionClick(option)}
             >
               {option}

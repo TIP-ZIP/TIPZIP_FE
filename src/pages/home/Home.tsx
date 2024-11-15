@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import * as S from './Home.Styled';
 import LoginModalContainer from '@components/home/LoginModalContainer';
-import SearchBar from '@components/home/SearchBar';
-import SelectBar from '@components/home/SelectBar';
-import CategoryList from '@components/home/CategoryList';
-import PostList from '@components/home/PostList';
-import Dropdown from '@components/home/DropDown';
+import SearchBar from '@components/home/SearchBar/SearchBar';
+import SelectBar from '@components/home/SelectBar/SelectBar';
+import CategoryList from '@components/home/CategoryList/CategoryList';
+import PostList from '@components/home/PostList/PostList';
+import Dropdown from '@components/home/Dropdown/DropDown';
 
 const postsData = [
   {

@@ -30,6 +30,7 @@ export const ModalContainer = styled.div`
 
 export const ModalTitle = styled.span`
   ${fontStyles.Body4}
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};
 `;
 
 export const ButtonContainer = styled.div`

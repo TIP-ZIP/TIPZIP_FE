@@ -1,6 +1,5 @@
-// components/SearchBar.tsx
 import React from 'react';
-import * as S from '@pages/home/Home.Styled';
+import * as S from './SearchBar.Styled';
 
 const SearchBar: React.FC = () => {
   return (
