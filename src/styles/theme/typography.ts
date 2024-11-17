@@ -41,6 +41,12 @@ export const fontStyles: typography = {
     font-weight: 500;
     line-height: normal;
   `,
+  Body5: css`
+    font-style: normal;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 150%;
+  `,
   Caption1: css`
     font-style: normal;
     font-size: 1.1rem;

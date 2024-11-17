@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
+import Home from '@pages/home/Home';
 import Layout from './layout/Layout';
+import SearchPost from '@pages/search/SearchPost';
 import OnBoarding from '@pages/OnBoarding/OnBoarding';
 import Login from '@pages/Login/Login';
 import SetUsername from '@pages/SetUsername/SetUsername';
-import Home from '@pages/home/Home';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/set-username' element={<SetUsername />} />
           <Route path='/home' element={<Home />} />
+          <Route path='/search' element={<SearchPost />} />
         </Route>
       </Routes>
     </BrowserRouter>
