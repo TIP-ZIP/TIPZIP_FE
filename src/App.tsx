@@ -5,6 +5,7 @@ import SearchPost from '@pages/search/SearchPost';
 import OnBoarding from '@pages/OnBoarding/OnBoarding';
 import Login from '@pages/Login/Login';
 import SetUsername from '@pages/SetUsername/SetUsername';
+import Mypage from '@pages/mypage/Mypage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path='/set-username' element={<SetUsername />} />
           <Route path='/home' element={<Home />} />
           <Route path='/search' element={<SearchPost />} />
+          <Route path='/mypage' element={<Mypage />} />
         </Route>
       </Routes>
     </BrowserRouter>
