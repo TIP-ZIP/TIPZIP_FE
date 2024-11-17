@@ -76,10 +76,10 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
         <TitleSection>
           <TitleLabel>제목</TitleLabel>
           <TitleInput
-            placeholder="50자 이내로 간단하게 적어주세요"
+            placeholder="22자 이내로 간단하게 적어주세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            maxLength={50}
+            maxLength={22}
           />
         </TitleSection>
         <CategorySelector>
@@ -127,7 +127,9 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
             onChange={(e) => setLinkUrl(e.target.value)}
           />
         </LinkSection>
-        <StyledSubmitButton type="submit">등록하기</StyledSubmitButton>
+        <ButtonContainer>
+          <StyledSubmitButton type="submit">등록하기</StyledSubmitButton>
+        </ButtonContainer>
       </Form>
     </Container>
   );
@@ -150,8 +152,7 @@ const CATEGORIES = [
 const Container = styled.div`
   width: 100%;
   max-width: 375px;
-  margin: 0 auto;
-  padding: 1rem 1rem;
+  padding: 0rem 2rem;
   background-color: ${colors.TZ_Monochrome[0]};
 `;
 
@@ -161,7 +162,7 @@ const Form = styled.form`
 `;
 
 const TitleSection = styled.div`
-  margin-bottom: 0.25rem;
+  margin-bottom: 1.2rem;
 `;
 
 const TitleLabel = styled.label`
@@ -173,8 +174,7 @@ const TitleLabel = styled.label`
 
 const TitleInput = styled.input`
   width: 100%;
-  height: 2.75rem;
-  padding: 0.75rem 1rem;
+  padding: 1.3rem 1.6rem;
   border: none;
   border-radius: 8px;
   background-color: ${colors.TZ_Monochrome[100]};
@@ -192,8 +192,7 @@ const TitleInput = styled.input`
 
 const CategorySelector = styled.div`
   display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
+  gap: 0.8rem;
   overflow-x: auto;
   margin-bottom: 1rem;
   
@@ -206,7 +205,7 @@ const CategorySelector = styled.div`
 `;
 
 const CategoryChip = styled.div<{ $active?: boolean }>`
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   border-radius: 4px;
   background-color: ${({ $active }) => ($active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[100])};
   color: ${({ $active }) => ($active ? colors.TZ_Monochrome[0] : colors.TZ_Monochrome[500])};
@@ -252,20 +251,20 @@ const RightArrow = styled.img.attrs({
 `;
 
 const ContentSection = styled.section`
-  margin-bottom: 1.5rem;
+  margin-bottom: 3.2rem;
 `;
 
 const ContentLabel = styled.label`
   display: block;
   font-size: ${({ theme }) => theme.fontStyles.Body4};
   color: ${colors.TZ_Monochrome[1000]};
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 `;
 
 const ContentTextarea = styled.textarea`
   width: 100%;
-  min-height: 200px;
-  padding: 1rem;
+  min-height: 30rem;
+  padding: 1.2rem 1.7rem;
   border: none;
   border-radius: 8px;
   background-color: ${colors.TZ_Monochrome[100]};
@@ -273,6 +272,7 @@ const ContentTextarea = styled.textarea`
   line-height: 1.6;
   outline: none;
   resize: vertical;
+  margin-bottom: 1.0rem;
 
   &:focus {
     background-color: ${colors.TZ_Signature[50]};
@@ -285,16 +285,15 @@ const ContentTextarea = styled.textarea`
 
 const MediaButtons = styled.div`
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.8rem;
 `;
 
 const MediaButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
-  border: 0.6px solid #dddddd;
+  gap: 0.6rem;
+  padding: 0.8rem 1.2rem;
+  border: 0.6px solid ${colors.TZ_Monochrome[500]};
   border-radius: 8px;
   background: none;
   font-size: ${({ theme }) => theme.fontStyles.Caption8};
@@ -310,47 +309,47 @@ const CameraIcon = styled.img.attrs({
   src: '/src/assets/svgs/camera.svg',
   alt: 'Camera',
 })`
-  width: 1rem;
-  height: 1rem;
+  width: 1.2rem;
+  height: 1.1rem;
 `;
 
 const VideoIcon = styled.img.attrs({
   src: '/src/assets/svgs/video.svg',
   alt: 'Video',
 })`
-  width: 1rem;
-  height: 1rem;
+  width: 1.2rem;
+  height: 1.1rem;
 `;
 
 const LinkSection = styled.section`
+position: relative;
   margin-bottom: 2.5rem;
 `;
 
-const LinkLabel = styled.label`
+const LinkLabel = styled.label`  
   display: inline-block;
   font-size: ${({ theme }) => theme.fontStyles.Body4};
   color: ${colors.TZ_Monochrome[1000]};
   font-weight: 500;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1.2rem;
 `;
 
 const LinkHint = styled.span`
+  position: absolute;
+  top: 0.2rem;
   font-size: ${({ theme }) => theme.fontStyles.Caption7};
   color: ${colors.TZ_Monochrome[300]};
-  margin-left: 0.5rem;
+  margin-left: 0.8rem;
 `;
 
 const LinkInput = styled.input`
   width: 100%;
-  height: 40px;
-  padding: 0.75rem;
+  padding: 1.1rem 1.6rem;
   border: none;
   border-radius: 8px;
   background-color: ${colors.TZ_Monochrome[100]};
   font-size: ${({ theme }) => theme.fontStyles.Caption9};
   outline: none;
-  margin-top: 0.5rem;
-
   &:focus {
     background-color: ${colors.TZ_Signature[50]};
   }
@@ -361,7 +360,8 @@ const LinkInput = styled.input`
 `;
 
 const StyledSubmitButton = styled.button`
-  height: 2.75rem;
+  width: 100%;
+  height: 4.4rem;
   border: none;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.TZ_Monochrome[300]};
@@ -372,4 +372,11 @@ const StyledSubmitButton = styled.button`
   &:active {
     opacity: 0.8;
   }
+`;
+
+const ButtonContainer = styled.div`
+  position: sticky;
+  bottom: 0;
+  background-color: ${colors.TZ_Monochrome[0]};
+  padding: 1.6rem 0;
 `;

@@ -32,12 +32,11 @@ const Header = styled.header`
     position: relative;
     display: flex;
     align-items: center;    
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.2rem;
 `;
 
 const BackButton = styled.button`
     position: absolute;
-    left: -0.5rem;
     width: 1.5rem;    
     height: 1.5rem;
     margin-right: 1rem;

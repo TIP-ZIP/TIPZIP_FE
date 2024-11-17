@@ -91,9 +91,9 @@ export const fontStyles: typography = {
   `,
   Caption8: css`
     font-style: normal;
-    font-size: 1.0rem;
+    font-size: 1rem;
     font-weight: 400;
-    line-height: normal;
+    line-height: 1.2rem;
   `,
   Caption9: css`
     font-style: normal;
