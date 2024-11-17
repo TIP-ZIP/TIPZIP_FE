@@ -7,98 +7,104 @@ type typography = {
 export const fontStyles: typography = {
   Header1: css`
     font-style: normal;
-    font-size: 1.125rem;
+    font-size: 1.8rem;
     font-weight: 500;
     line-height: normal;
   `,
   Header2: css`
     font-style: normal;
-    font-size: 1rem;
+    font-size: 1.6rem;
     font-weight: 500;
-    line-height: 1.1931rem;
+    line-height: normal;
   `,
   Body1: css`
     font-style: normal;
-    font-size: 0.9375rem;
+    font-size: 1.5rem;
     font-weight: 500;
-    line-height: 1.1187rem;
+    line-height: normal;
   `,
   Body2: css`
     font-style: normal;
-    font-size: 0.875rem;
+    font-size: 1.4rem;
     font-weight: 500;
     line-height: normal;
   `,
   Body3: css`
     font-style: normal;
-    font-size: 0.8125rem;
+    font-size: 1.3rem;
     font-weight: 500;
-    line-height: 1.375rem;
+    line-height: normal;
   `,
   Body4: css`
     font-style: normal;
-    font-size: 0.75rem;
+    font-size: 1.2rem;
     font-weight: 500;
+    line-height: normal;
+  `,
+  Body5: css`
+    font-style: normal;
+    font-size: 1.2rem;
+    font-weight: 400;
     line-height: normal;
   `,
   Caption1: css`
     font-style: normal;
-    font-size: 0.6875rem;
+    font-size: 1.1rem;
     font-weight: 500;
-    line-height: 1.1rem;
+    line-height: normal;
   `,
   Caption2: css`
     font-style: normal;
-    font-size: 0.625rem;
+    font-size: 1.0rem;
     font-weight: 500;
-    line-height: 0.7456rem;
+    line-height: normal;
   `,
   Caption3: css`
     font-style: normal;
-    font-size: 0.5625rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    line-height: 0.6713rem;
+    line-height: normal;
   `,
   Caption4: css`
     font-style: normal;
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    line-height: 0.5969rem;
+    line-height: normal;
   `,
   Caption5: css`
     font-style: normal;
-    font-size: 0.4375rem;
+    font-size: 0.7rem;
     font-weight: 500;
-    line-height: 0.5219rem;
+    line-height: normal;
   `,
   Caption6: css`
     font-style: normal;
-    font-size: 0.5rem;
+    font-size: 0.8rem;
     font-weight: 400;
-    line-height: 0.5969rem;
+    line-height: normal;
   `,
   Caption7: css`
     font-style: normal;
-    font-size: 0.5625rem;
+    font-size: 0.9rem;
     font-weight: 400;
-    line-height: 0.6713rem;
+    line-height: normal;
   `,
   Caption8: css`
     font-style: normal;
-    font-size: 0.625rem;
+    font-size: 1.0rem;
     font-weight: 400;
-    line-height: 0.7456rem;
+    line-height: normal;
   `,
   Caption9: css`
     font-style: normal;
-    font-size: 0.6875rem;
+    font-size: 1.1rem;
     font-weight: 400;
-    line-height: 1.1rem;
+    line-height: normal;
   `,
   Caption10: css`
     font-style: normal;
-    font-size: 0.75rem;
+    font-size: 1.2rem;
     font-weight: 400;
-    line-height: 0.895rem;
+    line-height: normal;
   `,
 };
