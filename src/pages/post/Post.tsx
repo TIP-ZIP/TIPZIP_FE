@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import PostHeader from '@components/header/PostHeader';
 import { colors } from '@styles/theme/colors';
+import { AnimatePresence, motion } from 'framer-motion';
+import videoIcon from '@assets/svgs/video.svg';
+import cameraIcon from '@assets/svgs/camera.svg';
 
 interface PostFormProps {
   onSubmit: (post: Post) => void;
@@ -27,6 +30,19 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
+  const [showTags, setShowTags] = useState(false);
+
+  const categoryTags: { [key: string]: string[] } = {
+    '정리/공간 활용': ['#못질', '#서랍 정돈', '#신발 활용', '#가구', '#수납', '#방', '#원칙', '#케이블 정리', '#제활용'],
+    '주방': ['#키친 소품', '#재료 보관', '#냉장고', '#조리대 도구', '#생활고', '#주방 가구', '#주방 정돈', '#간단 요리'],
+    '청소': ['#욕실', '#청리', '#곰팡이', '#배수구', '#방지', '#부분청소', '#청소기', '#세탁/건조기'],
+    '건강': ['#운동', '#병원', '#다이어트', '#휴식', '#수면', '#피부', '#생활패턴', '#응급상황'],
+    'IT': ['#아이폰', '#안드로이드', '#윈도우', '#맥북', '#알고리즘', '#애플/프로그램', '#인터넷', '#컴퓨터', '#앱개발'],
+    '뷰티&패션': ['#피부', '#메이크업', '#패션', '#베이직한', '#향수', '#코디', '#악세서리', '#화장대', '#쇼핑 정보'],
+    '여가&휴식': ['#DIY', '#취미', '#운동', '#독서', '#홈 가드닝', '#영화', '#OTT', '#자기계발'],
+    '로컬': ['#동네 맛집', '#맛집 리뷰', '#로드맛집', '#맛집 명소', '#서울맛', '#지역 맛집'],
+    '기타': ['#라이프', '#운동']
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,8 +78,17 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
     onSubmit(post);
   };
 
-  const handleTagClick = () => {
-    navigate('/tag', { state: { selectedCategory: category } });
+  const handleCategorySelect = (cat: string) => {
+    setCategory(cat);
+    setShowTags(true);
+  };
+
+  const handleTagSelect = (tag: string) => {
+    if (tags.includes(tag)) {
+      setTags(tags.filter(t => t !== tag));
+    } else {
+      setTags([...tags, tag]);
+    }
   };
 
   return (
@@ -72,7 +97,9 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
         title="글 작성" 
         onBackClick={() => navigate('/')} 
       />
+
       <Form onSubmit={handleSubmit}>
+
         <TitleSection>
           <TitleLabel>제목</TitleLabel>
           <TitleInput
@@ -82,24 +109,42 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
             maxLength={22}
           />
         </TitleSection>
-        <CategorySelector>
+
+        <CategorySelector $showTags={showTags}>
           {CATEGORIES.map((cat) => (
             <CategoryChip
               key={cat}
               $active={category === cat}
-              onClick={() => setCategory(cat)}
+              onClick={() => handleCategorySelect(cat)}
             >
               {cat}
             </CategoryChip>
           ))}
         </CategorySelector>
-        <TagHeaderButton onClick={handleTagClick}>
-          <TagLabelGroup>
-            <TagLabel>태그 등록</TagLabel>
-            <TagHint>1개 이상 선택해주세요</TagHint>
-          </TagLabelGroup>
-          <RightArrow />
-        </TagHeaderButton>
+        
+        <AnimatePresence>
+          {showTags && category && (
+            <TagContainer
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <TagList>
+                {categoryTags[category]?.map((tag) => (
+                  <TagChip
+                    key={tag}
+                    $active={tags.includes(tag)}
+                    onClick={() => handleTagSelect(tag)}
+                  >
+                    {tag}
+                  </TagChip>
+                ))}
+              </TagList>
+            </TagContainer>
+          )}
+        </AnimatePresence>
+ 
         <ContentSection>
           <ContentLabel>본문 내용</ContentLabel>
           <ContentTextarea
@@ -118,6 +163,7 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
             </MediaButton>
           </MediaButtons>
         </ContentSection>
+
         <LinkSection>
           <LinkLabel>링크 첨부</LinkLabel>
           <LinkHint>(선택)</LinkHint>
@@ -127,9 +173,11 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
             onChange={(e) => setLinkUrl(e.target.value)}
           />
         </LinkSection>
+
         <ButtonContainer>
           <StyledSubmitButton type="submit">등록하기</StyledSubmitButton>
         </ButtonContainer>
+
       </Form>
     </Container>
   );
@@ -190,11 +238,11 @@ const TitleInput = styled.input`
   }
 `;
 
-const CategorySelector = styled.div`
+const CategorySelector = styled.div<{ $showTags: boolean }>`
   display: flex;
   gap: 0.8rem;
   overflow-x: auto;
-  margin-bottom: 1rem;
+  margin-bottom: ${({ $showTags }) => $showTags ? '1.2rem' : '3.2rem'}; // 태그가 보일 때는 마진을 줄임
   
   /* 스크롤바 숨기기 */
   -ms-overflow-style: none; /* IE and Edge */
@@ -212,42 +260,6 @@ const CategoryChip = styled.div<{ $active?: boolean }>`
   font-size: ${({ theme }) => theme.fontStyles.Caption8};
   white-space: nowrap;
   cursor: pointer;
-`;
-
-const TagHeaderButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-`;
-
-const TagLabelGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-`;
-
-const TagLabel = styled.label`
-  font-size: ${({ theme }) => theme.fontStyles.Body4};
-  margin-right: 0.25rem;
-`;
-
-const TagHint = styled.div`
-  font-size: ${({ theme }) => theme.fontStyles.Caption7};
-  color: ${colors.TZ_Monochrome[300]};
-`;
-
-const RightArrow = styled.img.attrs({
-  src: '/src/assets/svgs/rightarrow.svg',
-  alt: 'Right Arrow',
-})`
-  width: 1.25rem;
-  height: 1.25rem;
 `;
 
 const ContentSection = styled.section`
@@ -306,7 +318,7 @@ const MediaButton = styled.button`
 `;
 
 const CameraIcon = styled.img.attrs({
-  src: '/src/assets/svgs/camera.svg',
+  src: cameraIcon,
   alt: 'Camera',
 })`
   width: 1.2rem;
@@ -314,7 +326,7 @@ const CameraIcon = styled.img.attrs({
 `;
 
 const VideoIcon = styled.img.attrs({
-  src: '/src/assets/svgs/video.svg',
+  src: videoIcon,
   alt: 'Video',
 })`
   width: 1.2rem;
@@ -379,4 +391,28 @@ const ButtonContainer = styled.div`
   bottom: 0;
   background-color: ${colors.TZ_Monochrome[0]};
   padding: 1.6rem 0;
+`;
+
+const TagContainer = styled(motion.div)`
+  margin-top: 0;
+  margin-bottom: 3.2rem;
+  overflow: hidden;
+`;
+
+const TagList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+`;
+
+const TagChip = styled.div<{ $active?: boolean }>`
+  padding: 0.8rem 1rem;
+  border-radius: 4px;
+  color: ${({ $active }) => 
+    $active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[300]};
+  border: 0.6px solid ${({ $active }) => 
+    $active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[300]};
+  font-size: ${({ theme }) => theme.fontStyles.Caption8};
+  cursor: pointer;
+  transition: all 0.2s ease;
 `;

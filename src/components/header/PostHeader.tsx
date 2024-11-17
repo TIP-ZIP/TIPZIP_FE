@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import leftArrow from '@assets/svgs/leftarrow.svg';
 
 interface PostHeaderProps {
     title: string;
@@ -40,7 +41,7 @@ const BackButton = styled.button`
     width: 1.5rem;    
     height: 1.5rem;
     margin-right: 1rem;
-    background: url('/src/assets/svgs/leftarrow.svg') center/contain no-repeat;
+    background: url(${leftArrow}) center/contain no-repeat;
     border: none;
     cursor: pointer;
 `;
