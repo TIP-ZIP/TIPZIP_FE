@@ -1,7 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import leftArrow from '@assets/svgs/leftarrow.svg';
+import { Header, BackButton, Title } from './PostHeader.styled';
 
 interface PostHeaderProps {
     title: string;
@@ -28,28 +27,3 @@ const PostHeader: React.FC<PostHeaderProps> = ({ title, onBackClick }) => {
 };
 
 export default PostHeader;
-
-const Header = styled.header`
-    position: relative;
-    display: flex;
-    align-items: center;    
-    margin-bottom: 2.2rem;
-`;
-
-const BackButton = styled.button`
-    position: absolute;
-    width: 1.5rem;    
-    height: 1.5rem;
-    margin-right: 1rem;
-    background: url(${leftArrow}) center/contain no-repeat;
-    border: none;
-    cursor: pointer;
-`;
-
-const Title = styled.h2`
-    margin: 0 auto;
-    font-size: ${({ theme }) => theme.fontStyles.Header2};
-    font-weight: 500;
-    text-align: center;
-    color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};
-`;

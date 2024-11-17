@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 import PostHeader from '@components/post/PostHeader';
@@ -8,7 +7,7 @@ import PostEditor from '@components/post/PostEditor';
 import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
 
-import { colors } from '@styles/theme/colors';
+import { Container, Form, StyledSubmitButton, ButtonContainer } from './Post.styled';
 
 interface PostFormProps {
   onSubmit: (post: Post) => void;
@@ -122,37 +121,3 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
 };
 
 export default Post;
-
-const Container = styled.div`
-  width: 100%;
-  max-width: 375px;
-  padding: 0rem 2rem;
-  background-color: ${colors.TZ_Monochrome[0]};
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const StyledSubmitButton = styled.button`
-  width: 100%;
-  height: 4.4rem;
-  border: none;
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.colors.TZ_Monochrome[300]};
-  color: ${({ theme }) => theme.colors.TZ_Monochrome[0]};
-  font-size: ${({ theme }) => theme.fontStyles.Body1};
-  cursor: pointer;
-
-  &:active {
-    opacity: 0.8;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  position: sticky;
-  bottom: 0;
-  background-color: ${colors.TZ_Monochrome[0]};
-  padding: 1.6rem 0;
-`;
