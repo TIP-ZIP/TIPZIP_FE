@@ -5,7 +5,7 @@ import Header from '@components/header/Header';
 export default function Layout() {
   const location = useLocation();
 
-  const hideHeaderPaths = ['/login', '/search'];
+  const hideHeaderPaths = ['/login', '/search', '/', '/set-username'];
   const shouldHideHeader = hideHeaderPaths.includes(location.pathname);
 
   return (
