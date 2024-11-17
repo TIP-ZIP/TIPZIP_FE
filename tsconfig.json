@@ -27,10 +27,12 @@
     "baseUrl": ".", // 경로 설정 기준
     "paths": {
       // 경로 별칭 설정
+      "@api/*": ["src/api/*"],
+      "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
+      "@layout/*": ["src/layout/*"],
       "@pages/*": ["src/pages/*"],
-      "@styles/*": ["src/styles/*"],
-      "@assets/*": ["src/assets/*"]
+      "@styles/*": ["src/styles/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리
