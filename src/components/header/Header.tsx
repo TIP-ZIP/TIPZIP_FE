@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   return (
     <S.Container>
       <S.ItemList>
-        <S.Logo onClick={() => navigate('/')} />
+        <S.Logo onClick={() => navigate('/home')} />
         <S.IconList>
           <S.Icon>
             <S.BookmarkIcon />
