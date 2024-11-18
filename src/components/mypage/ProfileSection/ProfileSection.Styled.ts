@@ -12,6 +12,11 @@ export const ProfileContainer = styled.div`
   padding: 2.7rem 2.5rem 3.1rem 3.1rem;
 `;
 
+export const Profile = styled.img`
+  width: 7.9rem;
+  height: 7.9rem;
+  border-radius: 100%;
+`;
 export const GrayCircle = styled.div`
   display: flex;
   justify-content: center;

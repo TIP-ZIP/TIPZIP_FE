@@ -17,19 +17,46 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   isOwnProfile,
 }) => {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [profileImg, setProfileImg] = useState<string | null>(null);
 
   const handleFollowToggle = (e: React.MouseEvent) => {
     e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 막음
     setIsFollowing((prev) => !prev);
   };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result) {
+          setProfileImg(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleImageClick = () => {
+    document.getElementById('image-upload-input')?.click();
+  };
 
   return (
     <S.ProfileContainer>
-      <S.ImgSection>
-        <S.GrayCircle>
-          <S.ProfileImg />
-        </S.GrayCircle>
+      <S.ImgSection onClick={handleImageClick}>
+        {profileImg ? (
+          <S.Profile src={profileImg} />
+        ) : (
+          <S.GrayCircle>
+            <S.ProfileImg />
+          </S.GrayCircle>
+        )}
         <S.plusBtn />
+        <input
+          id='image-upload-input'
+          type='file'
+          accept='image/*'
+          style={{ display: 'none' }}
+          onChange={handleImageChange}
+        />
       </S.ImgSection>
       <S.InfoSection>
         <S.NameSection onClick={onNameClick}>
