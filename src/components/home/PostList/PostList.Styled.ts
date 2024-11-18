@@ -14,7 +14,7 @@ export const PostList = styled.div<{ $isMypage?: boolean }>`
   grid-template-columns: repeat(2, 1fr);
   gap: ${({ $isMypage }) => ($isMypage ? '2rem 2.3rem' : '2.3rem 1.1rem')};
   margin-top: ${({ $isMypage }) => ($isMypage ? '0' : '8.4rem')};
-  padding-bottom: 6.2rem;
+  padding-bottom: ${({ $isMypage }) => ($isMypage ? '0' : '6.2rem')};
 `;
 
 export const PostItem = styled.div`

@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import * as S from './Mypage.Styled';
-import PostList from '@components/home/PostList/PostList';
 import { postsData } from '@constants/PostData';
+import ProfileSection from '@components/mypage/ProfileSection/ProfileSection';
+import PostSection from '@components/mypage/PostSection/PostSection';
+import EditorSection from '@components/mypage/EditorSection/EditorSection';
 
 const Mypage: React.FC = () => {
   const [posts, setPosts] = useState(postsData);
+  const [showEditor, setShowEditor] = useState(false);
+  const [editorType, setEditorType] = useState<'nickname' | 'introduction'>('nickname');
+  const [nickname, setNickname] = useState('아기 사자 🦁');
+  const [introduction, setIntroduction] = useState('');
 
   const handleBookmarkClick = (postId: number) => {
     setPosts((prevPosts) =>
@@ -19,6 +25,27 @@ const Mypage: React.FC = () => {
       ),
     );
   };
+  const handleNameClick = () => {
+    setShowEditor((prev) => !prev);
+    setEditorType('nickname');
+  };
+
+  const handleIntroductionClick = () => {
+    setShowEditor((prev) => !prev);
+    setEditorType('introduction');
+  };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+
+  const handleIntroductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIntroduction(e.target.value);
+  };
+
+  const closeEditor = () => {
+    setShowEditor(false);
+  };
 
   return (
     <S.Container>
@@ -26,47 +53,24 @@ const Mypage: React.FC = () => {
         <S.ZipShape>마이 페이지</S.ZipShape>
         <S.ZipLine />
       </S.Zip>
-      <S.ProfileContainer>
-        <S.ImgSection>
-          <S.GrayCircle>
-            <S.ProfileImg />
-          </S.GrayCircle>
-          <S.plusBtn />
-        </S.ImgSection>
-        <S.InfoSection>
-          <S.NameSection>
-            <S.Name>아기 사자 🦁</S.Name>
-            <S.Verfied />
-          </S.NameSection>
-          <S.FollowerInfo>
-            <S.FollowBox>
-              <S.Follow>팔로워</S.Follow>
-              <S.FollowCount>70</S.FollowCount>
-            </S.FollowBox>
-            <S.FollowBox>
-              <S.Follow>팔로잉</S.Follow>
-              <S.FollowCount>50</S.FollowCount>
-            </S.FollowBox>
-          </S.FollowerInfo>
-          <S.IntroduceSection>
-            <S.EditIcon />
-            <S.InputText>프로필에 자기 소개를 작성해주세요.</S.InputText>
-          </S.IntroduceSection>
-        </S.InfoSection>
-      </S.ProfileContainer>
+      <ProfileSection
+        nickname={nickname}
+        introduction={introduction}
+        onNameClick={handleNameClick}
+        onIntroductionClick={handleIntroductionClick}
+      />
       <S.GrayLine />
-      <S.PostSection>
-        <S.PostInfo>
-          <S.PostText>게시물</S.PostText>
-          <S.PostCount>6개</S.PostCount>
-        </S.PostInfo>
-        <PostList
-          posts={posts}
-          handleBookmarkClick={handleBookmarkClick}
-          $isMypage={window.location.pathname === '/mypage'}
-        />
-      </S.PostSection>
-      <S.Text>아기 사자 🦁 님만의 꿀팁을 공유해주세요!</S.Text>
+      <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />
+      <S.Text>{nickname} 님만의 꿀팁을 공유해주세요!</S.Text>
+      <EditorSection
+        showEditor={showEditor}
+        editorType={editorType}
+        nickname={nickname}
+        introduction={introduction}
+        handleNicknameChange={handleNicknameChange}
+        handleIntroductionChange={handleIntroductionChange}
+        closeEditor={closeEditor}
+      />
     </S.Container>
   );
 };
