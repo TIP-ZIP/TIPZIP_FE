@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+export const EditorContainer = styled.div`
+  position: relative;
+`;
+
 export const InputBox = styled.div`
   position: relative;
   display: flex;

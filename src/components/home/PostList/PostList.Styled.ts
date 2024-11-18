@@ -38,7 +38,7 @@ export const PostImage = styled.div<{ $isMypage?: boolean }>`
 `;
 
 export const PostTitle = styled.span<{ $isMypage?: boolean }>`
-  width: 100%;
+  width: 16rem;
   height: 3.6rem;
   ${fontStyles.Body5}
   font-weight: ${({ $isMypage }) => ($isMypage ? '500' : '400')};

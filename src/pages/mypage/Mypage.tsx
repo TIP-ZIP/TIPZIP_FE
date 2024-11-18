@@ -58,6 +58,7 @@ const Mypage: React.FC = () => {
         introduction={introduction}
         onNameClick={handleNameClick}
         onIntroductionClick={handleIntroductionClick}
+        isOwnProfile={false}
       />
       <S.GrayLine />
       <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />

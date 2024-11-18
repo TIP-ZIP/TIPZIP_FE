@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import grayprofile from '@assets/svgs/grayProfile.svg';
 import changeImg from '@assets/pngs/Plus.png';
 import edit from '@assets/svgs/Edit.svg';
+import shield from '@assets/svgs/shield.svg';
 
 export const ProfileContainer = styled.div`
   display: flex;
@@ -56,12 +57,19 @@ export const InfoSection = styled.div`
 export const NameSection = styled.div`
   display: flex;
   margin-bottom: 0.8rem;
+  gap: 0.8rem;
 `;
 export const Name = styled.span`
   ${({ theme }) => theme.fontStyles.Header2}
 `;
 
-export const Verfied = styled.span``;
+export const Verfied = styled.span`
+  background: url(${shield});
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.6rem;
+  height: 1.6rem;
+`;
 
 export const FollowerInfo = styled.div`
   display: flex;
@@ -103,7 +111,8 @@ export const IntroduceSection = styled.div`
 `;
 
 export const InputText = styled.div<{ $isFilled: boolean }>`
-  ${({ theme }) => theme.fontStyles.Capiton4} color: ${(props) =>
+  ${({ theme }) => theme.fontStyles.Capiton4}
+  color: ${(props) =>
     props.$isFilled
       ? props.theme.colors.TZ_Monochrome[1000]
       : props.theme.colors.TZ_Monochrome[500]};
@@ -118,4 +127,32 @@ export const EditIcon = styled.div`
   cursor: pointer;
   height: 0.675rem;
   transform: scale(1.4);
+`;
+
+export const NameBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+`;
+
+export const FollowButtonContainer = styled.div`
+  display: flex;
+`;
+
+export const FollowButton = styled.button<{ $isFollowing: boolean }>`
+  ${({ theme }) => theme.fontStyles.Caption4}
+  background-color: ${(props) =>
+    props.$isFollowing
+      ? props.theme.colors.TZ_Monochrome[1000]
+      : props.theme.colors.TZ_Monochrome[300]};
+  color: ${(props) =>
+    props.$isFollowing
+      ? props.theme.colors.TZ_Monochrome[0]
+      : props.theme.colors.TZ_Monochrome[1000]};
+  border-radius: 1rem;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 `;
