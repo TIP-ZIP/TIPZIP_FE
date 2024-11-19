@@ -33,7 +33,7 @@ export const fontStyles: typography = {
     font-style: normal;
     font-size: 1.3rem;
     font-weight: 500;
-    line-height: 22px;
+    line-height: normal;
   `,
   Body4: css`
     font-style: normal;
@@ -51,7 +51,7 @@ export const fontStyles: typography = {
     font-style: normal;
     font-size: 1.1rem;
     font-weight: 500;
-    line-height: 160%;
+    line-height: normal;
   `,
   Caption2: css`
     font-style: normal;
@@ -67,8 +67,44 @@ export const fontStyles: typography = {
   `,
   Caption4: css`
     font-style: normal;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: normal;
+  `,
+  Caption5: css`
+    font-style: normal;
     font-size: 0.7rem;
     font-weight: 500;
+    line-height: normal;
+  `,
+  Caption6: css`
+    font-style: normal;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: normal;
+  `,
+  Caption7: css`
+    font-style: normal;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: normal;
+  `,
+  Caption8: css`
+    font-style: normal;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.2rem;
+  `,
+  Caption9: css`
+    font-style: normal;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: normal;
+  `,
+  Caption10: css`
+    font-style: normal;
+    font-size: 1.2rem;
+    font-weight: 400;
     line-height: normal;
   `,
 };
