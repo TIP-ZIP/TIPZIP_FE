@@ -20,7 +20,7 @@ export const BackButton = styled.button`
 
 export const Title = styled.h2`
     margin: 0 auto;
-    font-size: ${({ theme }) => theme.fontStyles.Header2};
+    ${({ theme }) => theme.fontStyles.Header2};
     font-weight: 500;
     text-align: center;
     color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};

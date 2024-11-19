@@ -8,7 +8,7 @@ export const LinkSection = styled.section`
 
 export const LinkLabel = styled.label`  
     display: inline-block;
-    font-size: ${({ theme }) => theme.fontStyles.Body4};
+    ${({ theme }) => theme.fontStyles.Body4};
     color: ${colors.TZ_Monochrome[1000]};
     font-weight: 500;
     margin-bottom: 1.2rem;
@@ -17,7 +17,7 @@ export const LinkLabel = styled.label`
 export const LinkHint = styled.span`
     position: absolute;
     top: 0.2rem;
-    font-size: ${({ theme }) => theme.fontStyles.Caption7};
+    ${({ theme }) => theme.fontStyles.Caption7};
     color: ${colors.TZ_Monochrome[300]};
     margin-left: 0.8rem;
 `;
@@ -28,7 +28,7 @@ export const LinkInput = styled.input`
     border: none;
     border-radius: 8px;
     background-color: ${colors.TZ_Monochrome[100]};
-    font-size: ${({ theme }) => theme.fontStyles.Caption9};
+    ${({ theme }) => theme.fontStyles.Caption9};
     outline: none;
     
     &:focus {

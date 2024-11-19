@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path='/' element={<Home />} />
-          <Route path='/post/new' element={<Post onSubmit={(data) => console.log(data)} />} />
+          <Route path='/post/new' element={<Post />} />
         </Route>
       </Routes>
     </BrowserRouter>

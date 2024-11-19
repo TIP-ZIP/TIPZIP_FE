@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import PostHeader from '@components/post/PostHeader';
 import TagSelector from '@components/post/TagSelector';
@@ -8,10 +9,6 @@ import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
 
 import * as S from './Post.styled';
-
-interface PostFormProps {
-  onSubmit: (post: Post) => void;
-}
 
 interface Post {
   title: string;
@@ -23,7 +20,7 @@ interface Post {
   linkUrl?: string;
 }
 
-const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
+const Post: React.FC = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -55,7 +52,7 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
       return;
     }
 
-    const post: Post = {
+    const postData: Post = {
       title: title.trim(),
       content: content.trim(),
       tags,
@@ -65,10 +62,28 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
       linkUrl: linkUrl.trim() || undefined,
     };
     
-    onSubmit(post);
+    try {
+      // 폼 제출(게시글 등록) 로직
+      const response = await axios.post('/api/posts', postData, {
+        headers: {
+          'Content-Type': 'application/json',
+          // 필요한 경우 인증 토큰 추가
+          // 'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 201) { // 또는 200
+        alert('게시글이 성공적으로 등록되었습니다.');
+        navigate('/'); // 홈으로 이동
+      }
+    } catch (error) {
+      console.error('게시글 등록 실패:', error);
+      alert('게시글 등록에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleCategorySelect = (cat: string) => {
+    setTags([]);
     setCategory(cat);
     setShowTags(true);
   };
@@ -81,27 +96,37 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
     }
   };
 
+  // 필수 항목들이 모두 입력되었는지 확인하는 함수 추가
+  const isFormValid = () => {
+    return (
+      title.trim() !== '' &&
+      category !== '' &&
+      tags.length > 0 &&
+      content.trim() !== ''
+    );
+  };
+
   return (
     <S.Container>
       <PostHeader 
         title="글 작성" 
         onBackClick={() => navigate('/')} 
       />
+      
+      <PostTitle 
+        title={title}
+        onChange={setTitle}
+      />
+
+      <TagSelector
+        category={category}
+        tags={tags}
+        showTags={showTags}
+        onCategorySelect={handleCategorySelect}
+        onTagSelect={handleTagSelect}
+      />
 
       <S.Form onSubmit={handleSubmit}>
-        <PostTitle 
-          title={title}
-          onChange={setTitle}
-        />
-
-        <TagSelector
-          category={category}
-          tags={tags}
-          showTags={showTags}
-          onCategorySelect={handleCategorySelect}
-          onTagSelect={handleTagSelect}
-        />
-
         <PostEditor
           content={content}
           onContentChange={setContent}
@@ -113,7 +138,12 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
         />
 
         <S.ButtonContainer>
-          <S.StyledSubmitButton type="submit">등록하기</S.StyledSubmitButton>
+          <S.StyledSubmitButton 
+            type="submit"
+            $isValid={isFormValid()} // prop 전달
+          >
+            등록하기
+          </S.StyledSubmitButton>
         </S.ButtonContainer>
       </S.Form>
     </S.Container>

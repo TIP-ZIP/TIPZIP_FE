@@ -3,7 +3,7 @@ import { colors } from '@styles/theme/colors';
 
 export const Container = styled.div`
     width: 100%;
-    max-width: 375px;
+    margin: 0 auto;
     padding: 0rem 2rem;
     background-color: ${colors.TZ_Monochrome[0]};
 `;
@@ -13,18 +13,23 @@ export const Form = styled.form`
     flex-direction: column;
 `;
 
-export const StyledSubmitButton = styled.button`
+export const StyledSubmitButton = styled.button<{ $isValid: boolean }>`
     width: 100%;
     height: 4.4rem;
     border: none;
     border-radius: 10px;
-    background-color: ${({ theme }) => theme.colors.TZ_Monochrome[300]};
+    background-color: ${({ theme, $isValid }) => 
+        $isValid 
+        ? theme.colors.TZ_Monochrome[1000]  // 활성화 상태일 때의 색상
+        : theme.colors.TZ_Monochrome[300]  // 비활성화 상태일 때의 색상
+    };
     color: ${({ theme }) => theme.colors.TZ_Monochrome[0]};
-    font-size: ${({ theme }) => theme.fontStyles.Body1};
-    cursor: pointer;
+    ${({ theme }) => theme.fontStyles.Body1};
+    cursor: ${({ $isValid }) => ($isValid ? 'pointer' : 'default')};
+    transition: background-color 0.2s ease-in-out;
 
     &:active {
-        opacity: 0.8;
+        opacity: ${({ $isValid }) => ($isValid ? 0.8 : 1)};
     }
 `;
 

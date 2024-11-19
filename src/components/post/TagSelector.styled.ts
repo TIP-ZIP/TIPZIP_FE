@@ -16,12 +16,12 @@ export const CategorySelector = styled.div<{ $showTags: boolean; $category?: str
     }
 `;
 
-export const CategoryChip = styled.div<{ $active?: boolean }>`
+export const CategoryChip = styled.button<{ $active?: boolean }>`
     padding: 0.8rem 1rem;
     border-radius: 4px;
     background-color: ${({ $active }) => ($active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[100])};
     color: ${({ $active }) => ($active ? colors.TZ_Monochrome[0] : colors.TZ_Monochrome[500])};
-    font-size: ${({ theme }) => theme.fontStyles.Caption8};
+    ${({ theme }) => theme.fontStyles.Caption8};
     white-space: nowrap;
     cursor: pointer;
 `;
@@ -45,7 +45,7 @@ export const TagChip = styled.div<{ $active?: boolean }>`
         $active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[300]};
     border: 0.6px solid ${({ $active }) => 
         $active ? colors.TZ_Signature[500] : colors.TZ_Monochrome[300]};
-    font-size: ${({ theme }) => theme.fontStyles.Caption8};
+    ${({ theme }) => theme.fontStyles.Caption8};
     cursor: pointer;
     transition: all 0.2s ease;
 `; 

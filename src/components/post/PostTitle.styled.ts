@@ -18,7 +18,7 @@ export const TitleInput = styled.input`
     border: none;
     border-radius: 8px;
     background-color: ${colors.TZ_Monochrome[100]};
-    font-size: ${({ theme }) => theme.fontStyles.Caption9};
+    ${({ theme }) => theme.fontStyles.Caption9};
     outline: none;
 
     &:focus {

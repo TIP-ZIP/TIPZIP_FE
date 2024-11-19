@@ -9,7 +9,7 @@ export const ContentSection = styled.section`
 
 export const ContentLabel = styled.label`
     display: block;
-    font-size: ${({ theme }) => theme.fontStyles.Body4};
+    ${({ theme }) => theme.fontStyles.Body4};
     color: ${colors.TZ_Monochrome[1000]};
     margin-bottom: 1.2rem;
 `;
@@ -21,7 +21,7 @@ export const ContentTextarea = styled.textarea`
     border: none;
     border-radius: 8px;
     background-color: ${colors.TZ_Monochrome[100]};
-    font-size: ${({ theme }) => theme.fontStyles.Caption9};
+    ${({ theme }) => theme.fontStyles.Caption9};
     line-height: 1.6;
     outline: none;
     resize: vertical;
@@ -49,7 +49,7 @@ export const MediaButton = styled.button`
     border: 0.6px solid ${colors.TZ_Monochrome[500]};
     border-radius: 8px;
     background: none;
-    font-size: ${({ theme }) => theme.fontStyles.Caption8};
+    ${({ theme }) => theme.fontStyles.Caption8};
     color: ${colors.TZ_Monochrome[500]};
     cursor: pointer;
 
