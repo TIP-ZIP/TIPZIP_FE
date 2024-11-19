@@ -17,7 +17,7 @@ export const colors: Colors = {
 
   TZ_Monochrome: {
     1000: '#000000',
-    900: '#2B2B2B',
+    900: '#192028',
     700: '#565C64',
     500: '#838991',
     300: '#CBD0D5',

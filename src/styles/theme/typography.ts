@@ -45,7 +45,7 @@ export const fontStyles: typography = {
     font-style: normal;
     font-size: 1.2rem;
     font-weight: 400;
-    line-height: normal;
+    line-height: 150%;
   `,
   Caption1: css`
     font-style: normal;
@@ -55,7 +55,7 @@ export const fontStyles: typography = {
   `,
   Caption2: css`
     font-style: normal;
-    font-size: 1.0rem;
+    font-size: 1rem;
     font-weight: 500;
     line-height: normal;
   `,
