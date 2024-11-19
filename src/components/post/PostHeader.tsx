@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header, BackButton, Title } from './PostHeader.styled';
+import * as S from './PostHeader.styled';
 
 interface PostHeaderProps {
     title: string;
@@ -19,10 +19,10 @@ const PostHeader: React.FC<PostHeaderProps> = ({ title, onBackClick }) => {
     };
 
     return (
-        <Header>
-            <BackButton onClick={handleBackClick} />
-            <Title>{title}</Title>
-        </Header>
+        <S.Header>
+            <S.BackButton onClick={handleBackClick} />
+            <S.Title>{title}</S.Title>
+        </S.Header>
     );
 };
 

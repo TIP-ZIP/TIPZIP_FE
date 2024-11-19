@@ -1,12 +1,6 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
-import {
-  CategorySelector,
-  CategoryChip,
-  TagContainer,
-  TagList,
-  TagChip
-} from './TagSelector.styled';
+import * as S from './TagSelector.styled';
 
 interface TagSelectorProps {
   category: string;
@@ -59,21 +53,21 @@ const TagSelector: React.FC<TagSelectorProps> = ({
 
   return (
     <>
-      <CategorySelector $showTags={showTags} $category={category}>
+      <S.CategorySelector $showTags={showTags} $category={category}>
         {CATEGORIES.map((cat) => (
-          <CategoryChip
+          <S.CategoryChip
             key={cat}
             $active={category === cat}
             onClick={() => handleCategoryClick(cat)}
           >
             {cat}
-          </CategoryChip>
+          </S.CategoryChip>
         ))}
-      </CategorySelector>
+      </S.CategorySelector>
       
       <AnimatePresence mode="wait">
         {showTags && category && (
-          <TagContainer
+          <S.TagContainer
             key={category}
             initial={{ opacity: 0, y: -20 }}  // y값 추가
             animate={{ opacity: 1, y: 0 }}    // height 대신 y 사용
@@ -83,18 +77,18 @@ const TagSelector: React.FC<TagSelectorProps> = ({
               ease: "easeInOut"              // 부드러운 이징 적용
             }}
           >
-            <TagList>
+            <S.TagList>
               {CATEGORY_TAGS[category]?.map((tag) => (
-                <TagChip
+                <S.TagChip
                   key={tag}
                   $active={tags.includes(tag)}
                   onClick={() => onTagSelect(tag)}
                 >
                   {tag}
-                </TagChip>
+                </S.TagChip>
               ))}
-            </TagList>
-          </TagContainer>
+            </S.TagList>
+          </S.TagContainer>
         )}
       </AnimatePresence>
     </>

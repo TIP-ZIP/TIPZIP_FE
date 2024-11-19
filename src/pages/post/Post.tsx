@@ -7,7 +7,7 @@ import PostEditor from '@components/post/PostEditor';
 import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
 
-import { Container, Form, StyledSubmitButton, ButtonContainer } from './Post.styled';
+import * as S from './Post.styled';
 
 interface PostFormProps {
   onSubmit: (post: Post) => void;
@@ -82,13 +82,13 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <Container>
+    <S.Container>
       <PostHeader 
         title="글 작성" 
         onBackClick={() => navigate('/')} 
       />
 
-      <Form onSubmit={handleSubmit}>
+      <S.Form onSubmit={handleSubmit}>
         <PostTitle 
           title={title}
           onChange={setTitle}
@@ -112,11 +112,11 @@ const Post: React.FC<PostFormProps> = ({ onSubmit }) => {
           onChange={setLinkUrl}
         />
 
-        <ButtonContainer>
-          <StyledSubmitButton type="submit">등록하기</StyledSubmitButton>
-        </ButtonContainer>
-      </Form>
-    </Container>
+        <S.ButtonContainer>
+          <S.StyledSubmitButton type="submit">등록하기</S.StyledSubmitButton>
+        </S.ButtonContainer>
+      </S.Form>
+    </S.Container>
   );
 };
 

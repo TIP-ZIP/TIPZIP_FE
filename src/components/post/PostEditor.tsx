@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-    ContentSection,
-    ContentLabel,
-    ContentTextarea,
-    MediaButtons,
-    MediaButton,
-    CameraIcon,
-    VideoIcon
-} from './PostEditor.styled';
+import * as S from './PostEditor.styled';
 
 interface PostEditorProps {
     content: string;
@@ -19,24 +11,24 @@ const PostEditor: React.FC<PostEditorProps> = ({
     onContentChange,
 }) => {
     return (
-        <ContentSection>
-            <ContentLabel>본문 내용</ContentLabel>
-            <ContentTextarea
+        <S.ContentSection>
+            <S.ContentLabel>본문 내용</S.ContentLabel>
+            <S.ContentTextarea
                 placeholder="~하게 작성하세요"
                 value={content}
                 onChange={(e) => onContentChange(e.target.value)}
             />
-            <MediaButtons>
-                <MediaButton>
-                    <CameraIcon />
+            <S.MediaButtons>
+                <S.MediaButton>
+                    <S.CameraIcon />
                     사진 선택
-                </MediaButton>
-                <MediaButton>
-                    <VideoIcon />
+                </S.MediaButton>
+                <S.MediaButton>
+                    <S.VideoIcon />
                     동영상 선택
-                </MediaButton>
-            </MediaButtons>
-        </ContentSection>
+                </S.MediaButton>
+            </S.MediaButtons>
+        </S.ContentSection>
     );
 };
 
