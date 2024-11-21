@@ -6,6 +6,7 @@ export const LoginModal: React.FC<{
   onClose: () => void;
   onLogin: () => void;
 }> = ({ showModal, onClose, onLogin }) => {
+  if (!showModal) return null;
   return (
     <Modal
       showModal={showModal}

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import grayprofile from '@assets/svgs/grayProfile.svg';
-import changeImg from '@assets/pngs/Plus.png';
+import changeImg from '@assets/svgs/Plus.svg';
 import edit from '@assets/svgs/Edit.svg';
 import shield from '@assets/svgs/shield.svg';
 
@@ -45,8 +45,8 @@ export const plusBtn = styled.div`
   right: 0.001rem;
   bottom: 0;
   width: 1.6rem;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
   height: 1.6rem;
-  transform: scale(1.6);
   cursor: pointer;
 `;
 

@@ -4,8 +4,11 @@ import close from '@assets/svgs/closemodal.svg';
 export const EditorContainer = styled.div`
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  min-width: 375px;
+  max-width: 768px;
   padding-top: 1.8rem;
   z-index: 1000;
   display: flex;

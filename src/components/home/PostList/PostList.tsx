@@ -1,6 +1,6 @@
 import React from 'react';
 import * as S from './PostList.Styled';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Post {
   id: number;
@@ -19,12 +19,13 @@ interface PostListProps {
 
 const PostList: React.FC<PostListProps> = ({ posts, handleBookmarkClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isMypage = location.pathname === '/mypage';
 
   return (
     <S.PostList $isMypage={isMypage}>
       {posts.map((post) => (
-        <S.PostItem key={post.id}>
+        <S.PostItem key={post.id} onClick={() => navigate(`/mypage/${post.id}`)}>
           <S.PostImage $isMypage={isMypage}>
             <S.ProfileContainer>
               <S.ProfileImage />

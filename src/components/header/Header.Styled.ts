@@ -25,15 +25,6 @@ export const ItemList = styled.div`
   justify-content: space-between;
 `;
 
-export const Logo = styled.div`
-  background: url(${logo});
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 9.23rem;
-  height: 2.13rem;
-  cursor: pointer;
-`;
-
 export const IconList = styled.div`
   display: flex;
   gap: 0.6rem;

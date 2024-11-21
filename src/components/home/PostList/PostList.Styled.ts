@@ -21,6 +21,7 @@ export const PostItem = styled.div`
   display: flex;
   position: relative;
   flex-direction: column;
+  cursor: pointer;
   gap: 0.8rem;
   overflow: hidden;
   text-align: left;

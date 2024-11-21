@@ -59,9 +59,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         />
       </S.ImgSection>
       <S.InfoSection>
-        <S.NameSection onClick={onNameClick}>
+        <S.NameSection>
           <S.NameBox>
-            <S.Name>{nickname}</S.Name>
+            <S.Name onClick={onNameClick}>{nickname}</S.Name>
             <S.Verfied />
           </S.NameBox>
           {!isOwnProfile && (

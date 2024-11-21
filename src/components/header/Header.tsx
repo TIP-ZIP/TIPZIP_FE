@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import * as S from './Header.Styled';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LogoutModal } from '@components/modal/LogoutModal';
+import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const logoColor = location.pathname === '/mypage' ? 'black' : '';
 
   // 추후 로그인 로직 추가
   const isLoggedIn = true;
@@ -26,7 +28,14 @@ const Header: React.FC = () => {
     <>
       <S.Container>
         <S.ItemList>
-          <S.Logo onClick={() => navigate('/home')} />
+          <div style={{ cursor: 'pointer' }}>
+            <TipZipLogo
+              onClick={() => navigate('/home')}
+              color={logoColor}
+              width='9.23rem'
+              height='2.13rem'
+            />
+          </div>
           <S.IconList>
             {isLoggedIn && location.pathname === '/mypage' && (
               <S.Icon onClick={handleLogoutClick}>
