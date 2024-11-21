@@ -67,7 +67,7 @@ export const ModalButton1 = styled.button`
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: 1rem;
+  top: 1.5rem;
   right: 1rem;
   width: 0.8rem;
   height: 0.8rem;
@@ -76,4 +76,5 @@ export const CloseButton = styled.button`
   background-size: contain;
   border: none;
   cursor: pointer;
+  transform: scale(1.2);
 `;

@@ -6,57 +6,7 @@ import SelectBar from '@components/home/SelectBar/SelectBar';
 import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
-
-const postsData = [
-  {
-    id: 1,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '꾸러기',
-    bookmarks: 102,
-    isFilled: false,
-  },
-  {
-    id: 2,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '뇽뇽맘',
-    bookmarks: 12,
-    isFilled: false,
-  },
-  {
-    id: 3,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '원채영',
-    bookmarks: 500,
-    isFilled: false,
-  },
-  {
-    id: 4,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '엄경호',
-    bookmarks: 1,
-    isFilled: false,
-  },
-  {
-    id: 5,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '김철흥',
-    bookmarks: 2,
-    isFilled: false,
-  },
-  {
-    id: 6,
-    title: '찜기 없이, 젓가락 하나로 만두 굽는 법',
-    image: 'Postexample.svg',
-    profileName: '마루누나',
-    bookmarks: 199,
-    isFilled: false,
-  },
-];
+import { postsData } from '@constants/PostData';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -149,7 +99,11 @@ const Home: React.FC = () => {
             <S.VerifyText $selectedVerify={selectedVerify}>인증된 유저만 보기</S.VerifyText>
           </S.SelectVerify>
         </S.PostInfoBar>
-        <PostList posts={posts} handleBookmarkClick={handleBookmarkClick} />
+        <PostList
+          posts={posts}
+          handleBookmarkClick={handleBookmarkClick}
+          $isMypage={window.location.pathname === '/mypage'}
+        />
       </S.Container>
     </S.HomeLayout>
   );
