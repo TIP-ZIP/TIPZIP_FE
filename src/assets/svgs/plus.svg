@@ -1,9 +1,5 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 36838">
-<circle id="Ellipse 9" cx="20" cy="20" r="20" fill="black"/>
-<g id="Group 36837">
-<path id="Vector 3" d="M20 10V30" stroke="white" stroke-width="1.4"/>
-<path id="Vector 4" d="M10 20L30 20" stroke="white" stroke-width="1.4"/>
-</g>
-</g>
+<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="8.00678" cy="8.00678" r="7.50678" fill="white" stroke="#FF4A22"/>
+<path d="M8.05669 12.2273C7.81375 12.2273 7.61681 12.0304 7.61681 11.7874V4.45617C7.61681 4.21324 7.81375 4.0163 8.05669 4.0163C8.29963 4.0163 8.49656 4.21324 8.49656 4.45617V11.7874C8.49656 12.0304 8.29963 12.2273 8.05669 12.2273Z" fill="#FF4A22"/>
+<path d="M3.51123 7.97458C3.51123 8.21752 3.70817 8.41446 3.95111 8.41446H11.8689C12.1118 8.41446 12.3087 8.21752 12.3087 7.97458C12.3087 7.73165 12.1118 7.53471 11.8689 7.53471H3.95111C3.70817 7.53471 3.51123 7.73165 3.51123 7.97458Z" fill="#FF4A22"/>
 </svg>

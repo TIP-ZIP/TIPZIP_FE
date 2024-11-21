@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from './PostList.Styled';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Post {
   id: number;
@@ -13,14 +14,19 @@ interface Post {
 interface PostListProps {
   posts: Post[];
   handleBookmarkClick: (postId: number) => void;
+  $isMypage: boolean;
 }
 
 const PostList: React.FC<PostListProps> = ({ posts, handleBookmarkClick }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isMypage = location.pathname === '/mypage';
+
   return (
-    <S.PostList>
+    <S.PostList $isMypage={isMypage}>
       {posts.map((post) => (
-        <S.PostItem key={post.id}>
-          <S.PostImage>
+        <S.PostItem key={post.id} onClick={() => navigate(`/mypage/${post.id}`)}>
+          <S.PostImage $isMypage={isMypage}>
             <S.ProfileContainer>
               <S.ProfileImage />
               <S.ProfileName>{post.profileName}</S.ProfileName>
@@ -33,7 +39,7 @@ const PostList: React.FC<PostListProps> = ({ posts, handleBookmarkClick }) => {
               <S.BookmarkCount>{post.bookmarks}</S.BookmarkCount>
             </S.BookmarkContainer>
           </S.PostImage>
-          <S.PostTitle>{post.title}</S.PostTitle>
+          <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
         </S.PostItem>
       ))}
     </S.PostList>

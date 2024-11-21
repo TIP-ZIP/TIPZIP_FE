@@ -32,7 +32,8 @@
       "@components/*": ["src/components/*"],
       "@layout/*": ["src/layout/*"],
       "@pages/*": ["src/pages/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@constants/*": ["src/constants/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리

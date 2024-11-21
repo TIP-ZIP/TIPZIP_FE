@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import logo from '@assets/svgs/Logo.svg';
 import bookmark from '@assets/svgs/Bookmark.svg';
 import profile from '@assets/svgs/Profile.svg';
+import logout from '@assets/svgs/Logout.svg';
 
 export const Container = styled.div`
   width: 100%;
@@ -24,21 +25,13 @@ export const ItemList = styled.div`
   justify-content: space-between;
 `;
 
-export const Logo = styled.div`
-  background: url(${logo});
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 9.23rem;
-  height: 2.13rem;
-  cursor: pointer;
-`;
-
 export const IconList = styled.div`
   display: flex;
-  gap: 0.4rem;
-  width: 4.4rem;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 7.2rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 `;
 export const Icon = styled.div`
   display: flex;
@@ -46,6 +39,16 @@ export const Icon = styled.div`
   height: 2rem;
   justify-content: center;
   align-items: center;
+`;
+
+export const LogoutIcon = styled.div`
+  background: url(${logout});
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 1.58rem;
+  height: 1.54rem;
+  cursor: pointer;
+  transform: scale(1.2);
 `;
 
 export const BookmarkIcon = styled.div`
