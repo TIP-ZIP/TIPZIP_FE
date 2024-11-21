@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '@pages/home/Home';
 import Layout from './layout/Layout';
+import Post from '@pages/post/Post';
 import SearchPost from '@pages/search/SearchPost';
 import OnBoarding from '@pages/OnBoarding/OnBoarding';
 import Login from '@pages/Login/Login';
@@ -18,6 +19,7 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/search' element={<SearchPost />} />
           <Route path='/mypage' element={<Mypage />} />
+          <Route path='/post/new' element={<Post />} />
         </Route>
       </Routes>
     </BrowserRouter>
