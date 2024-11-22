@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import * as S from './Header.Styled';
 import { useNavigate, useLocation } from 'react-router-dom';
+
+import * as S from './Header.Styled';
+
 import { LogoutModal } from '@components/modal/LogoutModal';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const logoColor = location.pathname === '/mypage' ? 'black' : '';
 
   // 추후 로그인 로직 추가
