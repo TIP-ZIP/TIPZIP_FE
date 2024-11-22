@@ -7,19 +7,39 @@ import linkIcon from '@assets/svgs/link.svg?react';
 
 export const PostDetailWrapper = styled.div`
   width: 100%;
-  padding-top: 2rem;
+  padding-top: 6rem;
   padding-bottom: 3.6rem;
 `;
 
 // Post Detail Header
 export const PostDetailHeader = styled.div`
   width: 100%;
-  padding: 0 1.6rem;
-  margin-bottom: 2rem;
+  max-width: 768px;
+  min-width: 375px;
+  padding: 1.6rem;
+
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${colors.TZ_Monochrome[0]};
 `;
 
 export const LeftArrow = styled(leftArrow)`
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 1.6rem;
+
   cursor: pointer;
+`;
+
+export const HeaderTitle = styled.h2`
+  ${({ theme }) => theme.fontStyles.Header2}
+  color: ${colors.TZ_Monochrome[1000]};
 `;
 
 // Main Section

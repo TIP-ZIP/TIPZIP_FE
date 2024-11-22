@@ -97,6 +97,7 @@ const PostDetail: React.FC = () => {
     <S.PostDetailWrapper>
       <S.PostDetailHeader>
         <S.LeftArrow onClick={() => navigate(-1)} />
+        <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
       </S.PostDetailHeader>
       <S.PostDetailMain>
         {/* Intro Section */}
