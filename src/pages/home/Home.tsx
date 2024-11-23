@@ -7,6 +7,7 @@ import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
 import { postsData } from '@constants/PostData';
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,8 @@ const Home: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState(postsData);
   const [showModal, setShowModal] = useState(true);
+  const [isClicked, setIsClicked] = useState(false);
+  const navigate = useNavigate();
   const categories = [
     '정리/공간 활용',
     '주방',
@@ -72,6 +75,10 @@ const Home: React.FC = () => {
     );
   };
 
+  const handlePlusClick = () => {
+    setIsClicked((prev) => !prev);
+  };
+
   return (
     <S.HomeLayout>
       <LoginModalContainer
@@ -105,6 +112,13 @@ const Home: React.FC = () => {
           $isMypage={window.location.pathname === '/mypage'}
         />
       </S.Container>
+      {isClicked && (
+        <S.OrangeBubble onClick={() => navigate('/post/new')}>
+          <S.Whiteedit />
+          <S.BubbleText>나의 팁 공유하기</S.BubbleText>
+        </S.OrangeBubble>
+      )}
+      <S.PlusBtn $isClicked={isClicked} onClick={handlePlusClick} />
     </S.HomeLayout>
   );
 };
