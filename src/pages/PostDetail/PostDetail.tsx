@@ -14,6 +14,7 @@ interface PostDetail {
   post_id: number;
   profile_img?: string;
   author: string;
+  certificated_user: boolean;
   created_at: string;
   title: string;
   category: string;
@@ -105,7 +106,10 @@ const PostDetail: React.FC = () => {
           <S.PostInfosContainer>
             <S.PostAuthorDate>
               <S.ProfileImage src={postDetail?.profile_img} />
-              <S.AuthorName>{postDetail?.author}</S.AuthorName>
+              <S.NameBadgeContainer>
+                <S.AuthorName>{postDetail?.author}</S.AuthorName>
+                {postDetail?.certificated_user && <S.CertificationBadge />}
+              </S.NameBadgeContainer>
               <span>•</span>
               <S.PostDate>{postDetail?.created_at}</S.PostDate>
             </S.PostAuthorDate>

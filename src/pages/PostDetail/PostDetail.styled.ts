@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { colors } from '@styles/theme/colors';
 
 import leftArrow from '@assets/svgs/ArrowLeft.svg?react';
+import certificationBadge from '@assets/svgs/certificationBadge.svg?react';
 import bookMark from '@assets/svgs/EmptyBlackBookmark.svg?react';
 import linkIcon from '@assets/svgs/link.svg?react';
 
@@ -80,9 +81,20 @@ export const ProfileImage = styled.img`
   border-radius: 30px;
 `;
 
+export const NameBadgeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+`;
+
 export const AuthorName = styled.span`
   ${({ theme }) => theme.fontStyles.Caption10}
   color: ${colors.TZ_Monochrome[1000]};
+`;
+
+export const CertificationBadge = styled(certificationBadge)`
+  width: 1.6rem;
+  height: 1.6rem;
 `;
 
 export const PostDate = styled.span`
