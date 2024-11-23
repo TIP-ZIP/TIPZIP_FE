@@ -3,7 +3,7 @@ import { colors } from '@styles/theme/colors';
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 
   display: flex;
   flex-direction: column;

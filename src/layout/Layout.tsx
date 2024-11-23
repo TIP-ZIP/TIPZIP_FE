@@ -1,12 +1,13 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { matchPath, Outlet, useLocation } from 'react-router-dom';
 import * as S from './Layout.Styled';
 import Header from '@components/header/Header';
 
 export default function Layout() {
   const location = useLocation();
 
-  const hideHeaderPaths = ['/login', '/search', '/', '/set-username'];
-  const shouldHideHeader = hideHeaderPaths.includes(location.pathname);
+  const hideHeaderPaths = ['/', '/login', '/set-username', '/search', '/post'];
+  const shouldHideHeader =
+    hideHeaderPaths.includes(location.pathname) || !!matchPath('/post/:id', location.pathname);
 
   return (
     <S.Container $shouldHideHeader={shouldHideHeader}>

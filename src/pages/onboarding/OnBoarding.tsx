@@ -10,7 +10,7 @@ const OnBoarding: React.FC = () => {
   useEffect(() => {
     // 온보딩 Timer
     const timer = setTimeout(() => {
-      navigate('/login');
+      navigate('/home');
     }, 3000);
 
     return () => clearTimeout(timer);
