@@ -60,18 +60,20 @@ const Mypage: React.FC = () => {
         onIntroductionClick={handleIntroductionClick}
         isOwnProfile={false}
       />
-      <S.GrayLine />
-      <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />
-      <S.Text>{nickname} 님만의 꿀팁을 공유해주세요!</S.Text>
-      <EditorSection
-        showEditor={showEditor}
-        editorType={editorType}
-        nickname={nickname}
-        introduction={introduction}
-        handleNicknameChange={handleNicknameChange}
-        handleIntroductionChange={handleIntroductionChange}
-        closeEditor={closeEditor}
-      />
+      <S.PostWrapper>
+        <S.GrayLine />
+        <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />
+        <S.Text>{nickname} 님만의 꿀팁을 공유해주세요!</S.Text>
+        <EditorSection
+          showEditor={showEditor}
+          editorType={editorType}
+          nickname={nickname}
+          introduction={introduction}
+          handleNicknameChange={handleNicknameChange}
+          handleIntroductionChange={handleIntroductionChange}
+          closeEditor={closeEditor}
+        />
+      </S.PostWrapper>
     </S.Container>
   );
 };

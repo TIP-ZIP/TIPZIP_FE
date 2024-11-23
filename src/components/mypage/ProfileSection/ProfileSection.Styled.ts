@@ -10,6 +10,7 @@ export const ProfileContainer = styled.div`
   align-items: center;
   gap: 4.4rem;
   padding: 2.7rem 2.5rem 3.1rem 3.1rem;
+  width: 100%;
 `;
 
 export const Profile = styled.img`
@@ -111,6 +112,7 @@ export const IntroduceSection = styled.div`
   padding-left: 0.8rem;
   gap: 0.6rem;
   height: 2.2rem;
+  box-sizing: border-box;
   border-radius: 30px;
   background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
 `;

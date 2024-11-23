@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 export const PostSection = styled.div`
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
   gap: 2.4rem;
 `;
 
@@ -26,5 +26,5 @@ export const PostInfo = styled.div`
   align-items: center;
   margin-top: 2rem;
   width: 100%;
-  padding-left: 2.6rem;
+  padding-left: 2.1rem;
 `;

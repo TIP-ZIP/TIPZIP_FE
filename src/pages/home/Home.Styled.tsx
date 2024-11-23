@@ -14,7 +14,7 @@ export const HomeLayout = styled.div`
 `;
 
 export const Container = styled.div`
-  padding: 0 2rem;
+  /* padding: 0 2rem; */
 `;
 
 export const PostInfoBar = styled.div`
