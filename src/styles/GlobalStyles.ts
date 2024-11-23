@@ -55,6 +55,10 @@ const GlobalStyles = createGlobalStyle`
         border: 0;
         background: transparent;
         cursor: pointer;
+
+        &:disabled {
+            pointer-events: none;
+        }
     }
 `;
 
