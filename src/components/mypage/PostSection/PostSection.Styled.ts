@@ -3,9 +3,9 @@ import styled from 'styled-components';
 export const PostSection = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  padding-left: 2.2rem;
-  padding-right: 0.9rem;
+
   gap: 2.4rem;
 `;
 
@@ -23,6 +23,8 @@ export const PostCount = styled.span`
 export const PostInfo = styled.div`
   gap: 0.4rem;
   display: flex;
-  align-self: flex-start;
+  align-items: center;
   margin-top: 2rem;
+  width: 100%;
+  padding-left: 2.6rem;
 `;

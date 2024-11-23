@@ -7,16 +7,17 @@ import empty from '@assets/svgs/EmptyBookmark.svg';
 import profileImg from '@assets/svgs/defaultProfile.svg';
 
 export const PostList = styled.div<{ $isMypage?: boolean }>`
-  display: flex;
-  max-height: 100%;
   display: grid;
   position: ${({ $isMypage }) => ($isMypage ? 'relative' : 'absolute')};
   grid-template-columns: repeat(2, 1fr);
-  gap: ${({ $isMypage }) => ($isMypage ? '2rem 2.3rem' : '2.3rem 1.1rem')};
+  gap: 2.3rem 1.1rem;
   margin-top: ${({ $isMypage }) => ($isMypage ? '0' : '8.4rem')};
   padding-bottom: ${({ $isMypage }) => ($isMypage ? '0' : '6.2rem')};
+  max-height: 100%;
+  @media (min-width: 768px) {
+    ${({ $isMypage }) => $isMypage && `grid-template-columns: repeat(3, 1fr);`}
+  }
 `;
-
 export const PostItem = styled.div`
   display: flex;
   position: relative;
@@ -28,21 +29,38 @@ export const PostItem = styled.div`
 `;
 
 export const PostImage = styled.div<{ $isMypage?: boolean }>`
-  width: ${({ $isMypage }) => ($isMypage ? '14.4rem' : '16rem')};
-  height: ${({ $isMypage }) => ($isMypage ? '14.4rem' : '16rem')};
+  width: 16rem;
+  height: 16rem;
   border-radius: 0.6rem;
   background: url(${postImg});
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
   object-fit: cover;
+
+  @media (min-width: 768px) {
+    ${({ $isMypage }) =>
+      $isMypage &&
+      `
+      width: 13rem;
+      height: 13rem;
+    `}
+  }
 `;
 
 export const PostTitle = styled.span<{ $isMypage?: boolean }>`
   width: 16rem;
   height: 3.6rem;
   ${fontStyles.Body5}
-  font-weight: ${({ $isMypage }) => ($isMypage ? '500' : '400')};
+  font-weight: 400;
+  @media (min-width: 768px) {
+    ${({ $isMypage }) =>
+      $isMypage &&
+      `
+      width: 13rem;
+      font-size: 1rem;
+    `}
+  }
 `;
 
 export const Plus = styled.div`

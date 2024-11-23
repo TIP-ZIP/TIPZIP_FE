@@ -22,6 +22,7 @@ const ZipContainer: React.FC<ZipContainerProps> = ({ postId }) => {
         { id: 1, name: '갓생 살기', postCount: 3, isScrapped: false },
         { id: 2, name: '아기 사자의 하루', postCount: 5, isScrapped: false },
         { id: 3, name: '멋쟁이사자처럼', postCount: 2, isScrapped: false },
+        { id: 4, name: '멋쟁이사자처럼', postCount: 2, isScrapped: false },
       ];
       setFolders(folderData);
     };

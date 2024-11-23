@@ -34,9 +34,20 @@ const ScrapEditorSection: React.FC<ScrapEditorSectionProps> = ({
     };
   }, [closeEditor]);
 
+  useEffect(() => {
+    if (showEditor) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showEditor]);
+
   return (
     showEditor && (
-      <div ref={editorRef}>
+      <S.EditorWrapper ref={editorRef} $showEditor={showEditor}>
         <Editor onClose={closeEditor}>
           <S.EditorContainer>
             <S.ScrapContainer>
@@ -52,7 +63,7 @@ const ScrapEditorSection: React.FC<ScrapEditorSectionProps> = ({
             <ZipContainer postId={postid} />
           </S.EditorContainer>
         </Editor>
-      </div>
+      </S.EditorWrapper>
     )
   );
 };

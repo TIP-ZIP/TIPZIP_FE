@@ -9,6 +9,7 @@ export const ZipContainer = styled.div`
   max-height: 36.4rem;
   padding-bottom: 3.1rem;
   box-sizing: border-box;
+  overflow-y: auto;
 `;
 
 export const ZipBar = styled.div`

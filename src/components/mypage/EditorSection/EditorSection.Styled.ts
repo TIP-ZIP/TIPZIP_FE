@@ -1,4 +1,26 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+
+const slideUp = keyframes`
+  0% {
+    transform: translateY(50rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+export const EditorWrapper = styled.div<{ $showEditor: boolean }>`
+  animation: ${(props) =>
+    props.$showEditor
+      ? css`
+          ${slideUp} 1s ease-out;
+        `
+      : 'none'};
+  height: 100%;
+  max-height: 50rem;
+`;
 
 export const EditorContainer = styled.div`
   position: relative;
