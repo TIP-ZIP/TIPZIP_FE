@@ -3,14 +3,13 @@ import { colors } from '@styles/theme/colors';
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  padding-top: 10.5rem;
+  padding-bottom: 2rem;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  padding-top: 10.5rem;
-  padding-bottom: 2rem;
 `;
 
 export const Header = styled.div`

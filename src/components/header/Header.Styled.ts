@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import logo from '@assets/svgs/Logo.svg';
 import bookmark from '@assets/svgs/Bookmark.svg';
 import profile from '@assets/svgs/Profile.svg';
 import logout from '@assets/svgs/Logout.svg';

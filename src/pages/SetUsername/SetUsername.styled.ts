@@ -3,9 +3,10 @@ import { colors } from '@styles/theme/colors';
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   padding: 0 2.2rem;
   padding-top: 4.8rem;
+  padding-bottom: 1.6rem;
 
   display: flex;
   flex-direction: column;
@@ -80,18 +81,49 @@ export const NicknameLength = styled.span`
   right: 1.2rem;
 `;
 
-export const InvalidNotice = styled.p`
-  padding-left: 1rem;
+export const TotalCheckContainer = styled.div`
+  width: 100%;
+  padding: 0 0.6rem;
   margin-top: 1rem;
 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
+export const InvalidCheckContainer = styled.div`
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+export const DuplicateCheckButton = styled.button`
+  width: fit-content;
+  padding: 0;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid ${colors.TZ_Monochrome[700]};
+
+  white-space: nowrap;
+
+  ${({ theme }) => theme.fontStyles.Body4}
+  color: ${colors.TZ_Monochrome[700]};
+
+  &:disabled {
+    opacity: 50%;
+  }
+
+  transition: opacity 0.12s;
+`;
+
+export const InvalidNotice = styled.p`
   color: ${colors.TZ_Signature[500]};
   ${({ theme }) => theme.fontStyles.Caption1}
 `;
 
 export const Restriction = styled.div`
   width: 100%;
-  margin-top: 1rem;
-  padding-left: 1rem;
 
   ${({ theme }) => theme.fontStyles.Caption1}
   font-weight: 400;
@@ -102,7 +134,6 @@ export const Restriction = styled.div`
 export const SubmitButton = styled.button<{ disabled: boolean }>`
   width: 100%;
   height: 4.8rem;
-  margin-bottom: 1.6rem;
   border-radius: 10px;
 
   display: flex;

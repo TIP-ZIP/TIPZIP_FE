@@ -25,7 +25,7 @@ const PostList: React.FC<PostListProps> = ({ posts, handleBookmarkClick }) => {
   return (
     <S.PostList $isMypage={isMypage}>
       {posts.map((post) => (
-        <S.PostItem key={post.id} onClick={() => navigate(`/mypage/${post.id}`)}>
+        <S.PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
           <S.PostImage $isMypage={isMypage}>
             <S.ProfileContainer>
               <S.ProfileImage />
