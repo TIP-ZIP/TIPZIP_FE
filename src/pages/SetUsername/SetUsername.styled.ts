@@ -3,7 +3,7 @@ import { colors } from '@styles/theme/colors';
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   padding: 0 2.2rem;
   padding-top: 4.8rem;
   padding-bottom: 1.6rem;

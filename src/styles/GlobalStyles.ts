@@ -4,6 +4,10 @@ import reset from 'styled-reset';
 const GlobalStyles = createGlobalStyle`
     ${reset}
 
+    :root  {
+        --vh: 100%;
+    }
+
     *{
         box-sizing: border-box;
     }
@@ -28,18 +32,20 @@ const GlobalStyles = createGlobalStyle`
     }
 
     body{
+        display: flex; 
+        flex-direction: column;
+        justify-content: center;
+
         font-family: 'Pretendard';
         line-height: 1;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        display: flex; 
-        flex-direction: column;
-        justify-content: center; 
+        
+        &::-webkit-scrollbar {
+            display: none; /* 웹 브라우저에서 스크롤 바 숨기기 */
+        }
     }
 
-    body::-webkit-scrollbar {
-        display: none; /* 웹 브라우저에서 스크롤 바 숨기기 */
-    }
 
     ol, ul{
         list-style: none;

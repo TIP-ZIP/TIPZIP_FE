@@ -10,8 +10,17 @@ import SearchPost from '@pages/search/SearchPost';
 import Post from '@pages/post/Post';
 import PostDetail from '@pages/PostDetail/PostDetail';
 import Mypage from '@pages/mypage/Mypage';
+import { useEffect } from 'react';
+import setVhProperty from './utils/setVhProperty';
 
 function App() {
+  useEffect(() => {
+    setVhProperty();
+
+    window.addEventListener('resize', setVhProperty);
+    return () => window.removeEventListener('resize', setVhProperty);
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
