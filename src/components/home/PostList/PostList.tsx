@@ -34,7 +34,10 @@ const PostList: React.FC<PostListProps> = ({ posts, handleBookmarkClick }) => {
             <S.BookmarkContainer>
               <S.BookmarkIcon
                 $isFilled={post.isFilled}
-                onClick={() => handleBookmarkClick(post.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleBookmarkClick(post.id);
+                }}
               />
               <S.BookmarkCount>{post.bookmarks}</S.BookmarkCount>
             </S.BookmarkContainer>

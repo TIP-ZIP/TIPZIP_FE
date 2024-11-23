@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EditorSection from '@components/mypage/EditorSection/EditorSection';
 import axios from 'axios';
 
 import * as S from './PostDetail.styled';
+import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 
 interface PostImage {
   image_id: number;
@@ -36,6 +38,7 @@ const PostDetail: React.FC = () => {
 
   // const [scrapCount, setScrapCount] = useState<number | undefined>(postDetail?.scrap_count); // 추후 API 연동 시 사용
   const [isScrapped, setIsScrapped] = useState<boolean | undefined>(postDetail?.is_scrapped);
+  const [showEditor, setShowEditor] = useState(false);
 
   const navigate = useNavigate();
 
@@ -72,6 +75,12 @@ const PostDetail: React.FC = () => {
       //   setIsScrapped((prev) => !prev);
       //   setScrapCount(updatedCount);
       // }
+
+      // 모달 표시
+      setShowEditor(true);
+
+      // 일정 시간 후 모달 숨기기
+      // setTimeout(() => setShowEditor(false), 3000);
     } catch (error) {
       console.error('Error updating scrap: ', error);
     }
@@ -93,6 +102,10 @@ const PostDetail: React.FC = () => {
 
     fetchPostDetail();
   }, []);
+
+  const closeEditor = () => {
+    setShowEditor(false);
+  };
 
   return (
     <S.PostDetailWrapper>
@@ -146,6 +159,13 @@ const PostDetail: React.FC = () => {
           </S.PostLinkButton>
         </S.PostDetailFooter>
       </S.PostDetailMain>
+      <ScrapEditorSection
+        showEditor={showEditor}
+        closeEditor={closeEditor}
+        thumbnail={postDetail?.thumbnail_url}
+        category={postDetail?.category}
+        postid={postDetail?.post_id}
+      />
     </S.PostDetailWrapper>
   );
 };
