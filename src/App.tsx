@@ -12,6 +12,7 @@ import PostDetail from '@pages/PostDetail/PostDetail';
 import Mypage from '@pages/mypage/Mypage';
 import { useEffect } from 'react';
 import setVhProperty from './utils/setVhProperty';
+import Scrap from '@pages/scrap/Scrap';
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
           <Route path='/post/new' element={<Post />} />
           <Route path='/post/:id' element={<PostDetail />} />
           <Route path='/mypage' element={<Mypage />} />
+          <Route path='/scrap' element={<Scrap />} />
         </Route>
       </Routes>
     </BrowserRouter>
