@@ -16,24 +16,43 @@ const categories = [
 ];
 
 const Scrap: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = React.useState<number | null>(null);
+  const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
+
   return (
     <Styled.Container>
-      {/* Header */}
       <Styled.Header>
         <Styled.Title>스크랩 ZIP</Styled.Title>
         <Styled.TabContainer>
           <Styled.TabBackground />
-          <Styled.ActiveTab />
-          <Styled.TabTextActive>카테고리 스크랩</Styled.TabTextActive>
-          <Styled.TabTextInactive>나만의 스크랩</Styled.TabTextInactive>
+          <Styled.ActiveTab isPersonal={activeTab === 'personal'} />
+          <Styled.TabTextActive
+            onClick={() => setActiveTab('category')}
+            isActive={activeTab === 'category'}
+          >
+            카테고리 스크랩
+          </Styled.TabTextActive>
+          <Styled.TabTextInactive
+            onClick={() => setActiveTab('personal')}
+            isActive={activeTab === 'personal'}
+          >
+            나만의 스크랩
+          </Styled.TabTextInactive>
         </Styled.TabContainer>
       </Styled.Header>
 
       {/* Categories */}
       <Styled.CategoriesContainer>
         {categories.map((category, index) => (
-          <Styled.CategoryCard key={index}>
-            <Styled.CardBackground src={ScrapFolder} alt="folder" />
+          <Styled.CategoryCard
+            key={index}
+            onClick={() => setSelectedCategory(index)}
+          >
+            <Styled.CardBackground
+              src={ScrapFolder}
+              alt="folder"
+              
+            />
             <Styled.CategoryName>{category.name}</Styled.CategoryName>
             <Styled.Badge>
               <Styled.BadgeIcon src={ColoredBookmark} alt="badge" />

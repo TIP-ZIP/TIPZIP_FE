@@ -42,32 +42,38 @@ export const TabBackground = styled.div`
   border-radius: 30px;
 `;
 
-export const ActiveTab = styled.div`
-  width: 6.5rem;
+export const ActiveTab = styled.div<{ isPersonal: boolean }>`
   height: 2.2rem;
   position: absolute;
   background: #ff4a22;
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.15);
   border-radius: 30px;
   margin: 0.3rem 0.4rem;
+  transition: all 0.3s ease-in-out;
+  width: ${props => props.isPersonal ? '5.5rem' : '6.5rem'};
+  transform: translateX(${props => props.isPersonal ? '6.2rem' : '0'});
 `;
 
-export const TabTextActive = styled.div`
+export const TabTextActive = styled.div<{ isActive: boolean }>`
   position: absolute;
   left: 1.1rem;
   top: 0.9rem;
-  color: white;
+  color: ${props => props.isActive ? 'white' : '#838991'};
   ${({ theme }) => theme.fontStyles.Caption4};
   word-wrap: break-word;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
 `;
 
-export const TabTextInactive = styled.div`
+export const TabTextInactive = styled.div<{ isActive: boolean }>`
   position: absolute;
   left: 7.2rem;
   top: 0.9rem;
-  color: #838991;
+  color: ${props => props.isActive ? 'white' : '#838991'};
   ${({ theme }) => theme.fontStyles.Caption4};
   word-wrap: break-word;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
 `;
 
 // Categories
