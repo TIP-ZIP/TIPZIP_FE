@@ -1,7 +1,6 @@
 import React from 'react';
 import * as S from './CategoryScrap.Styled';
-import ScrapFolder from '../../assets/svgs/scrapFolder.svg';
-import ColoredBookmark from '../../assets/svgs/ColoredBookmark.svg';
+import ScrapCard from './ScrapFolder';
 
 const dummyCategories = [
     { name: '로컬', count: '30' },
@@ -20,19 +19,15 @@ const CategoryScrap: React.FC = () => {
 
     return (
         <S.CategoriesContainer>
-        {dummyCategories.map((category, index) => (
-            <S.CategoryCard
-            key={index}
-            onClick={() => setSelectedCategory(index)}
-            >
-            <S.CardBackground src={ScrapFolder} alt="folder" />
-            <S.CategoryName>{category.name}</S.CategoryName>
-            <S.Badge>
-                <S.BadgeIcon src={ColoredBookmark} alt="badge" />
-                <S.BadgeText>{category.count}</S.BadgeText>
-            </S.Badge>
-            </S.CategoryCard>
-        ))}
+            {dummyCategories.map((category, index) => (
+                <ScrapCard
+                    key={index}
+                    name={category.name}
+                    count={category.count}
+                    type="category"
+                    onClick={() => setSelectedCategory(index)}
+                />
+            ))}
         </S.CategoriesContainer>
     );
 };

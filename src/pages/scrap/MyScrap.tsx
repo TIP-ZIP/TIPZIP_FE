@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import * as S from './MyScrap.Styled';
-import PersonalScrapFolder from '@assets/svgs/personalScrapFolder.svg'
-import ColoredBookmark from '@assets/svgs/ColoredBookmark.svg'
 import ScrapOption from '@assets/svgs/scrapOption.svg'
 import ScrapOptionDropdown from '@assets/svgs/scrapOptionDropdown.svg'
 import DeleteWhite from '@assets/svgs/DeleteWhite.svg'
 import EditWhite from '@assets/svgs/EditWhite.svg'
-import ScrapDelete from '@assets/svgs/ScrapDelete.svg'
+import ScrapCard from './ScrapFolder';
 
 const dummyCategories = [
     { name: '갓생 살기', count: '13' },
@@ -43,18 +41,13 @@ const MyScrap: React.FC = () => {
             
             <S.PersonalContainer>
                 {dummyCategories.map((category, index) => (
-                    <S.CategoryCard
-                    key={index}
-                    onClick={() => setSelectedCategory(index)}
-                    >
-                    <S.DeleteIcon src={ScrapDelete} alt="delete" />
-                    <S.CardBackground src={PersonalScrapFolder} alt="folder" />
-                    <S.CategoryName>{category.name}</S.CategoryName>
-                    <S.Badge>
-                        <S.BadgeIcon src={ColoredBookmark} alt="badge" />
-                        <S.BadgeText>{category.count}</S.BadgeText>
-                    </S.Badge>
-                    </S.CategoryCard>
+                    <ScrapCard
+                        key={index}
+                        name={category.name}
+                        count={category.count}
+                        type="personal"
+                        onClick={() => setSelectedCategory(index)}
+                    />
                 ))}
             </S.PersonalContainer>
         </S.Container>
