@@ -1,7 +1,24 @@
 import React from 'react';
 import * as Styled from './Scrap.Styled';
-import CategoryScrap from './CategoryScrap';
-import MyScrap from './MyScrap';
+import ScrapFolderView from './ScrapFolderView';
+
+const categoryDummyData = [
+  { name: '로컬', count: '30' },
+  { name: '주방', count: '31' },
+  { name: '건강', count: '12' },
+  { name: '건강', count: '41' },
+  { name: '기타', count: '30' },
+  { name: '정리 / 공간 활용', count: '13' },
+  { name: '청소', count: '52' },
+  { name: '청소', count: '40' },
+  { name: '여가 & 휴식', count: '55' },
+];
+
+const personalDummyData = [
+  { name: '갓생 살기', count: '13' },
+  { name: '아기 사자의 하루', count: '13' },
+  { name: '멋쟁이 사자처럼!', count: '13' },
+];
 
 const Scrap: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
@@ -28,7 +45,10 @@ const Scrap: React.FC = () => {
         </Styled.TabContainer>
       </Styled.Header>
       
-      {activeTab === 'category' ? <CategoryScrap /> : <MyScrap />}
+      <ScrapFolderView 
+        type={activeTab}
+        categories={activeTab === 'category' ? categoryDummyData : personalDummyData}
+      />
     </Styled.Container>
   );
 };

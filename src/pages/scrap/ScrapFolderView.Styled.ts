@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 
-
-// Categories
 export const Container = styled.div`
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 `;
 
 export const OptionHeaderContainer = styled.div`
-    width: 100%;
-    padding: 2.1rem 3.4rem 0;
+  width: 100%;
+  padding: 2.1rem 3.4rem 0;
 `;
 
-export const PersonalContainer = styled.div`
-    padding: 2.1rem 3.4rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13.56rem, 1fr));
-    gap: 3.5rem;
-    justify-items: center;
+export const FoldersContainer = styled.div`
+  padding: 2.1rem 3.4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13.56rem, 1fr));
+  gap: 3.5rem;
+  justify-items: center;
 `;
+
 
 export const CategoryCard = styled.div`
     width: 13.56rem;

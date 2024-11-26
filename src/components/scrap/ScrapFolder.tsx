@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './ScrapFolder.Styled';
+import * as S from '../../pages/scrap/ScrapFolder.Styled';
 import PersonalScrapFolderImage from '@assets/svgs/personalScrapFolder.svg';
 import ScrapFolderImage from '@assets/svgs/scrapFolder.svg';
 import ColoredBookmark from '@assets/svgs/ColoredBookmark.svg';
