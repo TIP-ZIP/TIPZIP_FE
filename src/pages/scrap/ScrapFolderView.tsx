@@ -5,6 +5,7 @@ import ScrapOptionDropdown from '@assets/svgs/scrapOptionDropdown.svg'
 import DeleteWhite from '@assets/svgs/DeleteWhite.svg'
 import EditWhite from '@assets/svgs/EditWhite.svg'
 import ScrapCard from '../../components/scrap/ScrapFolder';
+import { useNavigate } from 'react-router-dom';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -12,6 +13,7 @@ interface ScrapFolderViewProps {
 }
 
 const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: initialCategories }) => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -35,6 +37,11 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
       prevCategories.filter((_, index) => index !== indexToDelete)
     );
     setIsDeleteMode(false);
+  };
+
+  const handleFolderClick = (index: number) => {
+    setSelectedCategory(index);
+    navigate(`/scrap/${type}/${categories[index].name}`);
   };
 
   return (
@@ -72,7 +79,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
             name={category.name}
             count={category.count}
             type={type}
-            onClick={() => setSelectedCategory(index)}
+            onClick={() => handleFolderClick(index)}
             isDeleteMode={isDeleteMode}
             onDelete={() => handleFolderDelete(index)}
           />
