@@ -13,7 +13,7 @@ export const OptionHeaderContainer = styled.div`
 export const FoldersContainer = styled.div`
   padding: 2.1rem 3.4rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13.56rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(13.56rem, 1fr));
   gap: 3.5rem;
   justify-items: center;
 `;

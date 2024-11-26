@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './ScrapFolderView.Styled';
 import ScrapOption from '@assets/svgs/scrapOption.svg'
 import ScrapOptionDropdown from '@assets/svgs/scrapOptionDropdown.svg'
@@ -11,9 +11,31 @@ interface ScrapFolderViewProps {
   categories: Array<{ name: string; count: string }>;
 }
 
-const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories }) => {
+const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: initialCategories }) => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [categories, setCategories] = useState(initialCategories);
+
+  useEffect(() => {
+    setCategories(initialCategories);
+  }, [initialCategories]);
+
+  const handleDeleteClick = () => {
+    if (isDeleteMode) {
+      setIsDeleteMode(false);
+    } else {
+      setIsDeleteMode(true);
+    }
+    setIsDropdownOpen(false);
+  };
+
+  const handleFolderDelete = (indexToDelete: number) => {
+    setCategories(prevCategories => 
+      prevCategories.filter((_, index) => index !== indexToDelete)
+    );
+    setIsDeleteMode(false);
+  };
 
   return (
     <S.Container>
@@ -25,7 +47,10 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories }) =
               <S.DropdownMenu>
                 <S.DropdownIcon src={ScrapOptionDropdown} alt="dropdown" />
                 <S.IconLeft>
-                  <S.IconButton>
+                  <S.IconButton onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick();
+                  }}>
                     <S.Icon src={DeleteWhite} alt="delete" />
                   </S.IconButton>
                 </S.IconLeft>
@@ -48,6 +73,8 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories }) =
             count={category.count}
             type={type}
             onClick={() => setSelectedCategory(index)}
+            isDeleteMode={isDeleteMode}
+            onDelete={() => handleFolderDelete(index)}
           />
         ))}
       </S.FoldersContainer>

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from '../../pages/scrap/ScrapFolder.Styled';
+import * as S from './ScrapFolder.Styled';
 import PersonalScrapFolderImage from '@assets/svgs/personalScrapFolder.svg';
 import ScrapFolderImage from '@assets/svgs/scrapFolder.svg';
 import ColoredBookmark from '@assets/svgs/ColoredBookmark.svg';
@@ -10,13 +10,22 @@ interface ScrapFolderProps {
   count: string;
   type: 'personal' | 'category';
   onClick: () => void;
+  isDeleteMode?: boolean;
+  onDelete?: () => void;
 }
 
-const ScrapFolder: React.FC<ScrapFolderProps> = ({ name, count, type, onClick }) => {
+const ScrapFolder: React.FC<ScrapFolderProps> = ({ name, count, type, onClick, isDeleteMode = false, onDelete }) => {
   return (
     <S.CategoryFolder onClick={onClick}>
-      {type === 'personal' && (
-        <S.DeleteIcon src={ScrapDelete} alt="delete" />
+      {type === 'personal' && isDeleteMode && (
+        <S.DeleteIcon 
+          src={ScrapDelete} 
+          alt="delete" 
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete?.();
+          }}
+        />
       )}
       <S.FolderBackground 
         src={type === 'personal' ? PersonalScrapFolderImage : ScrapFolderImage} 
