@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axiosInstance from '@api/axios';
 
 export const postAuthCodeToServer = async (socialProvider: string, code: string) => {
-  const response = await axios.post(
-    `http://13.125.173.168:8080/auth/login`,
+  const response = await axiosInstance.post(
+    '/auth/login',
     {
       social_provider: socialProvider,
       authorization_code: code,
