@@ -1,20 +1,22 @@
 import axiosInstance from '@api/axios';
 
 export const postAuthCodeToServer = async (socialProvider: string, code: string) => {
-  const response = await axiosInstance.post(
-    '/auth/login',
-    {
-      social_provider: socialProvider,
-      authorization_code: code,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
+  try {
+    const response = await axiosInstance.post(
+      '/auth/login',
+      {
+        social_provider: socialProvider,
+        authorization_code: code,
       },
-    },
-  );
-  console.log('Kakao Auth Success: ', response.data);
-  // return response.data;
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
 
-  localStorage.setItem('kakaoToken', response.data.access_token);
+    return { status: response.status, data: response.data };
+  } catch (error) {
+    console.error('Kakao Auth Error:', error);
+  }
 };
