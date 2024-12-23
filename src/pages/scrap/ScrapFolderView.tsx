@@ -6,6 +6,8 @@ import DeleteWhite from '@assets/svgs/DeleteWhite.svg'
 import EditWhite from '@assets/svgs/EditWhite.svg'
 import ScrapCard from '../../components/scrap/ScrapFolder';
 import { useNavigate } from 'react-router-dom';
+import newScrapFolder from '@assets/svgs/newScrapFolder.svg'
+import plusSign from '@assets/pngs/plusSign.png'
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -42,6 +44,10 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
   const handleFolderClick = (index: number) => {
     setSelectedCategory(index);
     navigate(`/scrap/${type}/${categories[index].name}`);
+  };
+
+  const handleCreateNewFolder = () => {
+    console.log('Create new folder');
   };
 
   return (
@@ -84,6 +90,12 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
             onDelete={() => handleFolderDelete(index)}
           />
         ))}
+        {type === 'personal' && (
+          <S.NewFolderCard onClick={handleCreateNewFolder}>
+            <S.NewFolderBackground src={newScrapFolder} alt="new folder" />
+            <S.PlusIcon src={plusSign} alt="create new folder" />
+          </S.NewFolderCard>
+        )}
       </S.FoldersContainer>
     </S.Container>
   );

@@ -124,3 +124,25 @@ export const Icon = styled.img`
     width: 1rem;
     height: 1rem;
 `;
+
+export const NewFolderCard = styled.div`
+  width: 13.56rem;
+  height: 10.097rem;
+  position: relative;
+  cursor: pointer;
+`;
+
+export const NewFolderBackground = styled.img`
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0px 6px 4px rgba(0, 0, 0, 0.15));
+`;
+
+export const PlusIcon = styled.img`
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
