@@ -5,7 +5,7 @@ export const Header = styled.header`
     position: relative;
     display: flex;
     align-items: center;    
-    margin-bottom: 2.2rem;
+    margin: 2.2rem 0;
 `;
 
 export const BackButton = styled.button`
@@ -24,4 +24,4 @@ export const Title = styled.h2`
     font-weight: 500;
     text-align: center;
     color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};
-`; 
+`;

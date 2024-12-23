@@ -20,7 +20,7 @@ export const HeaderImageWrapper = styled.div`
     width: 18.7rem;
     display: flex;
     align-items: center;
-    
+    top: 0.1rem;
 `;
 
 export const HeaderCategoryBar = styled.div`
