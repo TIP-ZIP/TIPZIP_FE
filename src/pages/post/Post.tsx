@@ -33,7 +33,7 @@ const Post: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // 필수 필드 검증
     if (!title.trim()) {
       alert('제목을 입력해주세요.');
@@ -61,7 +61,7 @@ const Post: React.FC = () => {
       videoUrl: videoUrl || undefined,
       linkUrl: linkUrl.trim() || undefined,
     };
-    
+
     try {
       // 폼 제출(게시글 등록) 로직
       const response = await axios.post('/api/posts', postData, {
@@ -69,10 +69,11 @@ const Post: React.FC = () => {
           'Content-Type': 'application/json',
           // 필요한 경우 인증 토큰 추가
           // 'Authorization': `Bearer ${token}`
-        }
+        },
       });
 
-      if (response.status === 201) { // 또는 200
+      if (response.status === 201) {
+        // 또는 200
         alert('게시글이 성공적으로 등록되었습니다.');
         navigate('/'); // 홈으로 이동
       }
@@ -90,7 +91,7 @@ const Post: React.FC = () => {
 
   const handleTagSelect = (tag: string) => {
     if (tags.includes(tag)) {
-      setTags(tags.filter(t => t !== tag));
+      setTags(tags.filter((t) => t !== tag));
     } else {
       setTags([...tags, tag]);
     }
@@ -98,25 +99,14 @@ const Post: React.FC = () => {
 
   // 필수 항목들이 모두 입력되었는지 확인하는 함수 추가
   const isFormValid = () => {
-    return (
-      title.trim() !== '' &&
-      category !== '' &&
-      tags.length > 0 &&
-      content.trim() !== ''
-    );
+    return title.trim() !== '' && category !== '' && tags.length > 0 && content.trim() !== '';
   };
 
   return (
     <S.Container>
-      <PostHeader 
-        title="글 작성" 
-        onBackClick={() => navigate('/')} 
-      />
-      
-      <PostTitle 
-        title={title}
-        onChange={setTitle}
-      />
+      <PostHeader title='글 작성' onBackClick={() => navigate('/home')} />
+
+      <PostTitle title={title} onChange={setTitle} />
 
       <TagSelector
         category={category}
@@ -127,19 +117,13 @@ const Post: React.FC = () => {
       />
 
       <S.Form onSubmit={handleSubmit}>
-        <PostEditor
-          content={content}
-          onContentChange={setContent}
-        />
+        <PostEditor content={content} onContentChange={setContent} />
 
-        <PostLink 
-          linkUrl={linkUrl}
-          onChange={setLinkUrl}
-        />
+        <PostLink linkUrl={linkUrl} onChange={setLinkUrl} />
 
         <S.ButtonContainer>
-          <S.StyledSubmitButton 
-            type="submit"
+          <S.StyledSubmitButton
+            type='submit'
             $isValid={isFormValid()} // prop 전달
           >
             등록하기
