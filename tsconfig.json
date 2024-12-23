@@ -29,11 +29,12 @@
       // 경로 별칭 설정
       "@api/*": ["src/api/*"],
       "@assets/*": ["src/assets/*"],
+      "@auth/*": ["src/auth/*"],
       "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
       "@layout/*": ["src/layout/*"],
       "@pages/*": ["src/pages/*"],
-      "@styles/*": ["src/styles/*"],
-      "@constants/*": ["src/constants/*"]
+      "@styles/*": ["src/styles/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리
