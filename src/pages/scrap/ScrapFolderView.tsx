@@ -78,7 +78,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
         </S.OptionHeaderContainer>
       )}
       
-      <S.FoldersContainer>
+      <S.FoldersContainer type={type}>
         {categories.map((category, index) => (
           <ScrapCard
             key={index}
