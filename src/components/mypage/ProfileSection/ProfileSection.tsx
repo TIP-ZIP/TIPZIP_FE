@@ -3,9 +3,11 @@ import { axiosInstance } from '@api/axios';
 import * as S from './ProfileSection.Styled';
 
 interface ProfileSectionProps {
-  onNameClick: () => void;
-  onIntroductionClick: () => void;
-  isOwnProfile: boolean;
+  nickname: string; // 추가
+  introduction: string; // 추가
+  onNameClick: () => void; // 추가
+  onIntroductionClick: () => void; // 추가
+  isOwnProfile: boolean; // 추가
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({
@@ -24,7 +26,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await axiosInstance.get('/mypage');
+        const accessToken = localStorage.getItem('accessToken');
+        const response = await axiosInstance.get('/mypage/', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        console.log(response.data);
+
         const { profile_image, username, followerCount, followingCount, message, badge } =
           response.data;
 
@@ -48,16 +58,28 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const MAX_FILE_SIZE_MB = 5; // 최대 파일 크기 (MB)
+    const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // 바이트 단위로 변환
+
     const file = e.target.files?.[0];
+    const originalProfileImg = profileImg; // 기존 프로필 이미지 저장
+
     if (file) {
+      // 파일 크기 초과 확인
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`이미지 파일 크기는 최대 ${MAX_FILE_SIZE_MB}MB까지만 업로드 가능합니다.`);
+        return; // 업로드 중단
+      }
+
       const reader = new FileReader();
       reader.onloadend = async () => {
         if (reader.result) {
-          setProfileImg(reader.result as string);
+          const tempPreview = reader.result as string; // 임시 미리보기 이미지
+          setProfileImg(tempPreview); // 미리보기 설정
 
           const formData = new FormData();
           formData.append('file', file);
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('accessToken');
 
           try {
             const response = await axiosInstance.patch('/mypage/profileImage', formData, {
@@ -68,13 +90,18 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             });
 
             if (response.data.profile_image) {
-              setProfileImg(response.data.profile_image);
+              setProfileImg(response.data.profile_image); // 서버에서 받은 프로필 이미지로 업데이트
+            } else {
+              throw new Error('Invalid response from server');
             }
           } catch (error) {
             console.error('Failed to update profile image:', error);
+            alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+            setProfileImg(originalProfileImg); // 기존 이미지로 복구
           }
         }
       };
+
       reader.readAsDataURL(file);
     }
   };

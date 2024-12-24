@@ -11,6 +11,7 @@ interface EditorSectionProps {
   handleNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleIntroductionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   closeEditor: () => void;
+  onUpdate: (updatedValue: { nickname?: string; introduction?: string }) => void; // 추가
 }
 
 const EditorSection: React.FC<EditorSectionProps> = ({
@@ -21,6 +22,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   handleNicknameChange,
   handleIntroductionChange,
   closeEditor,
+  onUpdate, // 추가
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
 
@@ -39,17 +41,33 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   }, [closeEditor]);
 
   const handleSave = async () => {
+    const token = localStorage.getItem('accessToken'); // 토큰 가져오기
+
     try {
       if (editorType === 'nickname') {
         // 닉네임 저장 API 호출
-        await axiosInstance.patch('/mypage/username', {
-          nickname,
-        });
+        await axiosInstance.patch(
+          '/mypage/username',
+          { nickname },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        onUpdate({ nickname }); // 부모 상태 업데이트
       } else if (editorType === 'introduction') {
         // 자기소개 저장 API 호출
-        await axiosInstance.patch('/mypage/message', {
-          introduction,
-        });
+        await axiosInstance.patch(
+          '/mypage/message',
+          { introduction },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        onUpdate({ introduction }); // 부모 상태 업데이트
       }
       closeEditor(); // 저장 후 에디터 닫기
     } catch (error) {
@@ -67,7 +85,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
       <div ref={editorRef}>
         <Editor
           title={editorType === 'nickname' ? '닉네임 바꾸기' : '자기소개 작성'}
-          onClose={closeEditor}
+          onClose={handleClose}
         >
           <S.EditorBar />
           <S.EditorContainer>
@@ -88,7 +106,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                   value={introduction}
                   onChange={handleIntroductionChange}
                   maxLength={20}
-                  placeholder='프로필에 자기 소개를 작성해주세요.'
+                  placeholder={introduction ? '' : '프로필에 자기 소개를 작성해주세요.'}
                 />
                 <S.CharCount>{introduction.length}/20</S.CharCount>
               </S.InputBox>

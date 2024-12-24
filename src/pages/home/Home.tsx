@@ -6,37 +6,24 @@ import SelectBar from '@components/home/SelectBar/SelectBar';
 import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
-import { postsData } from '@constants/PostData';
 import { useNavigate } from 'react-router-dom';
+import useCategory from '@hooks/home/useCategory'; // 훅 임포트
+import useSort from '@hooks/home/useSort'; // 훅 임포트
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVerify, setSelectedVerify] = useState(false);
   const [selectedItem, setSelectedItem] = useState('전체');
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [sortOption, setSortOption] = useState('최신순');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [posts, setPosts] = useState(postsData);
+  const [posts, setPosts] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
-  const categories = [
-    '정리/공간 활용',
-    '주방',
-    '청소',
-    '건강',
-    'IT',
-    '뷰티&패션',
-    '여가&휴식',
-    '로컬',
-    '기타',
-  ];
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prev) =>
-      prev.includes(category) ? prev.filter((cat) => cat !== category) : [...prev, category],
-    );
-  };
+  const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
+    useCategory();
+  const { sortOption, selectedSort, handleSortOptionClick } = useSort();
+
   const handleClose = () => {
     setShowModal(false);
   };
@@ -44,12 +31,6 @@ const Home: React.FC = () => {
   const handleLogin = () => {
     console.log('로그인 처리 로직');
     setShowModal(false);
-  };
-
-  const handleSortOptionClick = (option: string) => {
-    setSortOption(option);
-    setIsDropdownOpen(false);
-    setIsOpen(false);
   };
 
   const handleSelectVerifyClick = () => {
@@ -90,7 +71,7 @@ const Home: React.FC = () => {
         <SearchBar />
         <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         <CategoryList
-          categories={categories}
+          categories={categoryList}
           selectedCategory={selectedCategory}
           handleCategoryClick={handleCategoryClick}
         />
@@ -107,7 +88,8 @@ const Home: React.FC = () => {
           </S.SelectVerify>
         </S.PostInfoBar>
         <PostList
-          posts={posts}
+          selectedCategory={selectedCategoryNumbers}
+          sortOption={selectedSort}
           handleBookmarkClick={handleBookmarkClick}
           $isMypage={window.location.pathname === '/mypage'}
         />
@@ -122,4 +104,5 @@ const Home: React.FC = () => {
     </S.HomeLayout>
   );
 };
+
 export default Home;
