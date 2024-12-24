@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Editor from '@components/mypage/Editor/Editor';
+import { axiosInstance } from '@api/axios';
 import * as S from './EditorSection.Styled';
 
 interface EditorSectionProps {
@@ -24,10 +25,9 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 외부 클릭 감지
-    const handleClickOutside = (e: PointerEvent) => {
+    const handleClickOutside = async (e: PointerEvent) => {
       if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
-        closeEditor(); // 외부 클릭 시 에디터 닫기
+        await handleClose(); // 외부 클릭 시 저장 후 닫기
       }
     };
 
@@ -37,6 +37,30 @@ const EditorSection: React.FC<EditorSectionProps> = ({
       document.removeEventListener('pointerdown', handleClickOutside);
     };
   }, [closeEditor]);
+
+  const handleSave = async () => {
+    try {
+      if (editorType === 'nickname') {
+        // 닉네임 저장 API 호출
+        await axiosInstance.patch('/mypage/username', {
+          nickname,
+        });
+      } else if (editorType === 'introduction') {
+        // 자기소개 저장 API 호출
+        await axiosInstance.patch('/mypage/message', {
+          introduction,
+        });
+      }
+      closeEditor(); // 저장 후 에디터 닫기
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
+  };
+
+  const handleClose = async () => {
+    await handleSave(); // 저장 호출
+    closeEditor(); // 에디터 닫기
+  };
 
   return (
     showEditor && (
@@ -66,7 +90,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                   maxLength={20}
                   placeholder='프로필에 자기 소개를 작성해주세요.'
                 />
-                <S.CharCount>{introduction.length}/13</S.CharCount>
+                <S.CharCount>{introduction.length}/20</S.CharCount>
               </S.InputBox>
             )}
           </S.EditorContainer>

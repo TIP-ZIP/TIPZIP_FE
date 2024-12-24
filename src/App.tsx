@@ -36,7 +36,8 @@ function App() {
           <Route path='/post/:id' element={<PostDetail />} />
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/scrap' element={<Scrap />} />
-          <Route path="/scrap/:type/:categoryName" element={<ScrapPostView />} />
+          <Route path='/scrap/:type/:categoryName' element={<ScrapPostView />} />
+          <Route path='/mypage/:userId' element={<Mypage />} />
         </Route>
       </Routes>
     </BrowserRouter>
