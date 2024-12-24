@@ -8,6 +8,7 @@ import ScrapCard from '../../components/scrap/ScrapFolder';
 import { useNavigate } from 'react-router-dom';
 import newScrapFolder from '@assets/svgs/newScrapFolder.svg'
 import plusSign from '@assets/pngs/plusSign.png'
+import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -20,6 +21,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [categories, setCategories] = useState(initialCategories);
+  const [isNewFolderHovered, setIsNewFolderHovered] = useState(false);
 
   useEffect(() => {
     setCategories(initialCategories);
@@ -91,8 +93,15 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
           />
         ))}
         {type === 'personal' && (
-          <S.NewFolderCard onClick={handleCreateNewFolder}>
-            <S.NewFolderBackground src={newScrapFolder} alt="new folder" />
+          <S.NewFolderCard 
+            onClick={handleCreateNewFolder}
+            onMouseEnter={() => setIsNewFolderHovered(true)}
+            onMouseLeave={() => setIsNewFolderHovered(false)}
+          >
+            <S.NewFolderBackground 
+              src={isNewFolderHovered ? NewScrapFolderSelected : newScrapFolder} 
+              alt="new folder" 
+            />
             <S.PlusIcon src={plusSign} alt="create new folder" />
           </S.NewFolderCard>
         )}
