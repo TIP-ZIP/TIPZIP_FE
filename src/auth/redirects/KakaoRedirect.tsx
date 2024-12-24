@@ -5,7 +5,7 @@ import { postAuthCodeToServer } from '@auth/utils/authHelpers';
 
 const KakaoRedirect = () => {
   const location = useLocation();
-  const isFirstRender = useRef(true);
+  const isFirstRender = useRef<boolean>(true);
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const KakaoRedirect = () => {
           if (response?.status === 200 || response?.status === 201) {
             console.log('Kakao Auth Success: ', response.data);
             // 로그인 성공 시 로컬 스토리지에 JWT 토큰 저장
-            localStorage.setItem('kakaoToken', response.data.access_token);
+            localStorage.setItem('accessToken', response.data.access_token);
           } else if (response?.status === 401) {
             console.warn('Authorization Code POST fail');
           }
