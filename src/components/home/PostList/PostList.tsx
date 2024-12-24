@@ -16,26 +16,32 @@ interface Post {
 interface PostListProps {
   selectedCategory: number[];
   sortOption: string;
+  selectedItem: string;
   handleBookmarkClick: (postId: number) => void;
-  $isMypage: boolean;
 }
 
 const PostList: React.FC<PostListProps> = ({
   selectedCategory,
   sortOption,
+  selectedItem,
   handleBookmarkClick,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMypage = location.pathname === '/mypage';
   const [showEditor, setShowEditor] = useState<number | null>(null);
-  const [categoryId, setCategoryId] = useState<number>(1);
   const [postsData, setPostsData] = useState<Post[]>([]);
+  const token = localStorage.getItem('accessToken');
 
   // 마이페이지 포스트 가져오기
   const getPostsForMypage = async () => {
     try {
-      const response = await axiosInstance.get('/post/user/id');
+      const id = 1; //userid 받아오기
+      const response = await axiosInstance.get(`/post/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for mypage', error);
@@ -45,37 +51,55 @@ const PostList: React.FC<PostListProps> = ({
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
     try {
-      const categoryQuery = selectedCategory.join(',');
-      const response = await axiosInstance.get(
-        `/posts?sort=${sortOption}&category=${categoryQuery}`,
-      );
-      setPostsData(response.data); // API 응답 데이터 설정
+      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
+      setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
     }
   };
 
-  useEffect(() => {
-    if (isMypage) {
-      getPostsForMypage();
-    } else {
-      getPostsForGeneral();
+  // 팔로잉 포스트 가져오기
+  const getPostsForFollowing = async () => {
+    try {
+      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const response = await axiosInstance.get(
+        `/posts/following?sort=${sortOption}&${categoryQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setPostsData(response.data);
+    } catch (error) {
+      console.error('Error fetching posts for following', error);
     }
-  }, [isMypage, categoryId, selectedCategory, sortOption]);
+  };
+
+  useEffect(() => {
+    if (selectedItem === '팔로잉') {
+      getPostsForFollowing();
+    } else if (selectedItem === '전체') {
+      getPostsForGeneral();
+    } else {
+      getPostsForMypage();
+    }
+  }, [selectedCategory, sortOption, selectedItem]);
 
   const handleBookmarkToggle = (postId: number, e: React.MouseEvent, isFilled: boolean) => {
     e.stopPropagation();
-    handleBookmarkClick(postId); // Call the bookmark click handler
+    handleBookmarkClick(postId);
 
     if (isFilled) {
-      setShowEditor(null); // 스크랩을 취소하면 에디터 닫기
+      setShowEditor(null);
     } else {
-      setShowEditor(postId); // 스크랩을 새로 추가하면 에디터 열기
+      setShowEditor(postId);
     }
   };
 
   const closeEditor = () => {
-    setShowEditor(null); // Close the editor manually
+    setShowEditor(null);
   };
 
   return (

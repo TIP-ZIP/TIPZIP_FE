@@ -90,8 +90,8 @@ const Home: React.FC = () => {
         <PostList
           selectedCategory={selectedCategoryNumbers}
           sortOption={selectedSort}
+          selectedItem={selectedItem}
           handleBookmarkClick={handleBookmarkClick}
-          $isMypage={window.location.pathname === '/mypage'}
         />
       </S.Container>
       {isClicked && (
