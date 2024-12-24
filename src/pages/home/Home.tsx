@@ -7,8 +7,8 @@ import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
 import { useNavigate } from 'react-router-dom';
-import useCategory from '@hooks/home/useCategory'; // 훅 임포트
-import useSort from '@hooks/home/useSort'; // 훅 임포트
+import useCategory from '@hooks/home/useCategory';
+import useSort from '@hooks/home/useSort';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -92,6 +92,7 @@ const Home: React.FC = () => {
           sortOption={selectedSort}
           selectedItem={selectedItem}
           handleBookmarkClick={handleBookmarkClick}
+          isVerify={selectedVerify}
         />
       </S.Container>
       {isClicked && (

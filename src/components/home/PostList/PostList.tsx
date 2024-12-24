@@ -18,6 +18,7 @@ interface PostListProps {
   sortOption: string;
   selectedItem: string;
   handleBookmarkClick: (postId: number) => void;
+  isVerify: boolean;
 }
 
 const PostList: React.FC<PostListProps> = ({
@@ -25,6 +26,7 @@ const PostList: React.FC<PostListProps> = ({
   sortOption,
   selectedItem,
   handleBookmarkClick,
+  isVerify,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,15 +79,40 @@ const PostList: React.FC<PostListProps> = ({
     }
   };
 
+  const getPostsForCertifiedUsers = async (isFollow: boolean) => {
+    try {
+      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const response = await axiosInstance.get(
+        `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setPostsData(response.data);
+    } catch (error) {
+      console.error('Error fetching posts for certified users', error);
+    }
+  };
+
   useEffect(() => {
     if (selectedItem === '팔로잉') {
-      getPostsForFollowing();
+      if (isVerify) {
+        getPostsForCertifiedUsers(true); // 팔로잉에서 인증된 유저 보기
+      } else {
+        getPostsForFollowing(); // 팔로잉에서 일반 포스트 보기
+      }
     } else if (selectedItem === '전체') {
-      getPostsForGeneral();
+      if (isVerify) {
+        getPostsForCertifiedUsers(false); // 전체에서 인증된 유저 보기
+      } else {
+        getPostsForGeneral(); // 전체에서 일반 포스트 보기
+      }
     } else {
-      getPostsForMypage();
+      getPostsForMypage(); // 마이페이지 포스트
     }
-  }, [selectedCategory, sortOption, selectedItem]);
+  }, [selectedCategory, sortOption, selectedItem, isVerify]);
 
   const handleBookmarkToggle = (postId: number, e: React.MouseEvent, isFilled: boolean) => {
     e.stopPropagation();
