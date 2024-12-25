@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ScrapPostView: React.FC = () => {
   const navigate = useNavigate();
   const { categoryName } = useParams();
+  const decodedCategoryName = decodeURIComponent(categoryName || '');
 
   // 카테고리 상태 관리
   const categories = [
@@ -51,7 +52,7 @@ const ScrapPostView: React.FC = () => {
               <img src={ArrowLeftWhite} alt="back" />
             </S.BackButton>
           </S.BackIconWrapper>
-          <S.HeaderText>{categoryName}</S.HeaderText>
+          <S.HeaderText>{decodedCategoryName}</S.HeaderText>
         </S.HeaderImageWrapper>
         
         <S.HeaderCategoryBar>
