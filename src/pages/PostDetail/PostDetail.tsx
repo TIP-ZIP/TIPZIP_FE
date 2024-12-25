@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EditorSection from '@components/mypage/EditorSection/EditorSection';
 import axios from 'axios';
 
 import * as S from './PostDetail.styled';
+import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 
 interface PostImage {
   image_id: number;
@@ -36,6 +38,7 @@ const PostDetail: React.FC = () => {
 
   // const [scrapCount, setScrapCount] = useState<number | undefined>(postDetail?.scrap_count); // 추후 API 연동 시 사용
   const [isScrapped, setIsScrapped] = useState<boolean | undefined>(postDetail?.is_scrapped);
+  const [showEditor, setShowEditor] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,6 +62,10 @@ const PostDetail: React.FC = () => {
 
         setIsScrapped((prev) => !prev);
         setPostDetail(updatedPostDetail);
+
+        if (!postDetail.is_scrapped) {
+          setShowEditor(true);
+        }
       }
 
       // // 추후 API 연동 시 사용할 logic
@@ -72,6 +79,9 @@ const PostDetail: React.FC = () => {
       //   setIsScrapped((prev) => !prev);
       //   setScrapCount(updatedCount);
       // }
+
+      // 일정 시간 후 모달 숨기기
+      // setTimeout(() => setShowEditor(false), 3000);
     } catch (error) {
       console.error('Error updating scrap: ', error);
     }
@@ -94,59 +104,72 @@ const PostDetail: React.FC = () => {
     fetchPostDetail();
   }, []);
 
+  const closeEditor = () => {
+    setShowEditor(false);
+  };
+
   return (
-    <S.PostDetailWrapper>
-      <S.PostDetailHeader>
-        <S.LeftArrow onClick={() => navigate(-1)} />
-        <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
-      </S.PostDetailHeader>
-      <S.PostDetailMain>
-        {/* Intro Section */}
-        <S.PostIntroduction>
-          <S.PostInfosContainer>
-            <S.PostAuthorDate>
-              <S.ProfileImage src={postDetail?.profile_img} />
-              <S.NameBadgeContainer>
-                <S.AuthorName>{postDetail?.author}</S.AuthorName>
-                {postDetail?.certificated_user && <S.CertificationBadge />}
-              </S.NameBadgeContainer>
-              <span>•</span>
-              <S.PostDate>{postDetail?.created_at}</S.PostDate>
-            </S.PostAuthorDate>
-            <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
-          </S.PostInfosContainer>
-          <S.PostTitle>{postDetail?.title}</S.PostTitle>
-          <S.PostCategory>{postDetail?.category}</S.PostCategory>
-        </S.PostIntroduction>
+    <>
+      <S.PostDetailWrapper>
+        <S.PostDetailHeader>
+          <S.LeftArrow onClick={() => navigate(-1)} />
+          <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
+        </S.PostDetailHeader>
+        <S.PostDetailMain>
+          {/* Intro Section */}
+          <S.PostIntroduction>
+            <S.PostInfosContainer>
+              <S.PostAuthorDate>
+                <S.ProfileImage src={postDetail?.profile_img} />
+                <S.NameBadgeContainer>
+                  <S.AuthorName>{postDetail?.author}</S.AuthorName>
+                  {postDetail?.certificated_user && <S.CertificationBadge />}
+                </S.NameBadgeContainer>
+                <span>•</span>
+                <S.PostDate>{postDetail?.created_at}</S.PostDate>
+              </S.PostAuthorDate>
+              <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
+            </S.PostInfosContainer>
+            <S.PostTitle>{postDetail?.title}</S.PostTitle>
+            <S.PostCategory>{postDetail?.category}</S.PostCategory>
+          </S.PostIntroduction>
 
-        {/* Content Section */}
-        <S.PostContentWrapper>
-          <S.PostContentContainer>
-            <S.TextContent>{postDetail?.content}</S.TextContent>
-            {postDetail?.images?.map((image) => (
-              <S.ImageContent key={image.image_id} src={image.image_url} />
-            ))}
-          </S.PostContentContainer>
-          <S.PostHastagContainer>
-            {postDetail?.hashtags.map((tag, index) => (
-              <S.HashtagButton key={index}>#{tag}</S.HashtagButton>
-            ))}
-          </S.PostHastagContainer>
-        </S.PostContentWrapper>
+          {/* Content Section */}
+          <S.PostContentWrapper>
+            <S.PostContentContainer>
+              <S.TextContent>{postDetail?.content}</S.TextContent>
+              {postDetail?.images?.map((image) => (
+                <S.ImageContent key={image.image_id} src={image.image_url} />
+              ))}
+            </S.PostContentContainer>
+            <S.PostHastagContainer>
+              {postDetail?.hashtags.map((tag, index) => (
+                <S.HashtagButton key={index}>#{tag}</S.HashtagButton>
+              ))}
+            </S.PostHastagContainer>
+          </S.PostContentWrapper>
 
-        {/* Post Footer Section */}
-        <S.PostDetailFooter>
-          <S.BookmarkContainer>
-            <S.BookmarkIcon $isScrapped={isScrapped} onClick={handleScrapClick} />
-            <S.ScrapCount>{postDetail?.scrap_count}</S.ScrapCount>
-          </S.BookmarkContainer>
-          <S.PostLinkButton onClick={() => handleLinkClick(postDetail?.link_url)}>
-            <S.LinkIcon />
-            다른 플랫폼에 게시된 같은 컨텐츠도 보러가기
-          </S.PostLinkButton>
-        </S.PostDetailFooter>
-      </S.PostDetailMain>
-    </S.PostDetailWrapper>
+          {/* Post Footer Section */}
+          <S.PostDetailFooter>
+            <S.BookmarkContainer>
+              <S.BookmarkIcon $isScrapped={isScrapped} onClick={handleScrapClick} />
+              <S.ScrapCount>{postDetail?.scrap_count}</S.ScrapCount>
+            </S.BookmarkContainer>
+            <S.PostLinkButton onClick={() => handleLinkClick(postDetail?.link_url)}>
+              <S.LinkIcon />
+              다른 플랫폼에 게시된 같은 컨텐츠도 보러가기
+            </S.PostLinkButton>
+          </S.PostDetailFooter>
+        </S.PostDetailMain>
+      </S.PostDetailWrapper>
+      <ScrapEditorSection
+        showEditor={showEditor}
+        closeEditor={closeEditor}
+        thumbnail={postDetail?.thumbnail_url}
+        category={postDetail?.category}
+        postid={postDetail?.post_id}
+      />
+    </>
   );
 };
 

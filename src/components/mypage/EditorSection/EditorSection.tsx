@@ -45,6 +45,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           title={editorType === 'nickname' ? '닉네임 바꾸기' : '자기소개 작성'}
           onClose={closeEditor}
         >
+          <S.EditorBar />
           <S.EditorContainer>
             {editorType === 'nickname' ? (
               <S.InputBox>
@@ -62,7 +63,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                   type='text'
                   value={introduction}
                   onChange={handleIntroductionChange}
-                  maxLength={13}
+                  maxLength={20}
                   placeholder='프로필에 자기 소개를 작성해주세요.'
                 />
                 <S.CharCount>{introduction.length}/13</S.CharCount>
