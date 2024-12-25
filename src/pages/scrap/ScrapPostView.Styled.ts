@@ -51,7 +51,8 @@ export const HeaderBackground = styled.img`
 // 헤더 텍스트
 export const HeaderText = styled.div`
     position: absolute;
-    right: 5.1rem;
+    left: 45%;
+    transform: translateX(-50%);
     z-index: 1;
     color: white;
     ${({ theme }) => theme.fontStyles.Body2};

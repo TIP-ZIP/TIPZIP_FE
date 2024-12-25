@@ -6,10 +6,11 @@ import CategoryList from '../../components/home/CategoryList/CategoryList';
 import PostList from '../../components/home/PostList/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ScrapPostView: React.FC = () => {
   const navigate = useNavigate();
+  const { categoryName } = useParams();
 
   // 카테고리 상태 관리
   const categories = [
@@ -50,7 +51,7 @@ const ScrapPostView: React.FC = () => {
               <img src={ArrowLeftWhite} alt="back" />
             </S.BackButton>
           </S.BackIconWrapper>
-          <S.HeaderText>멋쟁이 사자처럼 !</S.HeaderText>
+          <S.HeaderText>{categoryName}</S.HeaderText>
         </S.HeaderImageWrapper>
         
         <S.HeaderCategoryBar>
