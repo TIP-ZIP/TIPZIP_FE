@@ -25,7 +25,7 @@ const Scrap: React.FC = () => {
 
   return (
     <Styled.Container>
-      <Styled.Header>
+      <Styled.Header isPersonal={activeTab === 'personal'}>
         <Styled.Title>스크랩 ZIP</Styled.Title>
         <Styled.TabContainer>
           <Styled.TabBackground />

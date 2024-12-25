@@ -1,3 +1,4 @@
+import { colors } from '@styles/theme/colors';
 import styled from 'styled-components';
 
 // Container
@@ -9,12 +10,12 @@ export const Container = styled.div`
 `;
 
 // Header
-export const Header = styled.div`
+export const Header = styled.div<{ isPersonal: boolean }>`
   width: 100%;
   height: 10rem;
-  
-  background: #ff4a22;
+  background: ${props => props.isPersonal ? colors.TZ_Signature[0] : colors.TZ_Signature[500]};
 `;
+
 export const Title = styled.div`
   margin-left: 2.3rem;
   padding-top: 2.2rem;
