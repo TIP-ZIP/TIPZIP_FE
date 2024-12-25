@@ -5,14 +5,14 @@ interface TagItemProps {
 }
 
 
-export const CategoryList = styled.div<{ maxWidth?: string }>`
+export const CategoryList = styled.div<{ $maxWidth?: string }>`
   display: flex;
   position: absolute;
   overflow-x: scroll;
   scroll-behavior: smooth;
   white-space: nowrap;
   gap: 0.8rem;
-  max-width: ${({ maxWidth }) => maxWidth || 'calc(100% - 4rem)'};
+  max-width: ${props => props.$maxWidth || '100%'};
   box-sizing: border-box;
 
   &::-webkit-scrollbar {

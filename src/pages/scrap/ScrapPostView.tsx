@@ -57,7 +57,7 @@ const ScrapPostView: React.FC = () => {
         
         <S.HeaderCategoryBar>
         <CategoryList
-          maxWidth='calc(100% - 2rem)'
+          $maxWidth='calc(100% - 2rem)'
           categories={categories}
           selectedCategory={selectedCategory}
           handleCategoryClick={handleCategoryClick}

@@ -25,20 +25,20 @@ const Scrap: React.FC = () => {
 
   return (
     <Styled.Container>
-      <Styled.Header isPersonal={activeTab === 'personal'}>
+      <Styled.Header $isPersonal={activeTab === 'personal'}>
         <Styled.Title>스크랩 ZIP</Styled.Title>
         <Styled.TabContainer>
           <Styled.TabBackground />
-          <Styled.ActiveTab isPersonal={activeTab === 'personal'} />
+          <Styled.ActiveTab $isPersonal={activeTab === 'personal'} />
           <Styled.TabTextActive
             onClick={() => setActiveTab('category')}
-            isActive={activeTab === 'category'}
+            $isActive={activeTab === 'category'}
           >
             카테고리 스크랩
           </Styled.TabTextActive>
           <Styled.TabTextInactive
             onClick={() => setActiveTab('personal')}
-            isActive={activeTab === 'personal'}
+            $isActive={activeTab === 'personal'}
           >
             나만의 스크랩
           </Styled.TabTextInactive>
