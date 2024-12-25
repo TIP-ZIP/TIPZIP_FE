@@ -13,6 +13,7 @@ export const Container = styled.div`
 
 export const HeaderContainer = styled.div`
     width: 100%;
+    overflow: hidden;
 `;
 
 export const HeaderImageWrapper = styled.div`
@@ -25,6 +26,8 @@ export const HeaderImageWrapper = styled.div`
 
 export const HeaderCategoryBar = styled.div`
     width: 100%;
+    min-width: 375px;
+    max-width: 768px;
     position: absolute;
     padding: 17px 15px;
     box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.15);
@@ -51,9 +54,7 @@ export const HeaderText = styled.div`
     right: 5.1rem;
     z-index: 1;
     color: white;
-    font-size: 14px;
-    font-family: 'Pretendard';
-    font-weight: 500;
+    ${({ theme }) => theme.fontStyles.Body2};
     word-wrap: break-word;
 `;
 

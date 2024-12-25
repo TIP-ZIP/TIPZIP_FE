@@ -7,7 +7,7 @@ export const Container = styled.div`
 
 export const OptionHeaderContainer = styled.div`
   width: 100%;
-  padding: 2.1rem 3.4rem 0;
+  padding: 2.2rem 3.4rem 0.1rem;
 `;
 
 export const FoldersContainer = styled.div<{ type: 'category' | 'personal' }>`

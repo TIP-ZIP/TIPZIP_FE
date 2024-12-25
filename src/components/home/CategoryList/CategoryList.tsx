@@ -5,15 +5,17 @@ interface CategoryListProps {
   categories: string[];
   selectedCategory: string[];
   handleCategoryClick: (category: string) => void;
+  maxWidth?: string;
 }
 
 const CategoryList: React.FC<CategoryListProps> = ({
   categories,
   selectedCategory,
   handleCategoryClick,
+  maxWidth,
 }) => {
   return (
-    <S.CategoryList>
+    <S.CategoryList maxWidth={maxWidth}>
       {categories.map((category, index) => (
         <S.CategoryItem
           key={index}
