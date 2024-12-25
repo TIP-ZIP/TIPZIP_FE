@@ -45,9 +45,14 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
 
   const handleFolderClick = (index: number) => {
     setSelectedCategory(index);
-    // URL에서 안전하게 사용할 수 있도록 카테고리 이름을 인코딩
-    const encodedName = encodeURIComponent(categories[index].name);
-    navigate(`/scrap/${type}/${encodedName}`);
+    const categoryName = categories[index].name;
+    const normalizedName = categoryName.replace(/ /g, '');
+    const encodedName = encodeURIComponent(normalizedName);
+    
+    navigate(`/scrap/${type}/${encodedName}`, { state: { 
+      type,
+      originalName: categoryName
+    }});
   };
 
   const handleCreateNewFolder = () => {

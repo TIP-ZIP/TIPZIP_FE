@@ -6,6 +6,7 @@ interface CategoryListProps {
   categories: string[];
   selectedCategory: string[];
   handleCategoryClick: (category: string) => void;
+  isDisabled?: boolean;
 }
 
 const CategoryList: React.FC<CategoryListProps> = ({
@@ -13,6 +14,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
   selectedCategory,
   handleCategoryClick,
   $maxWidth,
+  isDisabled = false,
 }) => {
   return (
     <S.CategoryList $maxWidth={$maxWidth}>
@@ -20,7 +22,8 @@ const CategoryList: React.FC<CategoryListProps> = ({
         <S.CategoryItem
           key={index}
           $selectedtag={selectedCategory.includes(category)}
-          onClick={() => handleCategoryClick(category)}
+          onClick={() => !isDisabled && handleCategoryClick(category)}
+          $disabled={isDisabled && !selectedCategory.includes(category)}
         >
           {category}
         </S.CategoryItem>

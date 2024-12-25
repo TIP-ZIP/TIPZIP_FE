@@ -6,11 +6,11 @@ const categoryDummyData = [
   { name: '로컬', count: '30' },
   { name: '주방', count: '31' },
   { name: '건강', count: '12' },
-  { name: '건강', count: '41' },
+  { name: '뷰티 & 패션', count: '41' },
   { name: '기타', count: '30' },
   { name: '정리 / 공간 활용', count: '13' },
   { name: '청소', count: '52' },
-  { name: '청소', count: '40' },
+  { name: 'IT', count: '40' },
   { name: '여가 & 휴식', count: '55' },
 ];
 
