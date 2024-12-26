@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import useCategory from '@hooks/home/useCategory';
 import useSort from '@hooks/home/useSort';
 import useAuth from '@hooks/useAuth';
+import axiosInstance from '@api/axios';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,22 +45,29 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleBookmarkClick = (postId: number) => {
+  const handleBookmarkClick = async (postId: number) => {
     if (!isAuthenticated) {
       setShowModal(true);
       return;
     }
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              isFilled: !post.isFilled,
-              bookmarks: post.isFilled ? post.bookmarks - 1 : post.bookmarks + 1,
-            }
-          : post,
-      ),
-    );
+    try {
+      const response = await axiosInstance.post('/scrap', { postId, folder_name: null });
+      if (response.status === 200) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  isFilled: !post.isFilled,
+                  bookmarks: post.isFilled ? post.bookmarks - 1 : post.bookmarks + 1,
+                }
+              : post,
+          ),
+        );
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류가 발생했습니다.', error);
+    }
   };
 
   const handlePlusClick = () => {
