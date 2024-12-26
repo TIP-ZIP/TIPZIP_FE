@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import leftArrow from '@assets/svgs/leftarrow.svg';
 
 export const Header = styled.header`
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-top: 1.4rem;
-  margin-bottom: 2.2rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 1.4rem;
+    margin-bottom: 2.2rem;
 `;
 
 export const BackButton = styled.button`

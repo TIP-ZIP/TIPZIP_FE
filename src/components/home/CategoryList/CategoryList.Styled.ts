@@ -4,14 +4,15 @@ interface TagItemProps {
   $selectedtag?: boolean;
 }
 
-export const CategoryList = styled.div`
+
+export const CategoryList = styled.div<{ $maxWidth?: string }>`
   display: flex;
   position: absolute;
   overflow-x: scroll;
   scroll-behavior: smooth;
   white-space: nowrap;
   gap: 0.8rem;
-  max-width: calc(100% - 4rem);
+  max-width: ${props => props.$maxWidth || '100%'};
   box-sizing: border-box;
 
   &::-webkit-scrollbar {
@@ -21,7 +22,10 @@ export const CategoryList = styled.div`
   scrollbar-width: none;
 `;
 
-export const CategoryItem = styled.span<TagItemProps>`
+export const CategoryItem = styled.div<{ 
+  $selectedtag: boolean;
+  $disabled?: boolean;
+}>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,12 +35,13 @@ export const CategoryItem = styled.span<TagItemProps>`
   background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
   border-radius: 0.4rem;
   color: #cbd0d4;
-  cursor: pointer;
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
   white-space: nowrap;
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.TZ_Signature[500]};
-    color: ${({ theme }) => theme.colors.TZ_Monochrome[0]};
+    background-color: ${({ $disabled, $selectedtag }) => 
+      $disabled && !$selectedtag ? 'inherit' : '...'};
   }
 
   ${({ $selectedtag, theme }) =>
