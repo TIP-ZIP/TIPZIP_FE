@@ -26,10 +26,11 @@ const SetUsername: React.FC = () => {
   };
 
   const handleSaveButtonClick = () => {
-    if (isComposing) {
+    if (!isComposing) {
       // 추후 API 연동 시 사용자 이름 POST 로직 필요
+
+      alert('사용자 이름 설정 완료!');
     }
-    alert('사용자 이름 설정 완료!');
     nicknameInputRef.current?.blur(); // 저장 버튼 클릭 시 Input 포커스 해제
   };
 
