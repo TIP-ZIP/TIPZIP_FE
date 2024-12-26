@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
-
 import Layout from './layout/Layout';
 import OnBoarding from '@pages/onboarding/OnBoarding';
 import Home from '@pages/home/Home';
