@@ -47,7 +47,7 @@ const Header: React.FC = () => {
               </S.Icon>
             )}
             <S.Icon>
-              <S.BookmarkIcon />
+              <S.BookmarkIcon onClick={() => navigate('/scrap')} />
             </S.Icon>
             <S.Icon>
               <S.ProfileIcon onClick={() => navigate('/mypage')} />

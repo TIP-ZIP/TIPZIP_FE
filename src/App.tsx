@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import Layout from './layout/Layout';
 
-import OnBoarding from '@pages/OnBoarding/OnBoarding';
+import OnBoarding from '@pages/onboarding/OnBoarding';
 import Home from '@pages/home/Home';
 import Login from '@pages/Login/Login';
 import KakaoRedirect from '@auth/redirects/KakaoRedirect';
@@ -13,6 +13,8 @@ import Post from '@pages/post/Post';
 import PostDetail from '@pages/PostDetail/PostDetail';
 import Mypage from '@pages/mypage/Mypage';
 import setVhProperty from '@utils/setVhProperty';
+import Scrap from '@pages/scrap/Scrap';
+import ScrapPostView from '@pages/scrap/ScrapPostView';
 
 function App() {
   useEffect(() => {
@@ -35,6 +37,8 @@ function App() {
           <Route path='/post/new' element={<Post />} />
           <Route path='/post/:id' element={<PostDetail />} />
           <Route path='/mypage' element={<Mypage />} />
+          <Route path='/scrap' element={<Scrap />} />
+          <Route path="/scrap/:type/:categoryName" element={<ScrapPostView />} />
         </Route>
       </Routes>
     </BrowserRouter>
