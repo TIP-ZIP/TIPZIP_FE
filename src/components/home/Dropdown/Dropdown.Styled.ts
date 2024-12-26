@@ -20,7 +20,7 @@ export const DropdownButton = styled.button`
   text-align: left;
   font-size: 1rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.TZ_Monochrome[600]};
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};
   box-sizing: border-box;
 
   &:focus {

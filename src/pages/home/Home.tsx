@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './Home.Styled';
 import LoginModalContainer from '@components/home/LoginModalContainer';
 import SearchBar from '@components/home/SearchBar/SearchBar';
@@ -9,6 +9,7 @@ import Dropdown from '@components/home/Dropdown/DropDown';
 import { useNavigate } from 'react-router-dom';
 import useCategory from '@hooks/home/useCategory';
 import useSort from '@hooks/home/useSort';
+import useAuth from '@hooks/useAuth';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,25 +17,18 @@ const Home: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState('전체');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
-  const [showModal, setShowModal] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
     useCategory();
   const { sortOption, selectedSort, handleSortOptionClick } = useSort();
 
-  const handleClose = () => {
-    setShowModal(false);
-  };
-
-  const handleLogin = () => {
-    console.log('로그인 처리 로직');
-    setShowModal(false);
-  };
-
-  const handleSelectVerifyClick = () => {
-    setSelectedVerify(!selectedVerify);
+  const handleOption = (option: string) => {
+    handleSortOptionClick(option);
+    setIsOpen(false);
   };
 
   const toggleDropdown = () => {
@@ -42,7 +36,19 @@ const Home: React.FC = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  const handleSelectVerifyClick = () => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+    } else {
+      setSelectedVerify(!selectedVerify);
+    }
+  };
+
   const handleBookmarkClick = (postId: number) => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+      return;
+    }
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId
@@ -60,17 +66,29 @@ const Home: React.FC = () => {
     setIsClicked((prev) => !prev);
   };
 
+  const handleBubbleClick = () => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+      setIsClicked(false);
+    } else {
+      navigate('/post/new');
+    }
+  };
+
+  useEffect(() => {
+    if (selectedItem === '팔로잉' && !isAuthenticated) {
+      setShowModal(true);
+      setSelectedItem('전체');
+    }
+  }, [selectedItem, isAuthenticated]);
+
   return (
     <S.HomeLayout>
-      <LoginModalContainer
-        showModal={showModal}
-        handleClose={handleClose}
-        handleLogin={handleLogin}
-      />
       <S.Container>
         <SearchBar />
         <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         <CategoryList
+          $maxWidth='calc(100% - 4rem)'
           categories={categoryList}
           selectedCategory={selectedCategory}
           handleCategoryClick={handleCategoryClick}
@@ -79,7 +97,7 @@ const Home: React.FC = () => {
           <Dropdown
             isOpen={isOpen}
             sortOption={sortOption}
-            handleSortOptionClick={handleSortOptionClick}
+            handleSortOptionClick={handleOption}
             toggleDropdown={toggleDropdown}
           />
           <S.SelectVerify $selectedVerify={selectedVerify} onClick={handleSelectVerifyClick}>
@@ -96,12 +114,23 @@ const Home: React.FC = () => {
         />
       </S.Container>
       {isClicked && (
-        <S.OrangeBubble onClick={() => navigate('/post/new')}>
+        <S.OrangeBubble onClick={handleBubbleClick}>
           <S.Whiteedit />
           <S.BubbleText>나의 팁 공유하기</S.BubbleText>
         </S.OrangeBubble>
       )}
       <S.PlusBtn $isClicked={isClicked} onClick={handlePlusClick} />
+
+      {showModal && (
+        <LoginModalContainer
+          showModal={showModal}
+          handleClose={() => setShowModal(false)}
+          handleLogin={() => {
+            setShowModal(false);
+            navigate('/login');
+          }}
+        />
+      )}
     </S.HomeLayout>
   );
 };

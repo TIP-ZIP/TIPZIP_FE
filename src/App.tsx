@@ -1,7 +1,7 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Layout from './layout/Layout';
-
 import OnBoarding from '@pages/onboarding/OnBoarding';
 import Home from '@pages/home/Home';
 import Login from '@pages/login/Login';
@@ -10,10 +10,9 @@ import SearchPost from '@pages/search/SearchPost';
 import Post from '@pages/post/Post';
 import PostDetail from '@pages/PostDetail/PostDetail';
 import Mypage from '@pages/mypage/Mypage';
-import { useEffect } from 'react';
-import setVhProperty from './utils/setVhProperty';
 import Scrap from '@pages/scrap/Scrap';
 import ScrapPostView from '@pages/scrap/ScrapPostView';
+import setVhProperty from '@utils/setVhProperty';
 
 function App() {
   useEffect(() => {

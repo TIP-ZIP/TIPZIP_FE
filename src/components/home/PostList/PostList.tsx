@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import * as S from './PostList.Styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
-import { axiosInstance } from '@api/axios';
+import axiosInstance from '@api/axios';
 
 interface Post {
   id: number;
   title: string;
-  image: string;
-  profileName: string;
-  bookmarks: number;
-  isFilled: boolean;
+  thumbnail_url: string;
+  author: string | null;
+  scrapCount: number;
+  scrap: boolean;
 }
 
 interface PostListProps {
@@ -38,7 +38,7 @@ const PostList: React.FC<PostListProps> = ({
   // 마이페이지 포스트 가져오기
   const getPostsForMypage = async () => {
     try {
-      const id = 1; //userid 받아오기
+      const id = '변희민'; //userid 받아오기
       const response = await axiosInstance.get(`/post/user/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,11 +114,11 @@ const PostList: React.FC<PostListProps> = ({
     }
   }, [selectedCategory, sortOption, selectedItem, isVerify]);
 
-  const handleBookmarkToggle = (postId: number, e: React.MouseEvent, isFilled: boolean) => {
+  const handleBookmarkToggle = (postId: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();
     handleBookmarkClick(postId);
 
-    if (isFilled) {
+    if (scrap) {
       setShowEditor(null);
     } else {
       setShowEditor(postId);
@@ -137,14 +137,14 @@ const PostList: React.FC<PostListProps> = ({
             <S.PostImage $isMypage={isMypage}>
               <S.ProfileContainer>
                 <S.ProfileImage />
-                <S.ProfileName>{post.profileName}</S.ProfileName>
+                <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
               </S.ProfileContainer>
               <S.BookmarkContainer>
                 <S.BookmarkIcon
-                  $isFilled={post.isFilled}
-                  onClick={(e) => handleBookmarkToggle(post.id, e, post.isFilled)} // 클릭 시 스크랩 상태에 따라 에디터 제어
+                  $isFilled={post.scrap}
+                  onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
                 />
-                <S.BookmarkCount>{post.bookmarks}</S.BookmarkCount>
+                <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
               </S.BookmarkContainer>
             </S.PostImage>
             <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
@@ -157,7 +157,7 @@ const PostList: React.FC<PostListProps> = ({
           showEditor={true}
           closeEditor={closeEditor}
           postid={showEditor}
-          thumbnail={postsData.find((post) => post.id === showEditor)?.image}
+          thumbnail={postsData.find((post) => post.id === showEditor)?.thumbnail_url}
         />
       )}
     </>

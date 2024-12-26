@@ -4,7 +4,6 @@ interface TagItemProps {
   $selectedtag?: boolean;
 }
 
-
 export const CategoryList = styled.div<{ $maxWidth?: string }>`
   display: flex;
   position: absolute;
@@ -12,7 +11,7 @@ export const CategoryList = styled.div<{ $maxWidth?: string }>`
   scroll-behavior: smooth;
   white-space: nowrap;
   gap: 0.8rem;
-  max-width: ${props => props.$maxWidth || '100%'};
+  max-width: ${(props) => props.$maxWidth || '100%'};
   box-sizing: border-box;
 
   &::-webkit-scrollbar {
@@ -22,7 +21,7 @@ export const CategoryList = styled.div<{ $maxWidth?: string }>`
   scrollbar-width: none;
 `;
 
-export const CategoryItem = styled.div<{ 
+export const CategoryItem = styled.div<{
   $selectedtag: boolean;
   $disabled?: boolean;
 }>`
@@ -40,7 +39,7 @@ export const CategoryItem = styled.div<{
   opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
 
   &:hover {
-    background-color: ${({ $disabled, $selectedtag }) => 
+    background-color: ${({ $disabled, $selectedtag }) =>
       $disabled && !$selectedtag ? 'inherit' : '...'};
   }
 

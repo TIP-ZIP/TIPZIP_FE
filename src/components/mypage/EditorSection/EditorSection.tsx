@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Editor from '@components/mypage/Editor/Editor';
-import { axiosInstance } from '@api/axios';
+import axiosInstance from '@api/axios';
 import * as S from './EditorSection.Styled';
 
 interface EditorSectionProps {
