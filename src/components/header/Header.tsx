@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 import * as S from './Header.Styled';
-
+import LoginModalContainer from '@components/home/LoginModalContainer';
 import { LogoutModal } from '@components/modal/LogoutModal';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
+import useAuth from '@hooks/useAuth';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
 
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
   const logoColor = location.pathname === '/mypage' ? 'black' : '';
-
-  // 추후 로그인 로직 추가
-  const isLoggedIn = true;
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
@@ -28,34 +26,63 @@ const Header: React.FC = () => {
     setShowLogoutModal(false);
   };
 
+  const handleLoginRequired = (callback: () => void) => {
+    if (isAuthenticated) {
+      callback();
+    } else {
+      setShowLoginModal(true); // 로그인되지 않았으면 로그인 모달 띄우기
+    }
+  };
+
+  const handleProfileClick = () => {
+    handleLoginRequired(() => navigate('/mypage')); // 로그인 후 마이페이지로 이동
+  };
+
+  const handleBookmarkClick = () => {
+    handleLoginRequired(() => navigate('/scrap')); // 로그인 후 북마크 페이지로 이동
+  };
+
   return (
     <>
       <S.Container>
         <S.ItemList>
           <div style={{ cursor: 'pointer' }}>
             <TipZipLogo
-              onClick={() => navigate('/home')}
+              onClick={() => {
+                window.location.href = '/home';
+              }}
               color={logoColor}
               width='9.23rem'
               height='2.13rem'
             />
           </div>
           <S.IconList>
-            {isLoggedIn && location.pathname === '/mypage' && (
+            {isAuthenticated && location.pathname === '/mypage' && (
               <S.Icon onClick={handleLogoutClick}>
                 <S.LogoutIcon />
               </S.Icon>
             )}
-            <S.Icon>
-              <S.BookmarkIcon onClick={() => navigate('/scrap')} />
+            <S.Icon onClick={handleBookmarkClick}>
+              <S.BookmarkIcon />
             </S.Icon>
-            <S.Icon>
-              <S.ProfileIcon onClick={() => navigate('/mypage')} />
+
+            <S.Icon onClick={handleProfileClick}>
+              <S.ProfileIcon />
             </S.Icon>
           </S.IconList>
         </S.ItemList>
       </S.Container>
       <LogoutModal showModal={showLogoutModal} onClose={handleCloseModal} onLogout={handleLogout} />
+      {showLoginModal && (
+        <LoginModalContainer
+          showModal={showLoginModal}
+          handleClose={() => setShowLoginModal(false)}
+          handleLogin={() => {
+            setShowLoginModal(false);
+            navigate('/login');
+          }}
+        />
+      )}
     </>
   );
 };

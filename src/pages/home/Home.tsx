@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './Home.Styled';
 import LoginModalContainer from '@components/home/LoginModalContainer';
 import SearchBar from '@components/home/SearchBar/SearchBar';
@@ -6,54 +6,29 @@ import SelectBar from '@components/home/SelectBar/SelectBar';
 import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
-import { postsData } from '@constants/PostData';
 import { useNavigate } from 'react-router-dom';
+import useCategory from '@hooks/home/useCategory';
+import useSort from '@hooks/home/useSort';
+import useAuth from '@hooks/useAuth';
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVerify, setSelectedVerify] = useState(false);
   const [selectedItem, setSelectedItem] = useState('전체');
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [sortOption, setSortOption] = useState('최신순');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [posts, setPosts] = useState(postsData);
-  const [showModal, setShowModal] = useState(true);
+  const [posts, setPosts] = useState<any[]>([]);
   const [isClicked, setIsClicked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const categories = [
-    '정리/공간 활용',
-    '주방',
-    '청소',
-    '건강',
-    'IT',
-    '뷰티&패션',
-    '여가&휴식',
-    '로컬',
-    '기타',
-  ];
+  const { isAuthenticated } = useAuth();
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory((prev) =>
-      prev.includes(category) ? prev.filter((cat) => cat !== category) : [...prev, category],
-    );
-  };
-  const handleClose = () => {
-    setShowModal(false);
-  };
+  const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
+    useCategory();
+  const { sortOption, selectedSort, handleSortOptionClick } = useSort();
 
-  const handleLogin = () => {
-    console.log('로그인 처리 로직');
-    setShowModal(false);
-  };
-
-  const handleSortOptionClick = (option: string) => {
-    setSortOption(option);
-    setIsDropdownOpen(false);
+  const handleOption = (option: string) => {
+    handleSortOptionClick(option);
     setIsOpen(false);
-  };
-
-  const handleSelectVerifyClick = () => {
-    setSelectedVerify(!selectedVerify);
   };
 
   const toggleDropdown = () => {
@@ -61,7 +36,19 @@ const Home: React.FC = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  const handleSelectVerifyClick = () => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+    } else {
+      setSelectedVerify(!selectedVerify);
+    }
+  };
+
   const handleBookmarkClick = (postId: number) => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+      return;
+    }
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId
@@ -79,18 +66,30 @@ const Home: React.FC = () => {
     setIsClicked((prev) => !prev);
   };
 
+  const handleBubbleClick = () => {
+    if (!isAuthenticated) {
+      setShowModal(true);
+      setIsClicked(false);
+    } else {
+      navigate('/post/new');
+    }
+  };
+
+  useEffect(() => {
+    if (selectedItem === '팔로잉' && !isAuthenticated) {
+      setShowModal(true);
+      setSelectedItem('전체');
+    }
+  }, [selectedItem, isAuthenticated]);
+
   return (
     <S.HomeLayout>
-      <LoginModalContainer
-        showModal={showModal}
-        handleClose={handleClose}
-        handleLogin={handleLogin}
-      />
       <S.Container>
         <SearchBar />
         <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         <CategoryList
-          categories={categories}
+          $maxWidth='calc(100% - 4rem)'
+          categories={categoryList}
           selectedCategory={selectedCategory}
           handleCategoryClick={handleCategoryClick}
         />
@@ -98,7 +97,7 @@ const Home: React.FC = () => {
           <Dropdown
             isOpen={isOpen}
             sortOption={sortOption}
-            handleSortOptionClick={handleSortOptionClick}
+            handleSortOptionClick={handleOption}
             toggleDropdown={toggleDropdown}
           />
           <S.SelectVerify $selectedVerify={selectedVerify} onClick={handleSelectVerifyClick}>
@@ -107,19 +106,33 @@ const Home: React.FC = () => {
           </S.SelectVerify>
         </S.PostInfoBar>
         <PostList
-          posts={posts}
+          selectedCategory={selectedCategoryNumbers}
+          sortOption={selectedSort}
+          selectedItem={selectedItem}
           handleBookmarkClick={handleBookmarkClick}
-          $isMypage={window.location.pathname === '/mypage'}
+          isVerify={selectedVerify}
         />
       </S.Container>
       {isClicked && (
-        <S.OrangeBubble onClick={() => navigate('/post/new')}>
+        <S.OrangeBubble onClick={handleBubbleClick}>
           <S.Whiteedit />
           <S.BubbleText>나의 팁 공유하기</S.BubbleText>
         </S.OrangeBubble>
       )}
       <S.PlusBtn $isClicked={isClicked} onClick={handlePlusClick} />
+
+      {showModal && (
+        <LoginModalContainer
+          showModal={showModal}
+          handleClose={() => setShowModal(false)}
+          handleLogin={() => {
+            setShowModal(false);
+            navigate('/login');
+          }}
+        />
+      )}
     </S.HomeLayout>
   );
 };
+
 export default Home;

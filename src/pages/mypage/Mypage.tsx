@@ -12,6 +12,7 @@ const Mypage: React.FC = () => {
   const [nickname, setNickname] = useState('아기 사자 🦁');
   const [introduction, setIntroduction] = useState('');
 
+  // 북마크 클릭 핸들러
   const handleBookmarkClick = (postId: number) => {
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
@@ -25,26 +26,42 @@ const Mypage: React.FC = () => {
       ),
     );
   };
+
+  // 닉네임 수정 에디터 열기
   const handleNameClick = () => {
-    setShowEditor((prev) => !prev);
+    setShowEditor(true);
     setEditorType('nickname');
   };
 
+  // 자기소개 수정 에디터 열기
   const handleIntroductionClick = () => {
-    setShowEditor((prev) => !prev);
+    setShowEditor(true);
     setEditorType('introduction');
   };
 
+  // EditorSection에서 업데이트된 값을 처리
+  const handleUpdate = (updatedValue: { nickname?: string; introduction?: string }) => {
+    if (updatedValue.nickname !== undefined) {
+      setNickname(updatedValue.nickname);
+    }
+    if (updatedValue.introduction !== undefined) {
+      setIntroduction(updatedValue.introduction);
+    }
+  };
+
+  // 에디터 닫기
+  const closeEditor = () => {
+    setShowEditor(false);
+  };
+
+  // 닉네임 입력 변경 핸들러
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
+  // 자기소개 입력 변경 핸들러
   const handleIntroductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIntroduction(e.target.value);
-  };
-
-  const closeEditor = () => {
-    setShowEditor(false);
   };
 
   return (
@@ -64,17 +81,21 @@ const Mypage: React.FC = () => {
         <S.GrayLine />
         <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />
         <S.Text>{nickname} 님만의 꿀팁을 공유해주세요!</S.Text>
-        <EditorSection
-          showEditor={showEditor}
-          editorType={editorType}
-          nickname={nickname}
-          introduction={introduction}
-          handleNicknameChange={handleNicknameChange}
-          handleIntroductionChange={handleIntroductionChange}
-          closeEditor={closeEditor}
-        />
+        {showEditor && (
+          <EditorSection
+            showEditor={showEditor}
+            editorType={editorType}
+            nickname={nickname}
+            introduction={introduction}
+            handleNicknameChange={handleNicknameChange}
+            handleIntroductionChange={handleIntroductionChange}
+            closeEditor={closeEditor}
+            onUpdate={handleUpdate}
+          />
+        )}
       </S.PostWrapper>
     </S.Container>
   );
 };
+
 export default Mypage;
