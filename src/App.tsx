@@ -1,8 +1,6 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
-
 import Layout from './layout/Layout';
-
 import OnBoarding from '@pages/onboarding/OnBoarding';
 import Home from '@pages/home/Home';
 import Login from '@pages/Login/Login';
@@ -38,7 +36,8 @@ function App() {
           <Route path='/post/:id' element={<PostDetail />} />
           <Route path='/mypage' element={<Mypage />} />
           <Route path='/scrap' element={<Scrap />} />
-          <Route path="/scrap/:type/:categoryName" element={<ScrapPostView />} />
+          <Route path='/scrap/:type/:categoryName' element={<ScrapPostView />} />
+          <Route path='/mypage/:userId' element={<Mypage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Editor from '@components/mypage/Editor/Editor';
+import axiosInstance from '@api/axios';
 import * as S from './EditorSection.Styled';
 
 interface EditorSectionProps {
@@ -10,6 +11,7 @@ interface EditorSectionProps {
   handleNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleIntroductionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   closeEditor: () => void;
+  onUpdate: (updatedValue: { nickname?: string; introduction?: string }) => void; // 추가
 }
 
 const EditorSection: React.FC<EditorSectionProps> = ({
@@ -20,14 +22,14 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   handleNicknameChange,
   handleIntroductionChange,
   closeEditor,
+  onUpdate, // 추가
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 외부 클릭 감지
-    const handleClickOutside = (e: PointerEvent) => {
+    const handleClickOutside = async (e: PointerEvent) => {
       if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
-        closeEditor(); // 외부 클릭 시 에디터 닫기
+        await handleClose(); // 외부 클릭 시 저장 후 닫기
       }
     };
 
@@ -38,12 +40,52 @@ const EditorSection: React.FC<EditorSectionProps> = ({
     };
   }, [closeEditor]);
 
+  const handleSave = async () => {
+    const token = localStorage.getItem('accessToken'); // 토큰 가져오기
+
+    try {
+      if (editorType === 'nickname') {
+        // 닉네임 저장 API 호출
+        await axiosInstance.patch(
+          '/mypage/username',
+          { nickname },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        onUpdate({ nickname }); // 부모 상태 업데이트
+      } else if (editorType === 'introduction') {
+        // 자기소개 저장 API 호출
+        await axiosInstance.patch(
+          '/mypage/message',
+          { introduction },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        onUpdate({ introduction }); // 부모 상태 업데이트
+      }
+      closeEditor(); // 저장 후 에디터 닫기
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
+  };
+
+  const handleClose = async () => {
+    await handleSave(); // 저장 호출
+    closeEditor(); // 에디터 닫기
+  };
+
   return (
     showEditor && (
       <div ref={editorRef}>
         <Editor
           title={editorType === 'nickname' ? '닉네임 바꾸기' : '자기소개 작성'}
-          onClose={closeEditor}
+          onClose={handleClose}
         >
           <S.EditorBar />
           <S.EditorContainer>
@@ -64,9 +106,9 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                   value={introduction}
                   onChange={handleIntroductionChange}
                   maxLength={20}
-                  placeholder='프로필에 자기 소개를 작성해주세요.'
+                  placeholder={introduction ? '' : '프로필에 자기 소개를 작성해주세요.'}
                 />
-                <S.CharCount>{introduction.length}/13</S.CharCount>
+                <S.CharCount>{introduction.length}/20</S.CharCount>
               </S.InputBox>
             )}
           </S.EditorContainer>
