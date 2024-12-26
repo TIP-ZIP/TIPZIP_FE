@@ -6,13 +6,13 @@ import Layout from './layout/Layout';
 import OnBoarding from '@pages/OnBoarding/OnBoarding';
 import Home from '@pages/home/Home';
 import Login from '@pages/Login/Login';
-import KakaoRedirect from './auth/redirects/KakaoRedirect';
+import KakaoRedirect from '@auth/redirects/KakaoRedirect';
 import SetUsername from '@pages/SetUsername/SetUsername';
 import SearchPost from '@pages/search/SearchPost';
 import Post from '@pages/post/Post';
 import PostDetail from '@pages/PostDetail/PostDetail';
 import Mypage from '@pages/mypage/Mypage';
-import setVhProperty from './utils/setVhProperty';
+import setVhProperty from '@utils/setVhProperty';
 
 function App() {
   useEffect(() => {
