@@ -16,11 +16,11 @@ export default defineConfig({
       '@auth': path.resolve(__dirname, 'src/auth'),
       '@components': path.resolve(__dirname, 'src/components'),
       '@constants': path.resolve(__dirname, 'src/constants'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@layout': path.resolve(__dirname, 'src/layout'),
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@utils': path.resolve(__dirname, 'src/utils'),
-      '@hooks': path.resolve(__dirname, 'src/hooks'),
     },
   },
   server: {
