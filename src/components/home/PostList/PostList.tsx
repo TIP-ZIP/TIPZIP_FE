@@ -19,6 +19,8 @@ interface PostListProps {
   selectedItem: string;
   handleBookmarkClick: (postId: number) => void;
   isVerify: boolean;
+  posts: Post[]; // 기존 prop 정의 수정
+  searchQuery: string; // 검색어 추가
 }
 
 const PostList: React.FC<PostListProps> = ({
@@ -27,6 +29,7 @@ const PostList: React.FC<PostListProps> = ({
   selectedItem,
   handleBookmarkClick,
   isVerify,
+  searchQuery,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,7 +57,10 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForGeneral = async () => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
-      const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
+      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
+      const response = await axiosInstance.get(
+        `/posts?sort=${sortOption}&${categoryQuery}${searchQueryParam}`,
+      );
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
@@ -65,8 +71,9 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForFollowing = async () => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
       const response = await axiosInstance.get(
-        `/posts/following?sort=${sortOption}&${categoryQuery}`,
+        `/posts/following?sort=${sortOption}&${categoryQuery}${searchQueryParam}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -82,8 +89,9 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForCertifiedUsers = async (isFollow: boolean) => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
       const response = await axiosInstance.get(
-        `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}`,
+        `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}${searchQueryParam}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,16 +120,37 @@ const PostList: React.FC<PostListProps> = ({
     } else {
       getPostsForMypage(); // 마이페이지 포스트
     }
-  }, [selectedCategory, sortOption, selectedItem, isVerify]);
+  }, [selectedCategory, sortOption, selectedItem, isVerify, searchQuery]); // searchQuery를 의존성 배열에 추가
 
-  const handleBookmarkToggle = (postId: number, e: React.MouseEvent, scrap: boolean) => {
+  const handleBookmarkToggle = async (postId: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();
-    handleBookmarkClick(postId);
 
-    if (scrap) {
-      setShowEditor(null);
-    } else {
-      setShowEditor(postId);
+    try {
+      // 요청 데이터 설정
+      const requestData = { postId, folder_name: null };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      if (scrap) {
+        // DELETE 요청에서 'data'는 두 번째 인자에 포함
+        const response = await axiosInstance.delete('/scrap', { ...config, data: requestData });
+      } else {
+        // POST 요청에서 'data'는 본문에 포함
+        const response = await axiosInstance.post('/scrap', requestData, config);
+      }
+
+      handleBookmarkClick(postId);
+      if (scrap) {
+        setShowEditor(null);
+      } else {
+        setShowEditor(postId);
+      }
+    } catch (error) {
+      console.error('Error toggling bookmark', error);
+      alert('북마크 처리 중 오류가 발생했습니다.');
     }
   };
 

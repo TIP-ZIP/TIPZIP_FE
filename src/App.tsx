@@ -27,7 +27,7 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path='/' element={<OnBoarding />} />
-          <Route path='/home' element={<Home />} />
+          <Route path='/home/*' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/oauth' element={<KakaoRedirect />} />
           <Route path='/set-username' element={<SetUsername />} />

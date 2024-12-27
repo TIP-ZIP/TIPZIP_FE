@@ -6,7 +6,7 @@ import SelectBar from '@components/home/SelectBar/SelectBar';
 import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useCategory from '@hooks/home/useCategory';
 import useSort from '@hooks/home/useSort';
 import useAuth from '@hooks/useAuth';
@@ -20,6 +20,9 @@ const Home: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [isClicked, setIsClicked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // 검색어 상태 추가
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // 선택된 태그 상태 추가
+  const token = localStorage.getItem('accessToken');
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -51,7 +54,15 @@ const Home: React.FC = () => {
       return;
     }
     try {
-      const response = await axiosInstance.post('/scrap', { postId, folder_name: null });
+      const response = await axiosInstance.post(
+        '/scrap',
+        { postId, folder_name: null },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       if (response.status === 200) {
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
@@ -90,10 +101,48 @@ const Home: React.FC = () => {
     }
   }, [selectedItem, isAuthenticated]);
 
+  const fetchPostsFromQuery = async () => {
+    try {
+      const query = `/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+      const response = await axiosInstance.get(query);
+      setPosts(response.data); // API에서 받아온 데이터를 posts 상태에 저장
+    } catch (error) {
+      console.error('검색 결과를 가져오는 중 오류가 발생했습니다.', error);
+    }
+  };
+
+  // 검색어와 태그가 변경되면 API 호출 처리
+  const handleSearchSubmit = async () => {
+    const query = `/home?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+    navigate(query); // URL에 쿼리 파라미터를 추가하고 홈 페이지로 이동
+  };
+
+  const { search } = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    const query = params.get('search') || '';
+    const tags = params.get('tags') ? params.get('tags')?.split(',') : [];
+    setSearchQuery(query);
+    setSelectedTags(tags || []);
+  }, [search]);
+
+  // 쿼리 파라미터에 변화가 있으면 포스트를 새로 불러옴
+  useEffect(() => {
+    if (searchQuery || selectedTags.length > 0) {
+      fetchPostsFromQuery(); // 검색어와 태그에 맞는 게시글을 API에서 가져옴
+    }
+  }, [searchQuery, selectedTags]);
+
   return (
     <S.HomeLayout>
       <S.Container>
-        <SearchBar />
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          handleSearchSubmit={handleSearchSubmit} // 검색 처리 함수 추가
+        />
         <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         <CategoryList
           $maxWidth='calc(100% - 4rem)'
@@ -119,6 +168,8 @@ const Home: React.FC = () => {
           selectedItem={selectedItem}
           handleBookmarkClick={handleBookmarkClick}
           isVerify={selectedVerify}
+          posts={posts} // 검색된 포스트 전달
+          searchQuery=''
         />
       </S.Container>
       {isClicked && (
