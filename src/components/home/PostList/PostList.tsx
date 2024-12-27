@@ -136,6 +136,7 @@ const PostList: React.FC<PostListProps> = ({
           Authorization: `Bearer ${token}`,
         },
       };
+      setShowEditor(postId);
 
       if (scrap) {
         // DELETE 요청에서 'data'는 두 번째 인자에 포함
@@ -147,7 +148,6 @@ const PostList: React.FC<PostListProps> = ({
 
       handleBookmarkClick(postId);
       if (scrap) {
-        setShowEditor(null);
       } else {
         setShowEditor(postId);
       }
@@ -190,6 +190,7 @@ const PostList: React.FC<PostListProps> = ({
           closeEditor={closeEditor}
           postid={showEditor}
           thumbnail={postsData.find((post) => post.id === showEditor)?.thumbnail_url}
+          category=''
         />
       )}
     </>

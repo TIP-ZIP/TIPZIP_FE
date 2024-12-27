@@ -4,6 +4,8 @@ import * as S from './PostDetail.styled';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import Spinner from '@components/postdetail/Spinner';
 import axiosInstance from '@api/axios';
+import useAuth from '@hooks/useAuth';
+import LoginModalContainer from '@components/home/LoginModalContainer';
 
 interface PostImage {
   image_id: number;
@@ -36,7 +38,10 @@ const PostDetail: React.FC = () => {
   const [postDetail, setPostDetail] = useState<PostDetail | null>(null);
   const [isScrapped, setIsScrapped] = useState<boolean | undefined>(undefined);
   const [showEditor, setShowEditor] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams<Params>();
   const postId = id ? parseInt(id, 10) : null;
@@ -69,22 +74,29 @@ const PostDetail: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      setIsLoading(false);
+      return;
+    }
+
     if (postId !== null) {
-      const token = localStorage.getItem('accessToken');
       const fetchPostDetail = async () => {
         try {
+          const token = localStorage.getItem('accessToken');
           const response = await axiosInstance.get(`/posts/${postId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           const postDetailData = response.data;
-          console.log(postDetailData);
 
           setPostDetail(postDetailData);
           setIsScrapped(postDetailData.is_scrapped);
         } catch (error) {
           console.error('Post detail fetching error: ', error);
+        } finally {
+          setIsLoading(false); // 로딩 종료
         }
       };
 
@@ -96,44 +108,63 @@ const PostDetail: React.FC = () => {
     setShowEditor(false);
   };
 
-  if (!postDetail) {
+  // 로그인 모달 렌더링 우선
+  if (showLoginModal) {
+    return (
+      <LoginModalContainer
+        showModal={showLoginModal}
+        handleClose={() => {
+          setShowLoginModal(false);
+          navigate(-1);
+        }}
+        handleLogin={() => {
+          setShowLoginModal(false);
+          navigate('/login');
+        }}
+      />
+    );
+  }
+
+  // 데이터 로딩 중
+  if (isLoading) {
     return <Spinner />;
   }
 
+  // 데이터 렌더링
   return (
     <>
       <S.PostDetailWrapper>
         <S.PostDetailHeader>
           <S.LeftArrow onClick={() => navigate(-1)} />
-          <S.HeaderTitle>{postDetail.author}'s Post</S.HeaderTitle>
+          <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
         </S.PostDetailHeader>
         <S.PostDetailMain>
           <S.PostIntroduction>
             <S.PostInfosContainer>
               <S.PostAuthorDate>
-                <S.ProfileImage src={postDetail.profile_img} />
+                <S.ProfileImage src={postDetail?.profile_img} />
                 <S.NameBadgeContainer>
-                  <S.AuthorName>{postDetail.author}</S.AuthorName>
-                  {postDetail.badge && <S.CertificationBadge />}
+                  <S.AuthorName>{postDetail?.author}</S.AuthorName>
+                  {postDetail?.badge && <S.CertificationBadge />}
                 </S.NameBadgeContainer>
                 <span>•</span>
-                <S.PostDate>{postDetail.created_at}</S.PostDate>
+                <S.PostDate>{postDetail?.created_at}</S.PostDate>
               </S.PostAuthorDate>
               <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
             </S.PostInfosContainer>
-            <S.PostTitle>{postDetail.title}</S.PostTitle>
-            <S.PostCategory>{postDetail.categories}</S.PostCategory>
+            <S.PostTitle>{postDetail?.title}</S.PostTitle>
+            <S.PostCategory>{postDetail?.categories}</S.PostCategory>
           </S.PostIntroduction>
 
           <S.PostContentWrapper>
             <S.PostContentContainer>
-              <S.TextContent>{postDetail.content}</S.TextContent>
-              {postDetail.images?.map((image) => (
+              <S.TextContent>{postDetail?.content}</S.TextContent>
+              {postDetail?.images?.map((image) => (
                 <S.ImageContent key={image.image_id} src={image.image_url} />
               ))}
             </S.PostContentContainer>
             <S.PostHastagContainer>
-              {postDetail.tag.map((tagItem, index) => (
+              {postDetail?.tag.map((tagItem, index) => (
                 <S.HashtagButton key={index}>#{tagItem}</S.HashtagButton>
               ))}
             </S.PostHastagContainer>
@@ -142,9 +173,9 @@ const PostDetail: React.FC = () => {
           <S.PostDetailFooter>
             <S.BookmarkContainer>
               <S.BookmarkIcon $isScrapped={isScrapped} onClick={handleScrapClick} />
-              <S.ScrapCount>{postDetail.scrapCount}</S.ScrapCount>
+              <S.ScrapCount>{postDetail?.scrapCount}</S.ScrapCount>
             </S.BookmarkContainer>
-            <S.PostLinkButton onClick={() => handleLinkClick(postDetail.link_url)}>
+            <S.PostLinkButton onClick={() => handleLinkClick(postDetail?.link_url)}>
               <S.LinkIcon />
               다른 플랫폼에 게시된 같은 컨텐츠도 보러가기
             </S.PostLinkButton>
@@ -154,9 +185,9 @@ const PostDetail: React.FC = () => {
       <ScrapEditorSection
         showEditor={showEditor}
         closeEditor={closeEditor}
-        thumbnail={postDetail.thumbnail_url}
-        category={postDetail.categories}
-        postid={postDetail.post_id}
+        thumbnail={postDetail?.thumbnail_url}
+        category={postDetail?.categories}
+        postid={postDetail?.post_id}
       />
     </>
   );
