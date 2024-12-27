@@ -20,7 +20,8 @@ interface PostListProps {
   handleBookmarkClick: (postId: number) => void;
   isVerify: boolean;
   posts: Post[]; // 기존 prop 정의 수정
-  searchQuery: string; // 검색어 추가
+  searchQuery: string;
+  selectedTags: string[];
 }
 
 const PostList: React.FC<PostListProps> = ({
@@ -30,14 +31,16 @@ const PostList: React.FC<PostListProps> = ({
   handleBookmarkClick,
   isVerify,
   searchQuery,
+  posts,
+  selectedTags,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMypage = location.pathname === '/mypage';
   const [showEditor, setShowEditor] = useState<number | null>(null);
-  const [postsData, setPostsData] = useState<Post[]>([]);
+  const [postsData, setPostsData] = useState<Post[]>(posts || []);
   const token = localStorage.getItem('accessToken');
-
+  const isSearchPage = location.pathname.includes('/home/search');
   // 마이페이지 포스트 가져오기
   const getPostsForMypage = async () => {
     try {
@@ -57,11 +60,9 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForGeneral = async () => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
-      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
-      const response = await axiosInstance.get(
-        `/posts?sort=${sortOption}&${categoryQuery}${searchQueryParam}`,
-      );
+      const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
       setPostsData(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
     }
@@ -71,9 +72,8 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForFollowing = async () => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
-      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
       const response = await axiosInstance.get(
-        `/posts/following?sort=${sortOption}&${categoryQuery}${searchQueryParam}`,
+        `/posts/following?sort=${sortOption}&${categoryQuery}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -89,9 +89,8 @@ const PostList: React.FC<PostListProps> = ({
   const getPostsForCertifiedUsers = async (isFollow: boolean) => {
     try {
       const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
-      const searchQueryParam = searchQuery ? `&search=${searchQuery}` : ''; // 검색어가 있으면 추가
       const response = await axiosInstance.get(
-        `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}${searchQueryParam}`,
+        `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -103,24 +102,28 @@ const PostList: React.FC<PostListProps> = ({
       console.error('Error fetching posts for certified users', error);
     }
   };
-
   useEffect(() => {
-    if (selectedItem === '팔로잉') {
-      if (isVerify) {
-        getPostsForCertifiedUsers(true); // 팔로잉에서 인증된 유저 보기
-      } else {
-        getPostsForFollowing(); // 팔로잉에서 일반 포스트 보기
-      }
-    } else if (selectedItem === '전체') {
-      if (isVerify) {
-        getPostsForCertifiedUsers(false); // 전체에서 인증된 유저 보기
-      } else {
-        getPostsForGeneral(); // 전체에서 일반 포스트 보기
-      }
+    if (searchQuery || selectedTags.length > 0) {
+      console.log(searchQuery || selectedTags);
+      setPostsData(posts);
     } else {
-      getPostsForMypage(); // 마이페이지 포스트
+      if (selectedItem === '팔로잉') {
+        if (isVerify) {
+          getPostsForCertifiedUsers(true); // 팔로잉에서 인증된 유저 보기
+        } else {
+          getPostsForFollowing(); // 팔로잉에서 일반 포스트 보기
+        }
+      } else if (selectedItem === '전체') {
+        if (isVerify) {
+          getPostsForCertifiedUsers(false); // 전체에서 인증된 유저 보기
+        } else {
+          getPostsForGeneral(); // 전체에서 일반 포스트 보기
+        }
+      } else {
+        getPostsForMypage(); // 마이페이지 포스트
+      }
     }
-  }, [selectedCategory, sortOption, selectedItem, isVerify, searchQuery]); // searchQuery를 의존성 배열에 추가
+  }, [searchQuery, selectedTags, selectedCategory, sortOption, selectedItem, isVerify, posts]); // searchQuery가 변경될 때마다 실행
 
   const handleBookmarkToggle = async (postId: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();
@@ -160,7 +163,7 @@ const PostList: React.FC<PostListProps> = ({
 
   return (
     <>
-      <S.PostList $isMypage={isMypage}>
+      <S.PostList $isMypage={isMypage} $isSearchPage={isSearchPage}>
         {postsData.map((post) => (
           <S.PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
             <S.PostImage $isMypage={isMypage}>

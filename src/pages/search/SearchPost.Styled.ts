@@ -51,6 +51,7 @@ export const SearchIcon = styled.div`
   background: url(${search});
   width: 1.4rem;
   height: 1.4rem;
+  margin-top: 0.2rem;
   margin-right: 1.6rem;
   background-size: contain;
   background-repeat: no-repeat;

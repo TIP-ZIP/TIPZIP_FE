@@ -6,18 +6,18 @@ import filled from '@assets/svgs/FilledBookmark.svg';
 import empty from '@assets/svgs/EmptyBookmark.svg';
 import profileImg from '@assets/svgs/defaultProfile.svg';
 
-export const PostList = styled.div<{ $isMypage?: boolean }>`
+export const PostList = styled.div<{ $isMypage?: boolean; $isSearchPage?: boolean }>`
   display: grid;
-  /* position: ${({ $isMypage }) => ($isMypage ? 'relative' : 'absolute')}; */
   grid-template-columns: repeat(2, 1fr);
   gap: 2.3rem 1.1rem;
-  margin-top: ${({ $isMypage }) => ($isMypage ? '0' : '9.8rem')};
+  margin-top: ${({ $isMypage, $isSearchPage }) =>
+    $isSearchPage ? '5.3rem' : $isMypage ? '0' : '9.8rem'};
   padding-bottom: ${({ $isMypage }) => ($isMypage ? '0' : '6.2rem')};
-  /* max-height: 100%; */
   @media (min-width: 768px) {
     ${({ $isMypage }) => $isMypage && `grid-template-columns: repeat(3, 1fr);`}
   }
 `;
+
 export const PostItem = styled.div`
   display: flex;
   position: relative;

@@ -24,7 +24,9 @@ const Home: React.FC = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]); // 선택된 태그 상태 추가
   const token = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const isSearchPage = location.pathname.includes('/home/search');
 
   const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
     useCategory();
@@ -105,7 +107,8 @@ const Home: React.FC = () => {
     try {
       const query = `/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
       const response = await axiosInstance.get(query);
-      setPosts(response.data); // API에서 받아온 데이터를 posts 상태에 저장
+      setPosts(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('검색 결과를 가져오는 중 오류가 발생했습니다.', error);
     }
@@ -114,22 +117,26 @@ const Home: React.FC = () => {
   // 검색어와 태그가 변경되면 API 호출 처리
   const handleSearchSubmit = async () => {
     const query = `/home?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
-    navigate(query); // URL에 쿼리 파라미터를 추가하고 홈 페이지로 이동
+    navigate(query);
   };
 
   const { search } = useLocation();
   useEffect(() => {
     const params = new URLSearchParams(search);
     const query = params.get('search') || '';
-    const tags = params.get('tags') ? params.get('tags')?.split(',') : [];
+    const tags = params.get('tags')
+      ? params
+          .get('tags')
+          ?.split(',')
+          .map((tag) => tag.replace('#', ''))
+      : [];
     setSearchQuery(query);
     setSelectedTags(tags || []);
   }, [search]);
 
-  // 쿼리 파라미터에 변화가 있으면 포스트를 새로 불러옴
   useEffect(() => {
     if (searchQuery || selectedTags.length > 0) {
-      fetchPostsFromQuery(); // 검색어와 태그에 맞는 게시글을 API에서 가져옴
+      fetchPostsFromQuery();
     }
   }, [searchQuery, selectedTags]);
 
@@ -143,34 +150,47 @@ const Home: React.FC = () => {
           setSelectedTags={setSelectedTags}
           handleSearchSubmit={handleSearchSubmit} // 검색 처리 함수 추가
         />
-        <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-        <CategoryList
-          $maxWidth='calc(100% - 4rem)'
-          categories={categoryList}
-          selectedCategory={selectedCategory}
-          handleCategoryClick={handleCategoryClick}
-        />
-        <S.PostInfoBar>
+        {!isSearchPage && (
+          <>
+            <SelectBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
+            <CategoryList
+              $maxWidth='calc(100% - 4rem)'
+              categories={categoryList}
+              selectedCategory={selectedCategory}
+              handleCategoryClick={handleCategoryClick}
+            />
+          </>
+        )}
+        <S.PostInfoBar $isSearchPage={isSearchPage}>
           <Dropdown
             isOpen={isOpen}
             sortOption={sortOption}
             handleSortOptionClick={handleOption}
             toggleDropdown={toggleDropdown}
           />
-          <S.SelectVerify $selectedVerify={selectedVerify} onClick={handleSelectVerifyClick}>
-            <S.Star $selectedVerify={selectedVerify} />
-            <S.VerifyText $selectedVerify={selectedVerify}>인증된 유저만 보기</S.VerifyText>
-          </S.SelectVerify>
+          {!isSearchPage && (
+            <S.SelectVerify $selectedVerify={selectedVerify} onClick={handleSelectVerifyClick}>
+              <S.Star $selectedVerify={selectedVerify} />
+              <S.VerifyText $selectedVerify={selectedVerify}>인증된 유저만 보기</S.VerifyText>
+            </S.SelectVerify>
+          )}
         </S.PostInfoBar>
-        <PostList
-          selectedCategory={selectedCategoryNumbers}
-          sortOption={selectedSort}
-          selectedItem={selectedItem}
-          handleBookmarkClick={handleBookmarkClick}
-          isVerify={selectedVerify}
-          posts={posts} // 검색된 포스트 전달
-          searchQuery=''
-        />
+        <>
+          {(searchQuery || selectedTags.length > 0) && posts.length === 0 ? (
+            <S.NoResultsText>검색결과가 존재하지 않습니다.</S.NoResultsText>
+          ) : (
+            <PostList
+              selectedCategory={selectedCategoryNumbers}
+              sortOption={selectedSort}
+              selectedItem={selectedItem}
+              handleBookmarkClick={handleBookmarkClick}
+              isVerify={selectedVerify}
+              posts={posts} // 검색된 포스트 전달
+              searchQuery={searchQuery}
+              selectedTags={selectedTags}
+            />
+          )}
+        </>
       </S.Container>
       {isClicked && (
         <S.OrangeBubble onClick={handleBubbleClick}>
