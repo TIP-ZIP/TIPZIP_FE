@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import EditorSection from '@components/mypage/EditorSection/EditorSection';
-import axios from 'axios';
-
+import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './PostDetail.styled';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
+import Spinner from '@components/postdetail/Spinner';
+import axiosInstance from '@api/axios';
 
 interface PostImage {
   image_id: number;
@@ -16,37 +15,36 @@ interface PostDetail {
   post_id: number;
   profile_img?: string;
   author: string;
-  certificated_user: boolean;
+  badge: boolean;
   created_at: string;
   title: string;
-  category: string;
+  categories: string;
   content: string;
   images?: PostImage[];
-  hashtags: string[];
-  scrap_count: number;
-  is_scrapped: boolean;
+  tag: string[];
+  scrapCount: number;
+  scrap: boolean;
   link_url?: string;
   thumbnail_url: string;
 }
 
-//   type Params = {
-//     id: string;
-//   };
+interface Params {
+  [key: string]: string | undefined;
+}
 
 const PostDetail: React.FC = () => {
   const [postDetail, setPostDetail] = useState<PostDetail | null>(null);
-
-  // const [scrapCount, setScrapCount] = useState<number | undefined>(postDetail?.scrap_count); // 추후 API 연동 시 사용
-  const [isScrapped, setIsScrapped] = useState<boolean | undefined>(postDetail?.is_scrapped);
+  const [isScrapped, setIsScrapped] = useState<boolean | undefined>(undefined);
   const [showEditor, setShowEditor] = useState(false);
 
   const navigate = useNavigate();
-
-  //   const { id } = useParams<Params>();
-  //   const numericId = parseInt(id || '', 10);
+  const { id } = useParams<Params>();
+  const postId = id ? parseInt(id, 10) : null;
 
   const handleLinkClick = (url: string | undefined) => {
-    window.open(url, '_blank', 'noopener, noreferrer');
+    if (url) {
+      window.open(url, '_blank', 'noopener, noreferrer');
+    }
   };
 
   const handleScrapClick = async () => {
@@ -54,108 +52,99 @@ const PostDetail: React.FC = () => {
       if (postDetail) {
         const updatedPostDetail = {
           ...postDetail,
-          scrap_count: postDetail?.is_scrapped
-            ? postDetail.scrap_count - 1
-            : postDetail.scrap_count + 1,
-          is_scrapped: !postDetail.is_scrapped,
+          scrap_count: postDetail.scrap ? postDetail.scrapCount - 1 : postDetail.scrapCount + 1,
+          is_scrapped: !postDetail.scrap,
         };
 
         setIsScrapped((prev) => !prev);
         setPostDetail(updatedPostDetail);
 
-        if (!postDetail.is_scrapped) {
+        if (!postDetail.scrap) {
           setShowEditor(true);
         }
       }
-
-      // // 추후 API 연동 시 사용할 logic
-      // if (scrapCount) {
-      //   const updatedCount = isScrapped ? scrapCount - 1 : scrapCount + 1;
-
-      //   await axios.patch('/data/post-detail/post-detail.json', {
-      //     scrap_count: updatedCount,
-      //   });
-
-      //   setIsScrapped((prev) => !prev);
-      //   setScrapCount(updatedCount);
-      // }
-
-      // 일정 시간 후 모달 숨기기
-      // setTimeout(() => setShowEditor(false), 3000);
     } catch (error) {
       console.error('Error updating scrap: ', error);
     }
   };
 
   useEffect(() => {
-    const fetchPostDetail = async () => {
-      try {
-        // 추후 API 연동 시 '/posts/${numericId}'로 GET 요청
-        const response = await axios.get('/data/post-detail/post-detail.json');
-        const postDetailData = response.data;
-        console.log(postDetailData);
+    if (postId !== null) {
+      const token = localStorage.getItem('accessToken');
+      const fetchPostDetail = async () => {
+        try {
+          const response = await axiosInstance.get(`/posts/${postId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const postDetailData = response.data;
+          console.log(postDetailData);
 
-        setPostDetail(postDetailData);
-      } catch (error) {
-        console.error('Post detail fetching error: ', error);
-      }
-    };
+          setPostDetail(postDetailData);
+          setIsScrapped(postDetailData.is_scrapped);
+        } catch (error) {
+          console.error('Post detail fetching error: ', error);
+        }
+      };
 
-    fetchPostDetail();
-  }, []);
+      fetchPostDetail();
+    }
+  }, [postId]);
 
   const closeEditor = () => {
     setShowEditor(false);
   };
+
+  if (!postDetail) {
+    return <Spinner />;
+  }
 
   return (
     <>
       <S.PostDetailWrapper>
         <S.PostDetailHeader>
           <S.LeftArrow onClick={() => navigate(-1)} />
-          <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
+          <S.HeaderTitle>{postDetail.author}'s Post</S.HeaderTitle>
         </S.PostDetailHeader>
         <S.PostDetailMain>
-          {/* Intro Section */}
           <S.PostIntroduction>
             <S.PostInfosContainer>
               <S.PostAuthorDate>
-                <S.ProfileImage src={postDetail?.profile_img} />
+                <S.ProfileImage src={postDetail.profile_img} />
                 <S.NameBadgeContainer>
-                  <S.AuthorName>{postDetail?.author}</S.AuthorName>
-                  {postDetail?.certificated_user && <S.CertificationBadge />}
+                  <S.AuthorName>{postDetail.author}</S.AuthorName>
+                  {postDetail.badge && <S.CertificationBadge />}
                 </S.NameBadgeContainer>
                 <span>•</span>
-                <S.PostDate>{postDetail?.created_at}</S.PostDate>
+                <S.PostDate>{postDetail.created_at}</S.PostDate>
               </S.PostAuthorDate>
               <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
             </S.PostInfosContainer>
-            <S.PostTitle>{postDetail?.title}</S.PostTitle>
-            <S.PostCategory>{postDetail?.category}</S.PostCategory>
+            <S.PostTitle>{postDetail.title}</S.PostTitle>
+            <S.PostCategory>{postDetail.categories}</S.PostCategory>
           </S.PostIntroduction>
 
-          {/* Content Section */}
           <S.PostContentWrapper>
             <S.PostContentContainer>
-              <S.TextContent>{postDetail?.content}</S.TextContent>
-              {postDetail?.images?.map((image) => (
+              <S.TextContent>{postDetail.content}</S.TextContent>
+              {postDetail.images?.map((image) => (
                 <S.ImageContent key={image.image_id} src={image.image_url} />
               ))}
             </S.PostContentContainer>
             <S.PostHastagContainer>
-              {postDetail?.hashtags.map((tag, index) => (
-                <S.HashtagButton key={index}>#{tag}</S.HashtagButton>
+              {postDetail.tag.map((tagItem, index) => (
+                <S.HashtagButton key={index}>#{tagItem}</S.HashtagButton>
               ))}
             </S.PostHastagContainer>
           </S.PostContentWrapper>
 
-          {/* Post Footer Section */}
           <S.PostDetailFooter>
             <S.BookmarkContainer>
               <S.BookmarkIcon $isScrapped={isScrapped} onClick={handleScrapClick} />
-              <S.ScrapCount>{postDetail?.scrap_count}</S.ScrapCount>
+              <S.ScrapCount>{postDetail.scrapCount}</S.ScrapCount>
             </S.BookmarkContainer>
-            <S.PostLinkButton onClick={() => handleLinkClick(postDetail?.link_url)}>
+            <S.PostLinkButton onClick={() => handleLinkClick(postDetail.link_url)}>
               <S.LinkIcon />
               다른 플랫폼에 게시된 같은 컨텐츠도 보러가기
             </S.PostLinkButton>
@@ -165,9 +154,9 @@ const PostDetail: React.FC = () => {
       <ScrapEditorSection
         showEditor={showEditor}
         closeEditor={closeEditor}
-        thumbnail={postDetail?.thumbnail_url}
-        category={postDetail?.category}
-        postid={postDetail?.post_id}
+        thumbnail={postDetail.thumbnail_url}
+        category={postDetail.categories}
+        postid={postDetail.post_id}
       />
     </>
   );

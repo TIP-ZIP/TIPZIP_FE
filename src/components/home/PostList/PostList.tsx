@@ -103,7 +103,7 @@ const PostList: React.FC<PostListProps> = ({
     }
   };
   useEffect(() => {
-    if (searchQuery || selectedTags.length > 0) {
+    if (searchQuery || (selectedTags && selectedTags.length > 0)) {
       console.log(searchQuery || selectedTags);
       setPostsData(posts);
     } else {
@@ -119,11 +119,11 @@ const PostList: React.FC<PostListProps> = ({
         } else {
           getPostsForGeneral(); // 전체에서 일반 포스트 보기
         }
-      } else {
+      } else if (isMypage) {
         getPostsForMypage(); // 마이페이지 포스트
       }
     }
-  }, [searchQuery, selectedTags, selectedCategory, sortOption, selectedItem, isVerify, posts]); // searchQuery가 변경될 때마다 실행
+  }, [searchQuery, selectedTags, selectedCategory, sortOption, selectedItem, isVerify]);
 
   const handleBookmarkToggle = async (postId: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();

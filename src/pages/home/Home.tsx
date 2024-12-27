@@ -180,14 +180,14 @@ const Home: React.FC = () => {
             <S.NoResultsText>검색결과가 존재하지 않습니다.</S.NoResultsText>
           ) : (
             <PostList
-              selectedCategory={selectedCategoryNumbers}
+              selectedCategory={selectedCategoryNumbers || []}
               sortOption={selectedSort}
               selectedItem={selectedItem}
               handleBookmarkClick={handleBookmarkClick}
               isVerify={selectedVerify}
-              posts={posts} // 검색된 포스트 전달
-              searchQuery={searchQuery}
-              selectedTags={selectedTags}
+              posts={posts || []}
+              searchQuery={searchQuery || ''}
+              selectedTags={selectedTags || []}
             />
           )}
         </>
