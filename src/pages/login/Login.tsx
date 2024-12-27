@@ -11,10 +11,20 @@ const Login: React.FC = () => {
   const KAKAO_REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
   const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
+
+  const GoogleAuthBaseURL = 'https://accounts.google.com/o/oauth2/v2/auth';
+  const GOOGLE_AUTH_URL = `${GoogleAuthBaseURL}?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20profile%20email`;
 
   const handleKakaoLogin = () => {
     window.location.href = KAKAO_AUTH_URL;
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL;
   };
 
   return (
@@ -32,7 +42,7 @@ const Login: React.FC = () => {
           네이버로 로그인
           <S.NaverIcon src={NaverIcon} />
         </S.NaverButton>
-        <S.GoogleButton>
+        <S.GoogleButton onClick={handleGoogleLogin}>
           구글로 로그인
           <S.SocialIcon src={GoogleIcon} />
         </S.GoogleButton>
