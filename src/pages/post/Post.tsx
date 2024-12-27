@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import useAuth from '@hooks/useAuth';
+import LoginModalContainer from '@components/home/LoginModalContainer';
 
 import PostHeader from '@components/post/PostHeader';
 import TagSelector from '@components/post/TagSelector';
@@ -9,19 +10,19 @@ import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
 
 import * as S from './Post.styled';
+import axiosInstance from '@api/axios';
 
 interface Post {
   title: string;
-  content: string;
-  tags: string[];
   category: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  linkUrl?: string;
+  tag: string[];
+  content: string;
+  link_url?: string;
+  thumbnail_url?: string;
 }
 
 const Post: React.FC = () => {
-  const navigate = useNavigate();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
@@ -30,6 +31,21 @@ const Post: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [showTags, setShowTags] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const token = localStorage.getItem('accessToken');
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // 컴포넌트 진입 시 로그인 체크
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+    }
+  }, [isAuthenticated]);
+
+  const handleImageUpload = (imageUrl: string) => {
+    setImages(prev => [...prev, imageUrl]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,33 +68,39 @@ const Post: React.FC = () => {
       return;
     }
 
+    // 태그에서 # 제거
+    const processedTags = tags.map(tag => tag.replace('#', ''));
+
     const postData: Post = {
       title: title.trim(),
-      content: content.trim(),
-      tags,
       category,
-      imageUrl: imageUrl || undefined,
-      videoUrl: videoUrl || undefined,
-      linkUrl: linkUrl.trim() || undefined,
+      tag: processedTags,
+      content: content.trim(),
+      link_url: linkUrl.trim() || undefined,
+      thumbnail_url: images.length > 0 ? images[0] : undefined
     };
 
     try {
-      // 폼 제출(게시글 등록) 로직
-      const response = await axios.post('/api/posts', postData, {
+      // 요청 데이터 로깅
+      console.log('Sending post data:', postData);
+
+      const response = await axiosInstance.post('/posts', postData, {
         headers: {
           'Content-Type': 'application/json',
-          // 필요한 경우 인증 토큰 추가
-          // 'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         },
       });
 
       if (response.status === 201) {
-        // 또는 200
         alert('게시글이 성공적으로 등록되었습니다.');
-        navigate('/'); // 홈으로 이동
+        navigate('/');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('게시글 등록 실패:', error);
+      // 더 자세한 에러 정보 출력
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+      }
       alert('게시글 등록에 실패했습니다. 다시 시도해주세요.');
     }
   };
@@ -103,34 +125,49 @@ const Post: React.FC = () => {
   };
 
   return (
-    <S.Container>
-      <PostHeader title='글 작성' onBackClick={() => navigate('/home')} />
-
-      <PostTitle title={title} onChange={setTitle} />
-
-      <TagSelector
-        category={category}
-        tags={tags}
-        showTags={showTags}
-        onCategorySelect={handleCategorySelect}
-        onTagSelect={handleTagSelect}
-      />
-
-      <S.Form onSubmit={handleSubmit}>
-        <PostEditor content={content} onContentChange={setContent} />
-
-        <PostLink linkUrl={linkUrl} onChange={setLinkUrl} />
-
-        <S.ButtonContainer>
-          <S.StyledSubmitButton
-            type='submit'
-            $isValid={isFormValid()} // prop 전달
-          >
-            등록하기
-          </S.StyledSubmitButton>
-        </S.ButtonContainer>
-      </S.Form>
-    </S.Container>
+    <>
+      {showLoginModal ? (
+        <LoginModalContainer
+          showModal={showLoginModal}
+          handleClose={() => {
+            setShowLoginModal(false);
+            navigate(-1);
+          }}
+          handleLogin={() => {
+            setShowLoginModal(false);
+            navigate('/login');
+          }}
+        />
+      ) : (
+        <S.Container>
+          <PostHeader title='글 작성' onBackClick={() => navigate('/home')} />
+          <PostTitle title={title} onChange={setTitle} />
+          <TagSelector
+            category={category}
+            tags={tags}
+            showTags={showTags}
+            onCategorySelect={handleCategorySelect}
+            onTagSelect={handleTagSelect}
+          />
+          <S.Form onSubmit={handleSubmit}>
+            <PostEditor 
+              content={content} 
+              onContentChange={setContent}
+              onImageUpload={handleImageUpload}
+            />
+            <PostLink linkUrl={linkUrl} onChange={setLinkUrl} />
+            <S.ButtonContainer>
+              <S.StyledSubmitButton
+                type='submit'
+                $isValid={isFormValid()}
+              >
+                등록하기
+              </S.StyledSubmitButton>
+            </S.ButtonContainer>
+          </S.Form>
+        </S.Container>
+      )}
+    </>
   );
 };
 
