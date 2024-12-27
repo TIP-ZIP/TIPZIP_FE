@@ -32,12 +32,11 @@
       "@auth/*": ["src/auth/*"],
       "@components/*": ["src/components/*"],
       "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/hooks/*"],
       "@layout/*": ["src/layout/*"],
       "@pages/*": ["src/pages/*"],
       "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
-      "@constants/*": ["src/constants/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": ["src"], // 타입 검사 포함 디렉토리
