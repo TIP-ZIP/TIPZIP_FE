@@ -136,8 +136,6 @@ const PostList: React.FC<PostListProps> = ({
           Authorization: `Bearer ${token}`,
         },
       };
-      setShowEditor(postId);
-
       if (scrap) {
         // DELETE 요청에서 'data'는 두 번째 인자에 포함
         const response = await axiosInstance.delete('/scrap', { ...config, data: requestData });
@@ -148,6 +146,7 @@ const PostList: React.FC<PostListProps> = ({
 
       handleBookmarkClick(postId);
       if (scrap) {
+        setShowEditor(null);
       } else {
         setShowEditor(postId);
       }
