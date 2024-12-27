@@ -1,23 +1,46 @@
 import React, { useState } from 'react';
 import * as S from './SearchPost.Styled';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '@api/axios';
+import { CATEGORY_TAGS } from '@constants/TagData';
 
 const SearchPost: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
-    console.log('검색어:', searchQuery);
+    const query = `/home/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+    navigate(query);
+  };
+
+  const toggleTagSelection = (tag: string) => {
+    setSelectedTags(
+      (prevTags) =>
+        prevTags.includes(tag)
+          ? prevTags.filter((t) => t !== tag) // 태그가 이미 선택된 경우 제거
+          : [...prevTags, tag], // 태그가 선택되지 않은 경우 추가
+    );
+  };
+
+  const handleTagOptionClick = () => {
+    if (selectedTags.length > 0) {
+      setSearchQuery(selectedTags.join(' '));
+      const query = `/home/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+      navigate(query);
+    }
   };
 
   return (
     <S.Container>
       <S.SearchBox>
-        <S.BackBtn />
+        <S.BackBtn onClick={() => navigate(-1)} />
         <S.SearchBar $isFocused={isFocused}>
           <S.SearchInput
             type='text'
@@ -27,10 +50,37 @@ const SearchPost: React.FC = () => {
             onFocus={() => setIsFocused(true)} // 포커스 시 배경색 변경
             onBlur={() => setIsFocused(false)}
           />
-          <S.SearchIcon />
+          <S.SearchIcon onClick={handleSearchSubmit} />
         </S.SearchBar>
       </S.SearchBox>
-      {/* 태그 컴포넌트 추가 */}
+      {isFocused ? null : (
+        <>
+          <S.TagOption $active={selectedTags.length > 0} onClick={handleTagOptionClick}>
+            <S.TagOptionText $active={selectedTags.length > 0}>
+              선택한 태그로 검색하기
+            </S.TagOptionText>
+            <S.WhiteSearchIcon />
+          </S.TagOption>
+          <S.TagContainer>
+            {Object.entries(CATEGORY_TAGS).map(([category, tags]) => (
+              <S.CategoryWrapper key={category}>
+                <S.CategoryTitle>{category}</S.CategoryTitle>
+                <S.TagList>
+                  {tags.map((tag) => (
+                    <S.TagItem
+                      key={tag}
+                      $active={selectedTags.includes(tag)}
+                      onClick={() => toggleTagSelection(tag)}
+                    >
+                      {tag}
+                    </S.TagItem>
+                  ))}
+                </S.TagList>
+              </S.CategoryWrapper>
+            ))}
+          </S.TagContainer>
+        </>
+      )}
     </S.Container>
   );
 };

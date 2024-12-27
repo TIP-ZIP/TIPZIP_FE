@@ -1,5 +1,4 @@
 import styled, { keyframes, css } from 'styled-components';
-
 const slideUp = keyframes`
   0% {
     transform: translateY(50rem);
@@ -12,14 +11,23 @@ const slideUp = keyframes`
 `;
 
 export const EditorWrapper = styled.div<{ $showEditor: boolean }>`
-  animation: ${(props) =>
-    props.$showEditor
-      ? css`
-          ${slideUp} 1s ease-out;
-        `
-      : 'none'};
-  height: 100%;
-  max-height: 50rem;
+  ${(props) =>
+    props.$showEditor &&
+    css`
+      animation: ${slideUp} 1s ease-out;
+    `}
+
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0%;
+  height: 50rem;
+  z-index: 100;
+  transform: ${(props) => (props.$showEditor ? 'translateY(0)' : 'translateY(50rem)')};
+  opacity: ${(props) => (props.$showEditor ? 1 : 0)};
+  transition:
+    transform 1s ease-out,
+    opacity 1s ease-out; /* Smooth transition for non-animated state changes */
 `;
 
 export const EditorContainer = styled.div`
