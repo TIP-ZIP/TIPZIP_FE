@@ -19,8 +19,8 @@ const Mypage: React.FC = () => {
         post.id === postId
           ? {
               ...post,
-              isFilled: !post.isFilled,
-              bookmarks: post.isFilled ? post.bookmarks - 1 : post.bookmarks + 1,
+              isFilled: !post.scrap,
+              scrapCount: post.scrap ? post.scrapCount - 1 : post.scrapCount + 1,
             }
           : post,
       ),

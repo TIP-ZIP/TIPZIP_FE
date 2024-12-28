@@ -33,6 +33,6 @@ export const postAuthCodeToServer = async (
 
     return { status: response.status, data: response.data };
   } catch (error) {
-    console.error('Kakao Auth Error:', error);
+    console.error('OAuth 2.0 Error:', error);
   }
 };

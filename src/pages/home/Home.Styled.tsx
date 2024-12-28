@@ -20,12 +20,12 @@ export const Container = styled.div`
   /* padding: 0 2rem; */
 `;
 
-export const PostInfoBar = styled.div`
+export const PostInfoBar = styled.div<{ $isSearchPage: boolean }>`
   display: flex;
   width: 100%;
   max-width: 33.1rem;
   justify-content: space-between;
-  margin-top: 4.2rem;
+  margin-top: ${({ $isSearchPage }) => ($isSearchPage ? '2rem' : '4.2rem')};
   width: 100%;
   position: absolute;
 `;
@@ -100,4 +100,13 @@ export const Whiteedit = styled.div`
   background-size: contain;
   width: 1.6rem;
   height: 1.6rem;
+`;
+
+export const NoResultsText = styled.div`
+  display: flex;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[1000]};
+  ${({ theme }) => theme.fontStyles.Body5}
+  text-align: center;
+  margin-top: 14.4rem;
 `;
