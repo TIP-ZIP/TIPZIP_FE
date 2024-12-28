@@ -103,7 +103,7 @@ const Post: React.FC = () => {
 
       if (response.status === 201) {
         alert('게시글이 성공적으로 등록되었습니다.');
-        navigate('/');
+        navigate('/home');
       }
     } catch (error: any) {
       console.error('게시글 등록 실패:', error);
