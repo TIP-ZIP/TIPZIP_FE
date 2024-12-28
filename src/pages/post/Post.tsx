@@ -32,6 +32,7 @@ const Post: React.FC = () => {
   const [linkUrl, setLinkUrl] = useState('');
   const [showTags, setShowTags] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
   const token = localStorage.getItem('accessToken');
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -55,6 +56,12 @@ const Post: React.FC = () => {
 
   const handleImageUpload = (imageUrl: string) => {
     setImages(prev => [...prev, imageUrl]);
+    
+    if (images.length === 0) {
+        setThumbnailUrl(imageUrl);
+    }
+    
+    setContent(prev => `${prev}\n<img src="${imageUrl}" alt="uploaded" />\n`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,7 +94,7 @@ const Post: React.FC = () => {
       tag: processedTags,
       content: content.trim(),
       link_url: linkUrl.trim() || undefined,
-      thumbnail_url: images.length > 0 ? images[0] : undefined
+      thumbnail_url: images[0] || undefined
     };
 
     try {
