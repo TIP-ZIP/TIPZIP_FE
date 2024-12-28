@@ -20,7 +20,7 @@ const KakaoRedirect = () => {
       const handleAuth = async () => {
         try {
           const response = await postAuthCodeToServer('KAKAO', KAKAO_AUTH_CODE);
-          console.log('Response: ', response);
+          console.log('Response: ', response?.status);
 
           if (response?.status === 200 || response?.status === 201) {
             console.log('Kakao Auth Success: ', response.data);
@@ -30,6 +30,7 @@ const KakaoRedirect = () => {
             localStorage.setItem('userID', response.data.user_id);
 
             if (response.data.username) {
+              localStorage.setItem('userName', response.data.username);
               navigate('/home');
             } else {
               navigate('/set-username');

@@ -18,7 +18,8 @@ const Login: React.FC = () => {
   const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
   const NAVER_STATE_STRING = import.meta.env.VITE_NAVER_STATE_STRING;
 
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
+  const KakaoAuthBaseURL = 'https://kauth.kakao.com/oauth/authorize';
+  const KAKAO_AUTH_URL = `${KakaoAuthBaseURL}?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
 
   const GoogleAuthBaseURL = 'https://accounts.google.com/o/oauth2/v2/auth';
   const GOOGLE_AUTH_URL = `${GoogleAuthBaseURL}?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20profile%20email`;
