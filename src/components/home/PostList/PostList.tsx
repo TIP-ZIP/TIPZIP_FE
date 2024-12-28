@@ -83,6 +83,7 @@ const PostList: React.FC<PostListProps> = ({
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for following', error);
+      setPostsData([]);
     }
   };
 
@@ -100,12 +101,13 @@ const PostList: React.FC<PostListProps> = ({
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for certified users', error);
+      setPostsData([]);
     }
   };
   useEffect(() => {
     if (searchQuery || (selectedTags && selectedTags.length > 0)) {
       console.log(searchQuery || selectedTags);
-      setPostsData(posts);
+      setPostsData(posts || []);
     } else {
       if (selectedItem === '팔로잉') {
         if (isVerify) {
@@ -163,24 +165,28 @@ const PostList: React.FC<PostListProps> = ({
   return (
     <>
       <S.PostList $isMypage={isMypage} $isSearchPage={isSearchPage}>
-        {postsData.map((post) => (
-          <S.PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
-            <S.PostImage $isMypage={isMypage}>
-              <S.ProfileContainer>
-                <S.ProfileImage />
-                <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
-              </S.ProfileContainer>
-              <S.BookmarkContainer>
-                <S.BookmarkIcon
-                  $isFilled={post.scrap}
-                  onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
-                />
-                <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
-              </S.BookmarkContainer>
-            </S.PostImage>
-            <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
-          </S.PostItem>
-        ))}
+        {Array.isArray(postsData) && postsData.length > 0 ? (
+          postsData.map((post) => (
+            <S.PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
+              <S.PostImage $isMypage={isMypage}>
+                <S.ProfileContainer>
+                  <S.ProfileImage />
+                  <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
+                </S.ProfileContainer>
+                <S.BookmarkContainer>
+                  <S.BookmarkIcon
+                    $isFilled={post.scrap}
+                    onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
+                  />
+                  <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
+                </S.BookmarkContainer>
+              </S.PostImage>
+              <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
+            </S.PostItem>
+          ))
+        ) : (
+          <S.Nocontent>조회할 수 있는 글이 없어요!</S.Nocontent>
+        )}
       </S.PostList>
 
       {showEditor !== null && (

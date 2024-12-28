@@ -14,21 +14,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   searchQuery,
   setSearchQuery,
   selectedTags,
-  setSelectedTags,
   handleSearchSubmit,
 }) => {
   const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-  };
-
-  const handleTagClick = () => {
-    // '/search'로 이동하고, 쿼리 파라미터로 'tags' 값을 전달
-    const tagsQuery = selectedTags.join(',');
-    navigate(
-      `/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(tagsQuery)}`,
-    );
   };
 
   return (

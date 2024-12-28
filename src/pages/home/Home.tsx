@@ -18,10 +18,11 @@ const Home: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState('전체');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false); // 검색 여부 상태
   const [isClicked, setIsClicked] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(''); // 검색어 상태 추가
-  const [selectedTags, setSelectedTags] = useState<string[]>([]); // 선택된 태그 상태 추가
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const token = localStorage.getItem('accessToken');
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,9 +33,20 @@ const Home: React.FC = () => {
     useCategory();
   const { sortOption, selectedSort, handleSortOptionClick } = useSort();
 
+  const sortMapping: Record<string, string> = {
+    최신순: 'recent',
+    '오래된 순': 'oldest',
+    인기순: 'popular',
+  };
+
+  const apiSortOption = sortMapping[selectedSort];
+
   const handleOption = (option: string) => {
     handleSortOptionClick(option);
     setIsOpen(false);
+    if (isSearching) {
+      fetchPostsFromQuery(option);
+    }
   };
 
   const toggleDropdown = () => {
@@ -103,20 +115,27 @@ const Home: React.FC = () => {
     }
   }, [selectedItem, isAuthenticated]);
 
-  const fetchPostsFromQuery = async () => {
+  const fetchPostsFromQuery = async (updatedSort?: string) => {
     try {
-      const query = `/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+      const sort = updatedSort ? sortMapping[updatedSort] : apiSortOption || 'recent';
+      const query = `/search?sort=${encodeURIComponent(sort)}&search=${encodeURIComponent(
+        searchQuery,
+      )}&tags=${encodeURIComponent(selectedTags.join(','))}`;
       const response = await axiosInstance.get(query);
-      setPosts(response.data);
-      console.log(response.data);
+      setPosts(response.data); // API 응답 데이터를 상태에 저장
     } catch (error) {
       console.error('검색 결과를 가져오는 중 오류가 발생했습니다.', error);
     }
   };
 
-  // 검색어와 태그가 변경되면 API 호출 처리
-  const handleSearchSubmit = async () => {
-    const query = `/home?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+  const handleSearchSubmit = () => {
+    setIsSearching(true);
+    fetchPostsFromQuery();
+    const query = `/home/search?sort=${encodeURIComponent(
+      apiSortOption,
+    )}&search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(
+      selectedTags.join(','),
+    )}`;
     navigate(query);
   };
 
@@ -130,15 +149,23 @@ const Home: React.FC = () => {
           ?.split(',')
           .map((tag) => tag.replace('#', ''))
       : [];
+    const sort = params.get('sort') || 'recent';
+    const translatedSort =
+      Object.keys(sortMapping).find((key) => sortMapping[key] === sort) || '최신순'; // 기본값으로 '최신순' 사용
+
     setSearchQuery(query);
     setSelectedTags(tags || []);
+    handleSortOptionClick(translatedSort); // 한글 값으로 변환하여 처리
   }, [search]);
 
   useEffect(() => {
-    if (searchQuery || selectedTags.length > 0) {
+    if (isSearchPage && (searchQuery || selectedTags.length > 0)) {
+      setIsSearching(true);
       fetchPostsFromQuery();
+    } else {
+      setIsSearching(false); // 검색 상태 비활성화
     }
-  }, [searchQuery, selectedTags]);
+  }, [searchQuery, selectedTags, isSearchPage]);
 
   return (
     <S.HomeLayout>
@@ -148,7 +175,7 @@ const Home: React.FC = () => {
           setSearchQuery={setSearchQuery}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
-          handleSearchSubmit={handleSearchSubmit} // 검색 처리 함수 추가
+          handleSearchSubmit={handleSearchSubmit}
         />
         {!isSearchPage && (
           <>
