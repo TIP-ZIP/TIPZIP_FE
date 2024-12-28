@@ -33,6 +33,7 @@ const GoogleRedirect = () => {
             localStorage.setItem('userID', response.data.user_id);
 
             if (response.data.username) {
+              localStorage.setItem('userName', response.data.username);
               navigate('/home');
             } else {
               navigate('/set-username');

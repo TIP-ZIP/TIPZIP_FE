@@ -1,10 +1,14 @@
-import React, { useRef, useState } from 'react';
-import checkDuplicate from '@api/checkDuplicate';
-
-import * as S from './SetUsername.styled';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SetUsername: React.FC = () => {
+import checkDuplicate from '@api/username/checkDuplicate';
+import setUsername from '@api/username/setUsername';
+
+import * as S from './SetUsername.styled';
+
+const SetUsername = () => {
+  const navigate = useNavigate();
+
   const MAX_NICKNAME_LENGTH = 12;
 
   const nav = useNavigate();
@@ -14,6 +18,7 @@ const SetUsername: React.FC = () => {
   const [nickname, setNickname] = useState<string>('');
   const [isComposing, setIsComposing] = useState<boolean>(false);
   const [invalidMessage, setInvalidMessage] = useState<string>('');
+  const [duplicateCheckAvailable, setDuplicateCheckAvailable] = useState<boolean>(false);
   const [submitAvailable, setSubmitAvailable] = useState<boolean>(false);
 
   const handleCompositionStart = () => {
@@ -27,11 +32,27 @@ const SetUsername: React.FC = () => {
     setNickname(e.currentTarget.value);
   };
 
-  const handleSaveButtonClick = () => {
-    if (!isComposing) {
-      // 추후 API 연동 시 사용자 이름 POST 로직 필요
+  const handleDuplicateCheck = async () => {
+    const checkedStatus = await checkDuplicate(nickname);
+    console.log(checkedStatus);
 
-      alert('사용자 이름 설정 완료!');
+    if (checkedStatus === 200) {
+      setSubmitAvailable(true);
+    }
+  };
+
+  const handleSaveButtonClick = async () => {
+    if (!isComposing) {
+      try {
+        const responseStatus = await setUsername(nickname);
+
+        if (responseStatus === 200) {
+          localStorage.setItem('userName', nickname);
+          navigate('/home');
+        }
+      } catch (error) {
+        console.error('Setting Username failed: ', error);
+      }
     }
     nicknameInputRef.current?.blur(); // 저장 버튼 클릭 시 Input 포커스 해제
     nav('/home');
@@ -56,15 +77,15 @@ const SetUsername: React.FC = () => {
 
     if (!nicknameLength) {
       setNickname(nicknameInput);
-      setSubmitAvailable(false);
+      setDuplicateCheckAvailable(false);
       setInvalidMessage('');
     } else if (!isNicknameValid) {
       setNickname(nicknameInput);
-      setSubmitAvailable(false);
+      setDuplicateCheckAvailable(false);
       setInvalidMessage('특수문자는 사용할 수 없습니다.');
     } else if (nicknameLength <= 12) {
       setNickname(nicknameInput);
-      setSubmitAvailable(true);
+      setDuplicateCheckAvailable(true);
       setInvalidMessage('');
     }
   };
@@ -96,8 +117,8 @@ const SetUsername: React.FC = () => {
             </S.Restriction>
           </S.InvalidCheckContainer>
           <S.DuplicateCheckButton
-            onClick={() => checkDuplicate(nickname)}
-            disabled={!submitAvailable}
+            onClick={handleDuplicateCheck}
+            disabled={!duplicateCheckAvailable}
           >
             중복 확인
           </S.DuplicateCheckButton>
