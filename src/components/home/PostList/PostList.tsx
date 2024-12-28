@@ -45,18 +45,21 @@ const PostList: React.FC<PostListProps> = ({
   const isSearchPage = location.pathname.includes('/home/search');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { isAuthenticated } = useAuth();
+
   // 마이페이지 포스트 가져오기
   const getPostsForMypage = async () => {
     try {
-      const id = '변희민'; //userid 받아오기
-      const response = await axiosInstance.get(`/post/user/${id}`, {
+      const id = localStorage.getItem('userID');
+      const response = await axiosInstance.get(`/posts/user/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for mypage', error);
+      setPostsData([]);
     }
   };
 

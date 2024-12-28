@@ -13,12 +13,12 @@ interface PostImage {
 
 interface PostDetail {
   post_id: number;
-  profile_img?: string;
+  profile_image?: string;
   author: string;
   badge: boolean;
   createdAt: string;
   title: string;
-  categories: string;
+  category: string;
   content: string;
   images?: PostImage[];
   tag: string[];
@@ -26,6 +26,7 @@ interface PostDetail {
   scrap: boolean;
   link_url?: string;
   thumbnail_url: string;
+  user_id: number;
 }
 
 interface Params {
@@ -136,7 +137,7 @@ const PostDetail: React.FC = () => {
   };
 
   const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
-
+  const writerID = postDetail?.user_id;
   return (
     <>
       {isLoading ? (
@@ -152,7 +153,7 @@ const PostDetail: React.FC = () => {
               <S.PostIntroduction>
                 <S.PostInfosContainer>
                   <S.PostAuthorDate>
-                    <S.ProfileImage src={postDetail?.profile_img} />
+                    <S.ProfileImage src={postDetail?.profile_image} />
                     <S.NameBadgeContainer>
                       <S.AuthorName>{postDetail?.author}</S.AuthorName>
                       {postDetail?.badge && <S.CertificationBadge />}
@@ -160,10 +161,12 @@ const PostDetail: React.FC = () => {
                     <span>•</span>
                     <S.PostDate>{postDetail?.createdAt}</S.PostDate>
                   </S.PostAuthorDate>
-                  <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
+                  <S.AuthorProfileButton onClick={() => navigate(`/mypage/${writerID}`)}>
+                    프로필 보기
+                  </S.AuthorProfileButton>
                 </S.PostInfosContainer>
                 <S.PostTitle>{postDetail?.title}</S.PostTitle>
-                <S.PostCategory>{postDetail?.categories}</S.PostCategory>
+                <S.PostCategory>{postDetail?.category}</S.PostCategory>
               </S.PostIntroduction>
 
               <S.PostContentWrapper>
@@ -199,7 +202,7 @@ const PostDetail: React.FC = () => {
               showEditor={showEditor}
               closeEditor={closeEditor}
               thumbnail={postDetail?.thumbnail_url}
-              category={postDetail?.categories}
+              category={postDetail?.category}
               postid={postDetail?.post_id}
             />
           )}
