@@ -2,17 +2,11 @@ import axiosInstance from '@api/axios';
 
 const checkDuplicate = async (username: string): Promise<void> => {
   try {
-    const response = await axiosInstance.post(
-      '/auth/username',
-      {
-        username: username,
+    const response = await axiosInstance.get(`/auth/username/exists?username=${username}`, {
+      headers: {
+        'Content-Type': 'application/json',
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+    });
 
     // 추후 API 연동 시 Axios Instance 변경 및 Response 형식 반영
     switch (response.status) {

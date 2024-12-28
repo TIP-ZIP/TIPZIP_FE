@@ -59,7 +59,7 @@ const PostList: React.FC<PostListProps> = ({
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
       setPostsData(response.data);
       console.log(response.data);
@@ -71,7 +71,7 @@ const PostList: React.FC<PostListProps> = ({
   // 팔로잉 포스트 가져오기
   const getPostsForFollowing = async () => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(
         `/posts/following?sort=${sortOption}&${categoryQuery}`,
         {
@@ -88,7 +88,7 @@ const PostList: React.FC<PostListProps> = ({
 
   const getPostsForCertifiedUsers = async (isFollow: boolean) => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(
         `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}`,
         {
