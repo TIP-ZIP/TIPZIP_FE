@@ -16,7 +16,7 @@ const Login: React.FC = () => {
 
   const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
   const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
-  const NAVER_STATE_STRING = 'test';
+  const NAVER_STATE_STRING = import.meta.env.VITE_NAVER_STATE_STRING;
 
   const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}`;
 

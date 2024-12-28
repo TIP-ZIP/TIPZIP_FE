@@ -38,7 +38,7 @@ function App() {
           <Route path='/' element={<OnBoarding />} />
           <Route path='/home/*' element={<Home />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/oauth' element={<KakaoRedirect />} />
+          <Route path='/oauth/kakao' element={<KakaoRedirect />} />
           <Route path='/oauth/google' element={<GoogleRedirect />} />
           <Route path='/oauth/naver' element={<NaverRedirect />} />
           <Route path='/set-username' element={<SetUsername />} />
