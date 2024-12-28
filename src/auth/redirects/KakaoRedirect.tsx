@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postAuthCodeToServer } from '@auth/utils/authHelpers';
+import Spinner from '@components/postdetail/Spinner';
 
 const KakaoRedirect = () => {
   const location = useLocation();
@@ -49,7 +50,7 @@ const KakaoRedirect = () => {
 
   return (
     <div>
-      <h1>Redirecting...</h1>
+      <Spinner />
     </div>
   );
 };

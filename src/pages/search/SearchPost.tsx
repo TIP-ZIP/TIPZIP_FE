@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import * as S from './SearchPost.Styled';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '@api/axios';
 import { CATEGORY_TAGS } from '@constants/TagData';
 
 const SearchPost: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedSort, setSelectedSort] = useState('최신순');
   const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +16,7 @@ const SearchPost: React.FC = () => {
 
   const handleSearchSubmit = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
-    const query = `/home/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+    const query = `/home/search?sort=${encodeURIComponent(selectedSort)}&search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
     navigate(query);
   };
 
@@ -32,7 +32,7 @@ const SearchPost: React.FC = () => {
   const handleTagOptionClick = () => {
     if (selectedTags.length > 0) {
       setSearchQuery(selectedTags.join(' '));
-      const query = `/home/search?search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
+      const query = `/home/search?sort=${encodeURIComponent(selectedSort)}&search=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(','))}`;
       navigate(query);
     }
   };
