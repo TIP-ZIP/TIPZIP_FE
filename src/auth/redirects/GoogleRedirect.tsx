@@ -3,23 +3,25 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postAuthCodeToServer } from '@auth/utils/authHelpers';
 
-const KakaoRedirect = () => {
+const GoogleRedirect = () => {
   const location = useLocation();
-  const isFirstRender = useRef<boolean>(true);
-
   const navigate = useNavigate();
 
-  const KAKAO_AUTH_CODE = new URLSearchParams(location.search).get('code');
-  console.log(KAKAO_AUTH_CODE);
+  const isFirstRender = useRef<boolean>(true);
+
+  const queryParams = new URLSearchParams(location.search);
+  const GOOGLE_AUTH_CODE = queryParams.get('code');
 
   useEffect(() => {
     if (!isFirstRender.current) return;
     isFirstRender.current = false;
 
-    if (KAKAO_AUTH_CODE) {
+    if (GOOGLE_AUTH_CODE) {
+      console.log('Authorization Code: ', GOOGLE_AUTH_CODE);
+
       const handleAuth = async () => {
         try {
-          const response = await postAuthCodeToServer('KAKAO', KAKAO_AUTH_CODE);
+          const response = await postAuthCodeToServer('GOOGLE', GOOGLE_AUTH_CODE);
           console.log('Response: ', response);
 
           if (response?.status === 200 || response?.status === 201) {
@@ -39,19 +41,19 @@ const KakaoRedirect = () => {
             navigate('/login-error');
           }
         } catch (error) {
-          console.error('Unknown Kakao Auth Error: ', error);
+          console.error('Fetching access token failed: ', error);
         }
       };
 
       handleAuth();
     }
-  }, [KAKAO_AUTH_CODE, navigate]);
+  }, [GOOGLE_AUTH_CODE, navigate]);
 
   return (
-    <div>
-      <h1>Redirecting...</h1>
-    </div>
+    <>
+      <h1>Google Login Processing...</h1>
+    </>
   );
 };
 
-export default KakaoRedirect;
+export default GoogleRedirect;
