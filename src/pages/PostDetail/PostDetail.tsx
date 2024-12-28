@@ -16,7 +16,7 @@ interface PostDetail {
   profile_img?: string;
   author: string;
   badge: boolean;
-  created_at: string;
+  createdAt: string;
   title: string;
   categories: string;
   content: string;
@@ -69,6 +69,11 @@ const PostDetail: React.FC = () => {
     }
   };
 
+  // Format date to 'YYYY.MM.DD'
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString('en-CA').replace(/-/g, '.');
+  };
+
   useEffect(() => {
     if (postId !== null) {
       const fetchPostDetail = async () => {
@@ -80,6 +85,9 @@ const PostDetail: React.FC = () => {
             },
           });
           const postDetailData = response.data;
+
+          // Format the createdAt date
+          postDetailData.createdAt = formatDate(postDetailData.createdAt);
 
           setPostDetail(postDetailData);
           setIsScrapped(postDetailData.is_scrapped);
@@ -97,6 +105,37 @@ const PostDetail: React.FC = () => {
   const closeEditor = () => {
     setShowEditor(false);
   };
+  const extractImages = (htmlContent: string) => {
+    const imgRegex = /<img[^>]+src="([^">]+)"/g;
+    let images: string[] = [];
+    let match;
+
+    // 이미지 src를 찾아 배열에 추가
+    while ((match = imgRegex.exec(htmlContent)) !== null) {
+      images.push(match[1]);
+    }
+
+    // 이미지를 제외한 나머지 텍스트를 반환
+    const textWithoutImages = htmlContent.replace(imgRegex, '');
+    return { text: textWithoutImages, images };
+  };
+
+  const { text: contentText, images: contentImages } = postDetail
+    ? extractImages(postDetail.content)
+    : { text: '', images: [] };
+
+  const cleanContent = (htmlContent: string) => {
+    // 이미지 태그를 제거하고, 스타일을 포함한 다른 태그도 제거
+    const cleanedContent = htmlContent
+      .replace(/<img[^>]*>/g, '') // 모든 이미지 태그 제거
+      .replace(/<div[^>]*>/g, '') // div 태그 제거
+      .replace(/<\/div>/g, '') // div 닫는 태그 제거
+      .replace(/<[^>]+>/g, ''); // 나머지 HTML 태그 모두 제거
+
+    return cleanedContent;
+  };
+
+  const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
 
   return (
     <>
@@ -119,7 +158,7 @@ const PostDetail: React.FC = () => {
                       {postDetail?.badge && <S.CertificationBadge />}
                     </S.NameBadgeContainer>
                     <span>•</span>
-                    <S.PostDate>{postDetail?.created_at}</S.PostDate>
+                    <S.PostDate>{postDetail?.createdAt}</S.PostDate>
                   </S.PostAuthorDate>
                   <S.AuthorProfileButton>프로필 보기</S.AuthorProfileButton>
                 </S.PostInfosContainer>
@@ -129,9 +168,9 @@ const PostDetail: React.FC = () => {
 
               <S.PostContentWrapper>
                 <S.PostContentContainer>
-                  <S.TextContent>{postDetail?.content}</S.TextContent>
-                  {postDetail?.images?.map((image) => (
-                    <S.ImageContent key={image.image_id} src={image.image_url} />
+                  <S.TextContent>{cleanedContent}</S.TextContent>
+                  {contentImages.map((imageUrl, index) => (
+                    <img key={index} src={imageUrl} alt={`image-${index}`} />
                   ))}
                 </S.PostContentContainer>
                 <S.PostHastagContainer>
