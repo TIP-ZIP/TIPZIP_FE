@@ -2,10 +2,12 @@ import React, { useRef, useState } from 'react';
 import checkDuplicate from '@api/checkDuplicate';
 
 import * as S from './SetUsername.styled';
+import { useNavigate } from 'react-router-dom';
 
 const SetUsername: React.FC = () => {
   const MAX_NICKNAME_LENGTH = 12;
 
+  const nav = useNavigate();
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
   const saveButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -32,6 +34,7 @@ const SetUsername: React.FC = () => {
       alert('사용자 이름 설정 완료!');
     }
     nicknameInputRef.current?.blur(); // 저장 버튼 클릭 시 Input 포커스 해제
+    nav('/home');
   };
 
   // // 추후 필요 시 추가

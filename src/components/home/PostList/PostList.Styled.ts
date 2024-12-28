@@ -28,6 +28,16 @@ export const PostItem = styled.div`
   text-align: left;
 `;
 
+export const Nocontent = styled.div`
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+`;
+
 export const PostImage = styled.div<{ $isMypage?: boolean }>`
   width: 16rem;
   height: 16rem;

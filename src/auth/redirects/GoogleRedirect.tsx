@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postAuthCodeToServer } from '@auth/utils/authHelpers';
+import Spinner from '@components/postdetail/Spinner';
 
 const GoogleRedirect = () => {
   const location = useLocation();
@@ -49,11 +50,7 @@ const GoogleRedirect = () => {
     }
   }, [GOOGLE_AUTH_CODE, navigate]);
 
-  return (
-    <>
-      <h1>Google Login Processing...</h1>
-    </>
-  );
+  return <Spinner />;
 };
 
 export default GoogleRedirect;
