@@ -14,6 +14,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
     onImageUpload,
 }) => {
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
         if (e.target.files && e.target.files[0]) {
             const formData = new FormData();
             formData.append('file', e.target.files[0]);
@@ -41,7 +42,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
                 onChange={(e) => onContentChange(e.target.value)}
             />
             <S.MediaButtons>
-                <S.MediaButton>
+                <S.MediaButton type="button">
                     <input
                         type="file"
                         accept="image/*"
