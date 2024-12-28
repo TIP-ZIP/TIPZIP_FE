@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import checkDuplicate from '@api/checkDuplicate';
+import checkDuplicate from '@api/username/checkDuplicate';
 
 import * as S from './SetUsername.styled';
 
@@ -23,6 +23,11 @@ const SetUsername: React.FC = () => {
     setIsComposing(false);
     // console.log('IME 조합 완료', e.currentTarget.value);
     setNickname(e.currentTarget.value);
+  };
+
+  const handleDuplicateCheck = async () => {
+    const checkedStatus = await checkDuplicate(nickname);
+    console.log(checkedStatus);
   };
 
   const handleSaveButtonClick = () => {
@@ -92,10 +97,7 @@ const SetUsername: React.FC = () => {
               • 특수문자는 사용할 수 없어요 <br /> • 12자 이내로 설정해주세요
             </S.Restriction>
           </S.InvalidCheckContainer>
-          <S.DuplicateCheckButton
-            onClick={() => checkDuplicate(nickname)}
-            disabled={!submitAvailable}
-          >
+          <S.DuplicateCheckButton onClick={handleDuplicateCheck} disabled={!submitAvailable}>
             중복 확인
           </S.DuplicateCheckButton>
         </S.TotalCheckContainer>
