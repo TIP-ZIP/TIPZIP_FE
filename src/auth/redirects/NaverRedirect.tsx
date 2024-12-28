@@ -2,29 +2,30 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postAuthCodeToServer } from '@auth/utils/authHelpers';
-import Spinner from '@components/postdetail/Spinner';
 
-const KakaoRedirect = () => {
+const NaverRedirect = () => {
   const location = useLocation();
-  const isFirstRender = useRef<boolean>(true);
-
   const navigate = useNavigate();
 
-  const KAKAO_AUTH_CODE = new URLSearchParams(location.search).get('code');
-  console.log(KAKAO_AUTH_CODE);
+  const isFirstRender = useRef<boolean>(true);
+
+  const queryParams = new URLSearchParams(location.search);
+  const NAVER_AUTH_CODE = queryParams.get('code');
 
   useEffect(() => {
     if (!isFirstRender.current) return;
     isFirstRender.current = false;
 
-    if (KAKAO_AUTH_CODE) {
+    if (NAVER_AUTH_CODE) {
+      console.log('Authorization Code: ', NAVER_AUTH_CODE);
+
       const handleAuth = async () => {
         try {
-          const response = await postAuthCodeToServer('KAKAO', KAKAO_AUTH_CODE);
+          const response = await postAuthCodeToServer('NAVER', NAVER_AUTH_CODE);
           console.log('Response: ', response);
 
           if (response?.status === 200 || response?.status === 201) {
-            console.log('Kakao Auth Success: ', response.data);
+            console.log('Naver Auth Success: ', response.data);
 
             // 로그인 성공 시 로컬 스토리지에 JWT 토큰 저장
             localStorage.setItem('accessToken', response.data.access_token);
@@ -40,19 +41,19 @@ const KakaoRedirect = () => {
             navigate('/login-error');
           }
         } catch (error) {
-          console.error('Unknown Kakao Auth Error: ', error);
+          console.error('Fetching access token failed: ', error);
         }
       };
 
       handleAuth();
     }
-  }, [KAKAO_AUTH_CODE, navigate]);
+  }, [NAVER_AUTH_CODE, navigate]);
 
   return (
-    <div>
-      <Spinner />
-    </div>
+    <>
+      <h1>Naver Login Processing...</h1>
+    </>
   );
 };
 
-export default KakaoRedirect;
+export default NaverRedirect;
