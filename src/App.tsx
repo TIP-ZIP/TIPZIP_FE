@@ -11,6 +11,7 @@ import Home from '@pages/Home/Home';
 import Login from '@pages/Login/Login';
 import KakaoRedirect from '@auth/redirects/KakaoRedirect';
 import GoogleRedirect from '@auth/redirects/GoogleRedirect';
+import NaverRedirect from '@auth/redirects/NaverRedirect';
 import SetUsername from '@pages/SetUsername/SetUsername';
 
 import SearchPost from '@pages/Search/SearchPost';
@@ -39,6 +40,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/oauth' element={<KakaoRedirect />} />
           <Route path='/oauth/google' element={<GoogleRedirect />} />
+          <Route path='/oauth/naver' element={<NaverRedirect />} />
           <Route path='/set-username' element={<SetUsername />} />
           <Route path='/search' element={<SearchPost />} />
           <Route path='/post/new' element={<Post />} />
