@@ -8,11 +8,11 @@ const axiosInstance = axios.create({
 // 요청 인터셉터 (Request Interceptor)
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
 
     // 토큰이 존재하면 토큰을 Authorization 헤더에 추가
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },

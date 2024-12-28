@@ -46,6 +46,7 @@ const SetUsername = () => {
         const responseStatus = await setUsername(nickname);
 
         if (responseStatus === 200) {
+          localStorage.setItem('userName', nickname);
           navigate('/home');
         }
       } catch (error) {
