@@ -36,12 +36,22 @@ const Post: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // 컴포넌트 진입 시 로그인 체크
+  // 컴포넌트 진입 시 로그인 체크 수정
   useEffect(() => {
-    if (!isAuthenticated) {
+    const token = localStorage.getItem('accessToken');
+    
+    // 토큰이 있을 때는 즉시 모달을 닫도록 수정
+    if (token) {
+      setShowLoginModal(false);
+      return;
+    }
+    
+    // 토큰이 없을 때만 모달 표시
+    if (!token) {
+      console.log('로그인 모달 표시 이유: 토큰 없음');
       setShowLoginModal(true);
     }
-  }, [isAuthenticated]);
+  }, []);  // isAuthenticated 의존성 제거
 
   const handleImageUpload = (imageUrl: string) => {
     setImages(prev => [...prev, imageUrl]);
