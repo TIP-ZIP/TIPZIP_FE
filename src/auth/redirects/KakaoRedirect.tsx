@@ -24,21 +24,22 @@ const KakaoRedirect = () => {
 
           if (response?.status === 200 || response?.status === 201) {
             console.log('Kakao Auth Success: ', response.data);
+
             // 로그인 성공 시 로컬 스토리지에 JWT 토큰 저장
             localStorage.setItem('accessToken', response.data.access_token);
-          } else if (response?.status === 401) {
-            console.warn('Authorization Code POST fail');
-          }
+            localStorage.setItem('userID', response.data.user_id);
 
-          if (response?.status === 200 && response.data.username) {
-            navigate('/home');
+            if (response.data.username) {
+              navigate('/home');
+            } else {
+              navigate('/set-username');
+            }
           } else {
-            navigate('/set-username');
+            console.warn('Authorization Code POST fail');
+            navigate('/login-error');
           }
         } catch (error) {
           console.error('Unknown Kakao Auth Error: ', error);
-          // // 에러 처리 페이지로 라우팅
-          // navigate('/login-error');
         }
       };
 

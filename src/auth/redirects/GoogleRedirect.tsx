@@ -29,6 +29,7 @@ const GoogleRedirect = () => {
 
             // 로그인 성공 시 로컬 스토리지에 JWT 토큰 저장
             localStorage.setItem('accessToken', response.data.access_token);
+            localStorage.setItem('userID', response.data.user_id);
 
             if (response.data.username) {
               navigate('/home');

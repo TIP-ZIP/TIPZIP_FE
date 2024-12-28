@@ -38,7 +38,7 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/oauth' element={<KakaoRedirect />} />
-          <Route path='/oauth2' element={<GoogleRedirect />} />
+          <Route path='/oauth/google' element={<GoogleRedirect />} />
           <Route path='/set-username' element={<SetUsername />} />
           <Route path='/search' element={<SearchPost />} />
           <Route path='/post/new' element={<Post />} />
