@@ -16,9 +16,11 @@ const PostThumbnail: React.FC<PostThumbnailProps> = ({
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
+  // images 배열에서 첫 번째 이미지를 자동으로 프리뷰에 넣기
   useEffect(() => {
     if (images.length > 0 && !thumbnail_url) {
-      onThumbnailSelect(images[0]);
+      setImagePreviewUrl(images[0]); // 첫 번째 이미지를 프리뷰로 설정
+      onThumbnailSelect(images[0]); // 썸네일로 첫 번째 이미지 선택
     }
   }, [images, thumbnail_url, onThumbnailSelect]);
 
@@ -33,7 +35,7 @@ const PostThumbnail: React.FC<PostThumbnailProps> = ({
       }
 
       const previewUrl = URL.createObjectURL(file);
-      setImagePreviewUrl(previewUrl);
+      setImagePreviewUrl(previewUrl); // 선택된 이미지의 미리보기 URL로 설정
       const formData = new FormData();
       formData.append('file', file);
 
@@ -45,7 +47,7 @@ const PostThumbnail: React.FC<PostThumbnailProps> = ({
         });
 
         const uploadedImageUrl = response.data.S3url;
-        onThumbnailSelect(uploadedImageUrl);
+        onThumbnailSelect(uploadedImageUrl); // 업로드된 이미지의 URL을 썸네일로 설정
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
           if (error.response?.status === 413) {
@@ -59,7 +61,7 @@ const PostThumbnail: React.FC<PostThumbnailProps> = ({
       }
     }
   };
-
+  const previewUrl = imagePreviewUrl || thumbnail_url;
   return (
     <S.Section>
       <S.TitleSection>
@@ -69,7 +71,7 @@ const PostThumbnail: React.FC<PostThumbnailProps> = ({
       <S.ViewSection>
         <S.Preview
           style={{
-            backgroundImage: imagePreviewUrl ? `url(${imagePreviewUrl})` : `url(${thumbnail_url})`,
+            backgroundImage: previewUrl ? `url(${previewUrl})` : 'none',
           }}
         />
         <S.MediaButton type='button'>

@@ -62,7 +62,6 @@ const Post: React.FC = () => {
 
   const handleThumbnailSelect = (url: string) => {
     setThumbnailUrl(url);
-    console.log(thumbnail_url);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,7 +92,7 @@ const Post: React.FC = () => {
       tag: processedTags,
       content: content.trim(),
       link_url: linkUrl.trim() || undefined,
-      thumbnail_url: thumbnail_url || images[0] || undefined,
+      thumbnail_url: thumbnail_url || images[0] || undefined, // Use the thumbnail_url if set, otherwise use the first image
     };
 
     try {
@@ -139,13 +138,7 @@ const Post: React.FC = () => {
   };
 
   const isFormValid = () => {
-    return (
-      title.trim() !== '' &&
-      category !== '' &&
-      tags.length > 0 &&
-      content.trim() !== '' &&
-      thumbnail_url
-    );
+    return title.trim() !== '' && category !== '' && tags.length > 0 && content.trim() !== '';
   };
 
   return (

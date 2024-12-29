@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import * as S from './PostEditor.styled';
@@ -13,6 +13,7 @@ interface PostEditorProps {
 
 const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onImageUpload }) => {
   const quillRef = React.useRef<ReactQuill>(null);
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
 
   const quillModules = {
     toolbar: [
@@ -43,13 +44,7 @@ const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onIma
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
 
-      console.log('업로드 시도하는 파일:', {
-        name: file.name,
-        size: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
-        type: file.type,
-      });
-
-      const maxSize = 10 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
         alert('파일 크기는 10MB 이하여야 합니다.');
         return;
@@ -58,26 +53,31 @@ const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onIma
       const formData = new FormData();
       formData.append('file', file);
 
-      console.log('FormData 내용:', {
-        hasFile: formData.has('file'),
-        fileName: file.name,
-      });
-
       try {
-        console.log('이미지 업로드 요청 시작');
         const response = await axiosInstance.post('/S3/uploadImageFile', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('이미지 업로드 성공:', response.data);
+
+        // 첫 번째 이미지를 썸네일로 설정
+        if (!thumbnail) {
+          setThumbnail(response.data.S3url); // 첫 번째 이미지를 썸네일로 설정
+          onImageUpload(response.data.S3url); // 부모로 썸네일 URL 전달
+        }
 
         // Quill 에디터에 이미지 삽입
         const quill = quillRef.current?.getEditor();
         if (quill) {
           const range = quill.getSelection() || { index: quill.getLength(), length: 0 };
-          quill.insertEmbed(range.index, 'image', response.data.S3url);
-          quill.setSelection(range.index + 1, 0);
+          const images = quill.root.querySelectorAll('img');
+          const imageUrls = Array.from(images).map((img) => img.src);
+
+          // 중복 이미지 삽입을 방지
+          if (!imageUrls.includes(response.data.S3url)) {
+            quill.insertEmbed(range.index, 'image', response.data.S3url);
+            quill.setSelection(range.index + 1, 0);
+          }
         }
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -101,11 +101,25 @@ const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onIma
   const handleChange = (value: string) => {
     console.log('에디터 내용:', value);
     onContentChange(value);
+
+    useEffect(() => {
+      // 처음 에디터가 로드될 때 첫 번째 이미지가 있으면 썸네일로 설정
+      const quill = quillRef.current?.getEditor();
+      if (quill) {
+        const images = quill.root.querySelectorAll('img');
+        if (images.length > 0 && !thumbnail) {
+          const firstImageUrl = images[0].src;
+          setThumbnail(firstImageUrl); // 첫 번째 이미지를 썸네일로 설정
+          onImageUpload(firstImageUrl); // 부모로 썸네일 URL 전달
+        }
+      }
+    }, [content]);
   };
 
   return (
     <S.ContentSection>
       <S.ContentLabel>본문 내용</S.ContentLabel>
+
       <S.QuillWrapper>
         <ReactQuill
           ref={quillRef}
