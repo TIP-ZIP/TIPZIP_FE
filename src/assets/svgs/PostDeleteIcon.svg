@@ -1,0 +1,12 @@
+<svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="Delete">
+        <path id="Stroke 1"
+            d="M7.05208 3.94482C7.05208 3.94482 6.82583 6.75107 6.69458 7.93316C6.63208 8.49774 6.28333 8.82857 5.71208 8.83899C4.62499 8.85857 3.53666 8.85982 2.44999 8.83691C1.90041 8.82566 1.55749 8.49066 1.49624 7.93607C1.36416 6.74357 1.13916 3.94482 1.13916 3.94482"
+            stroke="black" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" />
+        <path id="Stroke 3" d="M7.62833 2.59993H0.5625" stroke="black" stroke-width="0.6"
+            stroke-linecap="round" stroke-linejoin="round" />
+        <path id="Stroke 5"
+            d="M6.26674 2.59975C5.93966 2.59975 5.65799 2.3685 5.59383 2.04808L5.49258 1.54141C5.43008 1.30766 5.21841 1.146 4.97716 1.146H3.21341C2.97216 1.146 2.76049 1.30766 2.69799 1.54141L2.59674 2.04808C2.53258 2.3685 2.25091 2.59975 1.92383 2.59975"
+            stroke="black" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+</svg>

@@ -33,7 +33,13 @@ export const Modal: React.FC<ModalProps> = ({
           <S.ModalButton style={{ padding: buttonPadding1 }} onClick={onClose}>
             {buttonText1}
           </S.ModalButton>
-          <S.ModalButton1 style={{ padding: buttonPadding2 }} onClick={onAction}>
+          <S.ModalButton1
+            style={{ padding: buttonPadding2 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction();
+            }}
+          >
             {buttonText2}
           </S.ModalButton1>
         </S.ButtonContainer>

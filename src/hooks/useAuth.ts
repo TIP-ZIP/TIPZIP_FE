@@ -16,7 +16,7 @@ const useAuth = () => {
     validateToken();
   }, [validateToken]);
 
-  const logout = useCallback(async (): Promise<void> => {
+  const logout = useCallback(async (): Promise<number | undefined> => {
     try {
       const response = await axiosInstance.post('/auth/logout');
 
@@ -26,6 +26,8 @@ const useAuth = () => {
 
       localStorage.clear();
       setIsAuthenticated(false);
+
+      return response.status;
     } catch (error) {
       console.error('Logout failed: ', error);
     }
