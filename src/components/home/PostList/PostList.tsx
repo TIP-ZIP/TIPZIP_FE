@@ -239,6 +239,8 @@ const PostList: React.FC<PostListProps> = ({
       {showEditor !== null &&
         (() => {
           const selectedPost = postsData.find((post) => post.id === showEditor);
+          console.log(selectedPost?.category);
+
           return (
             <ScrapEditorSection
               showEditor={true}

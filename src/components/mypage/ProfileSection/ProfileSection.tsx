@@ -161,14 +161,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               },
             });
 
-            if (response.data.profile_image) {
-              setProfileImg(response.data.profile_image); // 서버에서 받은 프로필 이미지로 업데이트
+            // 서버에서 받은 프로필 이미지 URL 확인
+            if (response.status === 200) {
+              setProfileImg(response.data.imageUrl); // 서버에서 받은 프로필 이미지로 업데이트
             } else {
               throw new Error('Invalid response from server');
             }
           } catch (error) {
             console.error('Failed to update profile image:', error);
-            alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+            alert('이미지 최대 크기를 초과하였습니다.');
             setProfileImg(originalProfileImg); // 기존 이미지로 복구
           }
         }
