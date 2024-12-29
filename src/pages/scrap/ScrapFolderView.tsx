@@ -17,6 +17,14 @@ interface ScrapFolderViewProps {
   categories: Array<{ name: string; count: string; id?: number }>;
 }
 
+interface MyPostDTO {
+  post_id: number;
+  title: string;
+  scrap: boolean;
+  scrapCount: number;
+  thumbnail_url: string;
+}
+
 const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: initialCategories }) => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -47,28 +55,50 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
     setIsDeleteMode(false);
   };
 
-  const handleFolderClick = (index: number) => {
+  const handleFolderClick = async (index: number) => {
     setSelectedCategory(index);
     const category = categories[index];
-    const normalizedName = category.name.replace(/ /g, '');
-    const encodedName = encodeURIComponent(normalizedName);
     
-    console.log('폴더 클릭:', {
-      index,
-      category,
-      normalizedName,
-      encodedName,
-      type,
-      categoryId: category.id
-    });
-    
-    navigate(`/scrap/${type}/${encodedName}`, { 
-      state: { 
-        type,
-        originalName: category.name,
-        categoryId: category.id
+    try {
+      let response;
+      
+      if (type === 'category') {
+        // 카테고리 ID 매핑 사용
+        const categoryId = CATEGORY_IDS[category.name as keyof typeof CATEGORY_IDS];
+        const encodedCategoryName = encodeURIComponent(category.name);
+        
+        // 카테고리 폴더 조회
+        response = await axiosInstance.get<MyPostDTO[]>(`/scrap/category/${categoryId}`);
+        navigate(`/scrap/category/${encodedCategoryName}`, { 
+          state: { 
+            type,
+            originalName: category.name,
+            categoryId: categoryId,
+            posts: response.data
+          }
+        });
+      } else {
+        // 나만의 폴더 조회 시 폴더 이름 로깅
+        console.log('요청하는 폴더 이름:', category.name);
+        
+        response = await axiosInstance.get<MyPostDTO[]>('/scrap/folder', {
+          data: {
+            folder_name: category.name
+          }
+        });
+        
+        navigate(`/scrap/folder/${category.name}`, { 
+          state: { 
+            type,
+            originalName: category.name,
+            folderId: category.id,
+            posts: response.data
+          }
+        });
       }
-    });
+    } catch (error) {
+      console.error('폴더 내용 조회 실패:', error);
+    }
   };
 
   const handleCreateNewFolder = async () => {
@@ -95,6 +125,19 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
   const openCreateModal = () => {
     setIsCreateModalOpen(true);
   };
+
+  // 카테고리 ID 매핑
+  const CATEGORY_IDS = {
+    '정리/공간 활용': 1,
+    '주방': 2,
+    '청소': 3,
+    '건강': 4,
+    'IT': 5,
+    '뷰티&패션': 6,
+    '여가&휴식': 7,
+    '로컬': 8,
+    '기타': 9
+  } as const;
 
   return (
     <S.Container>
@@ -160,7 +203,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
                 type="text"
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
-                maxLength={12}
+                maxLength={130}
                 placeholder="제목을 입력하세요"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {

@@ -4,6 +4,7 @@ import ScrapFolderView from './ScrapFolderView';
 import useAuth from '@hooks/useAuth';
 import LoginModalContainer from '@components/home/LoginModalContainer';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '@api/axios';
 
 interface CategoryScrap {
   name: string;
@@ -11,12 +12,23 @@ interface CategoryScrap {
   id: number;
 }
 
-interface ScrapPost {
+interface PersonalScrap {
+  folder_name: string;
+  count: string;
+  folder_id: number;
+}
+
+interface MyPostDTO {
   post_id: number;
   title: string;
   scrap: boolean;
   scrapCount: number;
   thumbnail_url: string;
+}
+
+interface FolderResponse {
+  folderName: string;
+  count: number;
 }
 
 const categoryData: CategoryScrap[] = [
@@ -31,18 +43,45 @@ const categoryData: CategoryScrap[] = [
   { name: '기타', count: '0', id: 9 },
 ];
 
-const personalDummyData = [
-  { name: '갓생 살기', count: '13' },
-  { name: '아기 사자의 하루', count: '13' },
-  { name: '멋쟁이 사자처럼!', count: '13' },
-];
-
 const Scrap: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
   const [categories, setCategories] = React.useState<CategoryScrap[]>(categoryData);
+  const [personalFolders, setPersonalFolders] = React.useState<PersonalScrap[]>([]);
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+
+  React.useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        const isMyFolder = activeTab === 'personal';
+        const response = await axiosInstance.get<FolderResponse[]>(`/folder`, {
+          params: {
+            is_my: isMyFolder
+          }
+        });
+
+        const formattedData = response.data.map((folder) => ({
+          name: folder.folderName,
+          count: String(folder.count),
+          id: folder.folderName
+        }));
+
+        if (isMyFolder) {
+          setPersonalFolders(formattedData);
+        } else {
+          setCategories(formattedData);
+        }
+      } catch (error) {
+        console.error(`${activeTab === 'personal' ? '개인' : '카테고리'} 폴더 조회 실패:`, error);
+        if (activeTab === 'category') {
+          setCategories(categoryData);
+        }
+      }
+    };
+
+    fetchFolders();
+  }, [activeTab]);
 
   if (!isAuthenticated) {
     return (
@@ -84,7 +123,7 @@ const Scrap: React.FC = () => {
       
       <ScrapFolderView 
         type={activeTab}
-        categories={activeTab === 'category' ? categories : personalDummyData}
+        categories={activeTab === 'category' ? categories : personalFolders}
       />
     </Styled.Container>
   );
