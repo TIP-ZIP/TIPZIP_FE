@@ -18,7 +18,7 @@ import SearchPost from '@pages/Search/SearchPost';
 import Post from '@pages/Post/Post';
 import PostDetail from '@pages/PostDetail/PostDetail';
 
-import Mypage from '@pages/MyPage/Mypage';
+import MyPage from '@pages/MyPage/MyPage';
 
 import Scrap from '@pages/Scrap/Scrap';
 import ScrapPostView from '@pages/Scrap/ScrapPostView';
@@ -45,10 +45,10 @@ function App() {
           <Route path='/search' element={<SearchPost />} />
           <Route path='/post/new' element={<Post />} />
           <Route path='/post/:id' element={<PostDetail />} />
-          <Route path='/mypage' element={<Mypage />} />
+          <Route path='/mypage' element={<MyPage />} />
           <Route path='/scrap' element={<Scrap />} />
           <Route path='/scrap/:type/:categoryName' element={<ScrapPostView />} />
-          <Route path='/mypage/:writerid' element={<Mypage />} />
+          <Route path='/mypage/:writerid' element={<MyPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

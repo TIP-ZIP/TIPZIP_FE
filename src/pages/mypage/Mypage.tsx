@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as S from './Mypage.Styled';
+import * as S from './MyPage.Styled';
 import ProfileSection from '@components/mypage/ProfileSection/ProfileSection';
 import PostSection from '@components/mypage/PostSection/PostSection';
 import EditorSection from '@components/mypage/EditorSection/EditorSection';
 import axiosInstance from '@api/axios';
 
-const Mypage: React.FC = () => {
+const MyPage: React.FC = () => {
   const { writerid } = useParams<{ writerid: string }>();
   const [posts, setPosts] = useState<any[]>([]);
   const [showEditor, setShowEditor] = useState(false);
@@ -76,14 +76,12 @@ const Mypage: React.FC = () => {
     setShowEditor(false); // 에디터 닫기
   };
 
-  // 에디터 닫기
   const closeEditor = () => {
     setShowEditor(false);
   };
 
   useEffect(() => {
     const endpoint = isOwnProfile ? '/mypage/' : `/mypage/${writerid}`;
-
     axiosInstance
       .get(endpoint, {
         headers: {
@@ -120,14 +118,14 @@ const Mypage: React.FC = () => {
           <EditorSection
             showEditor={showEditor}
             editorType={editorType}
-            username={profileData.username} // 부모에서 전달된 값 사용
-            message={profileData.message} // 부모에서 전달된 값 사용
+            username={profileData.username}
+            message={profileData.message}
             handleUsernameChange={(e) =>
               setProfileData({ ...profileData, username: e.target.value })
             }
             handleMessageChange={(e) => setProfileData({ ...profileData, message: e.target.value })}
             closeEditor={closeEditor}
-            onUpdate={handleUpdate}
+            onUpdate={(updatedValue) => handleUpdate(updatedValue)}
           />
         )}
       </S.PostWrapper>
@@ -135,4 +133,4 @@ const Mypage: React.FC = () => {
   );
 };
 
-export default Mypage;
+export default MyPage;

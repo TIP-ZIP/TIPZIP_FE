@@ -14,13 +14,18 @@ interface ProfileSectionProps {
   isOwnProfile: boolean;
 }
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroductionClick }) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({
+  username: initialUsername,
+  message: initialMessage,
+  onNameClick,
+  onIntroductionClick,
+}) => {
   const { writerid } = useParams<{ writerid: string }>();
   const [isOwnProfile, setIsOwnProfile] = useState(true); // 자기 프로필 여부
   const [following, setFollowing] = useState(false);
   const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [username, setUsername] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState(initialUsername);
+  const [message, setMessage] = useState(initialMessage);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
@@ -31,8 +36,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
     const fetchProfileData = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
-        const loggedInUserID = localStorage.getItem('userID');
-        const loggedinUserName = localStorage.getItem('userName');
 
         // URL에 writerid가 있으면 해당 writerid로, 없으면 자기 프로필
         const endpoint = writerid ? `/mypage/${writerid}` : `/mypage/`;
@@ -73,7 +76,13 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
 
     fetchProfileData();
   }, [writerid]);
+  useEffect(() => {
+    setUsername(initialUsername); // username 값이 변경되면 상태 업데이트
+  }, [initialUsername]); // 초기값 변경 시에만 동작하도록 설정
 
+  useEffect(() => {
+    setMessage(initialMessage); // message 값이 변경되면 상태 업데이트
+  }, [initialMessage]);
   const socialProviderIcons: { [key: string]: string } = {
     KAKAO: KAKAOICON,
     NAVER: NAVERICON,
@@ -175,7 +184,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
 
   return (
     <S.ProfileContainer>
-      <S.ImgSection onClick={handleImageClick}>
+      <S.ImgSection onClick={isOwnProfile ? handleImageClick : undefined}>
         {profileImg ? (
           <S.Profile src={profileImg} />
         ) : (

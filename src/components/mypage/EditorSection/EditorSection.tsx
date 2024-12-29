@@ -8,10 +8,10 @@ interface EditorSectionProps {
   editorType: 'username' | 'message';
   username: string;
   message: string;
-  handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // 수정된 핸들러 이름
-  handleMessageChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // 수정된 핸들러 이름
+  handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleMessageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   closeEditor: () => void;
-  onUpdate: (updatedValue: { username?: string; message?: string }) => void; // 추가
+  onUpdate: (updatedValue: { username?: string; message?: string }) => void;
 }
 
 const EditorSection: React.FC<EditorSectionProps> = ({
@@ -38,13 +38,12 @@ const EditorSection: React.FC<EditorSectionProps> = ({
     return () => {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, [closeEditor]);
+  }, []);
 
   const handleSave = async () => {
-    const token = localStorage.getItem('accessToken'); // 토큰 가져오기
-
+    const token = localStorage.getItem('accessToken');
     try {
-      if (editorType === 'username') {
+      if (editorType === 'username' && username) {
         await axiosInstance.patch(
           '/mypage/username',
           { username },
@@ -55,7 +54,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           },
         );
         onUpdate({ username });
-      } else if (editorType === 'message') {
+      } else if (editorType === 'message' && message) {
         await axiosInstance.patch(
           '/mypage/message',
           { message },
@@ -67,7 +66,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
         );
         onUpdate({ message });
       }
-      closeEditor();
+      closeEditor(); // 저장 후 에디터 닫기
     } catch (error) {
       console.error('Failed to update profile:', error);
     }
@@ -91,10 +90,10 @@ const EditorSection: React.FC<EditorSectionProps> = ({
               <S.InputBox>
                 <S.EditorInput
                   type='text'
-                  value={username || ''} // 상태 값 바인딩
+                  value={username || ''}
                   onChange={handleUsernameChange}
                   maxLength={12}
-                  placeholder={username ? username : '닉네임을 작성해주세요.'}
+                  placeholder='닉네임을 작성해주세요.'
                 />
                 <S.CharCount>{username?.length}/12</S.CharCount>
               </S.InputBox>
@@ -105,7 +104,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
                   value={message || ''}
                   onChange={handleMessageChange}
                   maxLength={20}
-                  placeholder={message ? message : '프로필에 자기 소개를 작성해주세요.'}
+                  placeholder='자기 소개를 작성해주세요.'
                 />
                 <S.CharCount>{message?.length}/20</S.CharCount>
               </S.InputBox>
