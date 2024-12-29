@@ -235,11 +235,19 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <S.FollowCount>{followingCount}</S.FollowCount>
           </S.FollowBox>
         </S.FollowerInfo>
-        <S.IntroduceSection onClick={() => handleIntroductionClick(message)}>
-          {!message && <S.EditIcon />}
-          <S.InputText $isFilled={!!message}>
-            {message || '프로필에 자기 소개를 작성해주세요.'}
-          </S.InputText>
+        <S.IntroduceSection
+          onClick={isOwnProfile ? () => handleIntroductionClick(message) : undefined}
+        >
+          {message ? (
+            <S.InputText $isFilled={!!message}>{message}</S.InputText>
+          ) : isOwnProfile ? (
+            <>
+              <S.EditIcon />
+              <S.InputText $isFilled={false}>프로필에 자기 소개를 작성해주세요.</S.InputText>
+            </>
+          ) : (
+            <S.InputText $isFilled={false}>소개글이 없습니다.</S.InputText>
+          )}
         </S.IntroduceSection>
       </S.InfoSection>
     </S.ProfileContainer>
