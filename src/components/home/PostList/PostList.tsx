@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as S from './PostList.Styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
+import LoginModalContainer from '../LoginModalContainer';
+import useAuth from '@hooks/useAuth';
 import axiosInstance from '@api/axios';
 
 interface Post {
@@ -41,6 +43,8 @@ const PostList: React.FC<PostListProps> = ({
   const [postsData, setPostsData] = useState<Post[]>(posts || []);
   const token = localStorage.getItem('accessToken');
   const isSearchPage = location.pathname.includes('/home/search');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { isAuthenticated } = useAuth();
   // 마이페이지 포스트 가져오기
   const getPostsForMypage = async () => {
     try {
@@ -59,10 +63,9 @@ const PostList: React.FC<PostListProps> = ({
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
       setPostsData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
     }
@@ -71,7 +74,7 @@ const PostList: React.FC<PostListProps> = ({
   // 팔로잉 포스트 가져오기
   const getPostsForFollowing = async () => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(
         `/posts/following?sort=${sortOption}&${categoryQuery}`,
         {
@@ -83,12 +86,13 @@ const PostList: React.FC<PostListProps> = ({
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for following', error);
+      setPostsData([]);
     }
   };
 
   const getPostsForCertifiedUsers = async (isFollow: boolean) => {
     try {
-      const categoryQuery = selectedCategory.map((category) => `category=${category}`).join('&');
+      const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(
         `/posts/cert?sort=${sortOption}&${categoryQuery}&is_follow=${isFollow}`,
         {
@@ -100,12 +104,13 @@ const PostList: React.FC<PostListProps> = ({
       setPostsData(response.data);
     } catch (error) {
       console.error('Error fetching posts for certified users', error);
+      setPostsData([]);
     }
   };
   useEffect(() => {
     if (searchQuery || (selectedTags && selectedTags.length > 0)) {
       console.log(searchQuery || selectedTags);
-      setPostsData(posts);
+      setPostsData(posts || []);
     } else {
       if (selectedItem === '팔로잉') {
         if (isVerify) {
@@ -160,36 +165,60 @@ const PostList: React.FC<PostListProps> = ({
     setShowEditor(null);
   };
 
+  const handlePostClick = (postId: number) => {
+    if (!token) {
+      // 로그인되지 않은 경우, 로그인 모달을 띄운다
+      setShowLoginModal(true);
+    } else {
+      // 로그인된 경우에는 포스트 상세 페이지로 이동
+      navigate(`/post/${postId}`);
+    }
+  };
+
   return (
     <>
       <S.PostList $isMypage={isMypage} $isSearchPage={isSearchPage}>
-        {postsData.map((post) => (
-          <S.PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
-            <S.PostImage $isMypage={isMypage}>
-              <S.ProfileContainer>
-                <S.ProfileImage />
-                <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
-              </S.ProfileContainer>
-              <S.BookmarkContainer>
-                <S.BookmarkIcon
-                  $isFilled={post.scrap}
-                  onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
-                />
-                <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
-              </S.BookmarkContainer>
-            </S.PostImage>
-            <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
-          </S.PostItem>
-        ))}
+        {Array.isArray(postsData) && postsData.length > 0 ? (
+          postsData.map((post) => (
+            <S.PostItem key={post.id} onClick={() => handlePostClick(post.id)}>
+              <S.PostImage $isMypage={isMypage}>
+                <S.ProfileContainer>
+                  <S.ProfileImage />
+                  <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
+                </S.ProfileContainer>
+                <S.BookmarkContainer>
+                  <S.BookmarkIcon
+                    $isFilled={post.scrap}
+                    onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
+                  />
+                  <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
+                </S.BookmarkContainer>
+              </S.PostImage>
+              <S.PostTitle $isMypage={isMypage}>{post.title}</S.PostTitle>
+            </S.PostItem>
+          ))
+        ) : (
+          <S.Nocontent>조회할 수 있는 글이 없어요!</S.Nocontent>
+        )}
       </S.PostList>
-
       {showEditor !== null && (
         <ScrapEditorSection
           showEditor={true}
           closeEditor={closeEditor}
           postid={showEditor}
           thumbnail={postsData.find((post) => post.id === showEditor)?.thumbnail_url}
-          category=''
+          category='' // Ensure category is properly passed or updated dynamically
+        />
+      )}
+
+      {showLoginModal && (
+        <LoginModalContainer
+          showModal={showLoginModal}
+          handleClose={() => setShowLoginModal(false)}
+          handleLogin={() => {
+            setShowLoginModal(false);
+            navigate('/login');
+          }}
         />
       )}
     </>
