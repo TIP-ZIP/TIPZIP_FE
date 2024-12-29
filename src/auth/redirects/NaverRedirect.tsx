@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { postAuthCodeToServer } from '@auth/utils/authHelpers';
+
 import Spinner from '@components/postdetail/Spinner';
 
 const NaverRedirect = () => {
