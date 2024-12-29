@@ -17,7 +17,14 @@ interface ScrapFolderProps {
   onDelete?: () => void;
 }
 
-const ScrapFolder: React.FC<ScrapFolderProps> = ({ name, count, type, onClick, isDeleteMode = false, onDelete }) => {
+const ScrapFolder: React.FC<ScrapFolderProps> = ({
+  name,
+  count,
+  type,
+  onClick,
+  isDeleteMode = false,
+  onDelete,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const getFolderImage = () => {
@@ -28,32 +35,29 @@ const ScrapFolder: React.FC<ScrapFolderProps> = ({ name, count, type, onClick, i
   };
 
   return (
-    <S.CategoryFolder 
+    <S.CategoryFolder
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {type === 'personal' && isDeleteMode && (
-        <S.DeleteIcon 
-          src={ScrapDelete} 
-          alt="delete" 
+        <S.DeleteIcon
+          src={ScrapDelete}
+          alt='delete'
           onClick={(e) => {
             e.stopPropagation();
             onDelete?.();
           }}
         />
       )}
-      <S.FolderBackground 
-        src={getFolderImage()} 
-        alt="folder" 
-      />
+      <S.FolderBackground src={getFolderImage()} alt='folder' />
       <S.FolderName>{name}</S.FolderName>
       <S.Badge>
-        <S.BadgeIcon src={ColoredBookmark} alt="badge" />
+        <S.BadgeIcon src={ColoredBookmark} alt='badge' />
         <S.BadgeText>{count}</S.BadgeText>
       </S.Badge>
     </S.CategoryFolder>
   );
 };
 
-export default ScrapFolder; 
+export default ScrapFolder;

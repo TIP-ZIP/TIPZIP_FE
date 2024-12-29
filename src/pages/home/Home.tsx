@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import * as S from './Home.Styled';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import axiosInstance from '@api/axios';
+import useSort from '@hooks/home/useSort';
+import useCategory from '@hooks/home/useCategory';
+import useAuth from '@hooks/useAuth';
+
 import LoginModalContainer from '@components/home/LoginModalContainer';
 import SearchBar from '@components/home/SearchBar/SearchBar';
 import SelectBar from '@components/home/SelectBar/SelectBar';
 import CategoryList from '@components/home/CategoryList/CategoryList';
 import PostList from '@components/home/PostList/PostList';
 import Dropdown from '@components/home/Dropdown/DropDown';
-import { useNavigate, useLocation } from 'react-router-dom';
-import useCategory from '@hooks/home/useCategory';
-import useSort from '@hooks/home/useSort';
-import useAuth from '@hooks/useAuth';
-import axiosInstance from '@api/axios';
+
+import * as S from './Home.Styled';
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isSearchPage = location.pathname.includes('/home/search');
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVerify, setSelectedVerify] = useState(false);
   const [selectedItem, setSelectedItem] = useState('전체');
@@ -23,11 +31,10 @@ const Home: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const { isAuthenticated, validateToken } = useAuth();
+
   const token = localStorage.getItem('accessToken');
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isAuthenticated } = useAuth();
-  const isSearchPage = location.pathname.includes('/home/search');
 
   const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
     useCategory();
@@ -40,6 +47,10 @@ const Home: React.FC = () => {
   };
 
   const apiSortOption = sortMapping[selectedSort];
+
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   const handleOption = (option: string) => {
     handleSortOptionClick(option);
@@ -222,7 +233,7 @@ const Home: React.FC = () => {
       </S.Container>
       {isClicked && (
         <S.OrangeBubble onClick={handleBubbleClick}>
-          <S.Whiteedit />
+          <S.WhiteEdit />
           <S.BubbleText>나의 팁 공유하기</S.BubbleText>
         </S.OrangeBubble>
       )}
