@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import * as S from './Header.Styled';
+
+import useAuth from '@hooks/useAuth';
+
 import LoginModalContainer from '@components/home/LoginModalContainer';
 import { LogoutModal } from '@components/modal/LogoutModal';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
-import useAuth from '@hooks/useAuth';
+
+import * as S from './Header.Styled';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, validateToken, logout } = useAuth();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoColor = location.pathname === '/mypage' ? 'black' : '';
+
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
@@ -22,17 +29,21 @@ const Header: React.FC = () => {
     setShowLogoutModal(false);
   };
   const handleLogout = () => {
-    // 로그아웃 로직을 여기에 추가
-    setShowLogoutModal(false);
+    // React hook useAuth 내 logout 함수 호출
+    logout();
+    window.location.href = '/home';
   };
 
-  const handleLoginRequired = (callback: () => void) => {
-    if (isAuthenticated) {
-      callback();
-    } else {
-      setShowLoginModal(true); // 로그인되지 않았으면 로그인 모달 띄우기
-    }
-  };
+  const handleLoginRequired = useCallback(
+    (callback: () => void) => {
+      if (isAuthenticated) {
+        callback();
+      } else {
+        setShowLoginModal(true); // 로그인되지 않았으면 로그인 모달 띄우기
+      }
+    },
+    [isAuthenticated],
+  );
 
   const handleProfileClick = () => {
     handleLoginRequired(() => navigate('/mypage')); // 로그인 후 마이페이지로 이동
