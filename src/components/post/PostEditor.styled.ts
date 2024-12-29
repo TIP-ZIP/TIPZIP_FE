@@ -101,6 +101,13 @@ export const QuillWrapper = styled.div`
       color: ${colors.TZ_Monochrome[300]};
       font-style: normal;
     }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   .ql-toolbar {
