@@ -22,7 +22,6 @@ interface PostListProps {
   sortOption: string;
   $isMypage: boolean;
   selectedItem: string;
-  handleBookmarkClick: (postId: number) => void;
   isVerify: boolean;
   posts: Post[]; // 기존 prop 정의 수정
   searchQuery: string;
@@ -39,7 +38,6 @@ const PostList: React.FC<PostListProps> = ({
   selectedCategory,
   sortOption,
   selectedItem,
-  handleBookmarkClick,
   isVerify,
   searchQuery,
   posts,
@@ -158,12 +156,26 @@ const PostList: React.FC<PostListProps> = ({
       }
 
       const updatedScrapData: ScrapData = response.data;
+
+      // postsData에서 해당 포스트의 북마크 상태와 숫자 업데이트
+      setPostsData((prevPostsData) =>
+        prevPostsData.map((post) =>
+          post.id === post_id
+            ? {
+                ...post,
+                scrap: !scrap, // 북마크 상태 반전
+                scrapCount: scrap ? post.scrapCount - 1 : post.scrapCount + 1, // 숫자 증가/감소
+              }
+            : post,
+        ),
+      );
+
+      // 기존 scrapData 상태 업데이트
       setScrapData((prevScrapData) => {
         if (!Array.isArray(prevScrapData)) {
           return [updatedScrapData];
         }
 
-        // 배열이 맞다면 기존의 로직 처리
         const existingScrapIndex = prevScrapData.findIndex((data) => data.post_id === post_id);
         if (existingScrapIndex >= 0) {
           const newScrapData = [...prevScrapData];
@@ -174,9 +186,10 @@ const PostList: React.FC<PostListProps> = ({
         }
       });
 
-      handleBookmarkClick(post_id);
+      // 북마크 클릭 핸들러 호출
+
+      // 에디터 열기
       setShowEditor(scrap ? null : post_id);
-      console.log(response.data);
     } catch (error) {
       console.error('Error toggling bookmark', error);
       alert('북마크 처리 중 오류가 발생했습니다.');
