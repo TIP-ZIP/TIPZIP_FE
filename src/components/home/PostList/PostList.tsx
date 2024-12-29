@@ -60,7 +60,6 @@ const PostList: React.FC<PostListProps> = ({
       const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
       setPostsData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
     }
