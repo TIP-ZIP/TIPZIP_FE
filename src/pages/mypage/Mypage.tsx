@@ -10,38 +10,33 @@ const Mypage: React.FC = () => {
   const { writerid } = useParams<{ writerid: string }>();
   const [posts, setPosts] = useState<any[]>([]);
   const [showEditor, setShowEditor] = useState(false);
-  const [editorType, setEditorType] = useState<'username' | 'introduction'>('username');
-  const [username, setusername] = useState('');
-  const [message, setMessage] = useState('');
+  const [editorType, setEditorType] = useState<'username' | 'message'>('username');
+  const [profileData, setProfileData] = useState<{ username: string; message: string }>({
+    username: '',
+    message: '',
+  });
 
-  // writerid가 없으면 로컬스토리지에서 userId를 가져옴
-  const userId = writerid || '';
   const isOwnProfile = !writerid;
-  const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+  const token = localStorage.getItem('accessToken');
 
-  // 포스트 데이터 불러오기
   useEffect(() => {
-    if (userId) {
-      // Check if writerid exists, if not, make a request to /posts/my
-      const endpoint = writerid ? `/posts/user/${userId}` : '/posts/my';
+    const endpoint = writerid ? `/posts/user/${writerid}` : '/posts/my';
 
-      // Set token in the request headers
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-      axiosInstance
-        .get(endpoint, config)
-        .then((response) => {
-          setPosts(response.data);
-        })
-        .catch((error) => {
-          console.error('포스트 데이터를 가져오는 중 오류 발생:', error);
-        });
-    }
-  }, [userId, writerid]);
+    axiosInstance
+      .get(endpoint, config)
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => {
+        console.error('포스트 데이터를 가져오는 중 오류 발생:', error);
+      });
+  }, [writerid, token]); // writerid, token이 변경될 때마다 실행됨
 
   // 북마크 클릭 핸들러
   const handleBookmarkClick = (postId: number) => {
@@ -67,17 +62,16 @@ const Mypage: React.FC = () => {
   // 자기소개 수정 에디터 열기
   const handleIntroductionClick = () => {
     setShowEditor(true);
-    setEditorType('introduction');
+    setEditorType('message');
   };
 
   // EditorSection에서 업데이트된 값을 처리
   const handleUpdate = (updatedValue: { username?: string; message?: string }) => {
-    if (updatedValue.username !== undefined) {
-      setusername(updatedValue.username);
-    }
-    if (updatedValue.message !== undefined) {
-      setMessage(updatedValue.message);
-    }
+    setProfileData((prevData) => ({
+      ...prevData,
+      ...updatedValue,
+    }));
+    setShowEditor(false); // 에디터 닫기
   };
 
   // 에디터 닫기
@@ -85,15 +79,23 @@ const Mypage: React.FC = () => {
     setShowEditor(false);
   };
 
-  // 닉네임 입력 변경 핸들러
-  const handleusernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setusername(e.target.value);
-  };
+  useEffect(() => {
+    const endpoint = isOwnProfile ? '/mypage/' : `/mypage/${writerid}`;
 
-  // 자기소개 입력 변경 핸들러
-  const handleIntroductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
+    axiosInstance
+      .get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { username, message } = response.data;
+        setProfileData({ username, message });
+      })
+      .catch((error) => {
+        console.error('프로필 데이터를 가져오는 중 오류 발생:', error);
+      });
+  }, [writerid, token, isOwnProfile]);
 
   return (
     <S.Container>
@@ -102,8 +104,8 @@ const Mypage: React.FC = () => {
         <S.ZipLine />
       </S.Zip>
       <ProfileSection
-        username={username}
-        message={message}
+        username={profileData.username}
+        message={profileData.message}
         onNameClick={handleNameClick}
         onIntroductionClick={handleIntroductionClick}
         isOwnProfile={isOwnProfile}
@@ -111,15 +113,17 @@ const Mypage: React.FC = () => {
       <S.PostWrapper>
         <S.GrayLine />
         <PostSection posts={posts} handleBookmarkClick={handleBookmarkClick} />
-        <S.Text>{username} 님만의 꿀팁을 공유해주세요!</S.Text>
+        <S.Text>{profileData.username} 님만의 꿀팁을 공유해주세요!</S.Text>
         {showEditor && (
           <EditorSection
             showEditor={showEditor}
             editorType={editorType}
-            username={username}
-            message={message}
-            handleusernameChange={handleusernameChange}
-            handleIntroductionChange={handleIntroductionChange}
+            username={profileData.username} // 부모에서 전달된 값 사용
+            message={profileData.message} // 부모에서 전달된 값 사용
+            handleUsernameChange={(e) =>
+              setProfileData({ ...profileData, username: e.target.value })
+            }
+            handleMessageChange={(e) => setProfileData({ ...profileData, message: e.target.value })}
             closeEditor={closeEditor}
             onUpdate={handleUpdate}
           />

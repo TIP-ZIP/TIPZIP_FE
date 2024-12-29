@@ -6,8 +6,8 @@ import * as S from './ProfileSection.Styled';
 interface ProfileSectionProps {
   username: string;
   message: string;
-  onNameClick: () => void;
-  onIntroductionClick: () => void;
+  onNameClick: (newName: string) => void;
+  onIntroductionClick: (newMessage: string) => void;
   isOwnProfile: boolean;
 }
 
@@ -100,6 +100,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
       alert('팔로우 상태를 변경하는데 문제가 발생했습니다.');
     }
   };
+  const handleNameClick = (newName: string) => {
+    setUsername(newName); // 상태 업데이트
+    onNameClick(newName); // 상위 컴포넌트에 변경 사항 전달
+  };
+
+  const handleIntroductionClick = (newMessage: string) => {
+    setMessage(newMessage); // 상태 업데이트
+    onIntroductionClick(newMessage); // 상위 컴포넌트에 변경 사항 전달
+  };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const MAX_FILE_SIZE_MB = 5; // 최대 파일 크기 (MB)
@@ -176,7 +185,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
       <S.InfoSection>
         <S.NameSection $isOwnProfile={isOwnProfile}>
           <S.NameBox>
-            <S.Name onClick={onNameClick}>{username}</S.Name>
+            <S.Name onClick={() => handleNameClick(username)}>{username}</S.Name>
             {isVerified && <S.Verfied />}
           </S.NameBox>
           {!isOwnProfile && (
@@ -197,7 +206,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
             <S.FollowCount>{followingCount}</S.FollowCount>
           </S.FollowBox>
         </S.FollowerInfo>
-        <S.IntroduceSection onClick={onIntroductionClick}>
+        <S.IntroduceSection onClick={() => handleIntroductionClick(message)}>
           {!message && <S.EditIcon />}
           <S.InputText $isFilled={!!message}>
             {message || '프로필에 자기 소개를 작성해주세요.'}

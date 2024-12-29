@@ -5,11 +5,11 @@ import * as S from './EditorSection.Styled';
 
 interface EditorSectionProps {
   showEditor: boolean;
-  editorType: 'username' | 'introduction';
+  editorType: 'username' | 'message';
   username: string;
   message: string;
-  handleusernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleIntroductionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // 수정된 핸들러 이름
+  handleMessageChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // 수정된 핸들러 이름
   closeEditor: () => void;
   onUpdate: (updatedValue: { username?: string; message?: string }) => void; // 추가
 }
@@ -19,15 +19,12 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   editorType,
   username,
   message,
-  handleusernameChange,
-  handleIntroductionChange,
+  handleUsernameChange,
+  handleMessageChange,
   closeEditor,
-  onUpdate, // 추가
+  onUpdate,
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
-
-  console.log(username);
-  console.log(message);
 
   useEffect(() => {
     const handleClickOutside = async (e: PointerEvent) => {
@@ -48,7 +45,6 @@ const EditorSection: React.FC<EditorSectionProps> = ({
 
     try {
       if (editorType === 'username') {
-        // 닉네임 저장 API 호출
         await axiosInstance.patch(
           '/mypage/username',
           { username },
@@ -58,9 +54,8 @@ const EditorSection: React.FC<EditorSectionProps> = ({
             },
           },
         );
-        onUpdate({ username }); // 부모 상태 업데이트
-      } else if (editorType === 'introduction') {
-        // 자기소개 저장 API 호출
+        onUpdate({ username });
+      } else if (editorType === 'message') {
         await axiosInstance.patch(
           '/mypage/message',
           { message },
@@ -70,9 +65,9 @@ const EditorSection: React.FC<EditorSectionProps> = ({
             },
           },
         );
-        onUpdate({ message }); // 부모 상태 업데이트
+        onUpdate({ message });
       }
-      closeEditor(); // 저장 후 에디터 닫기
+      closeEditor();
     } catch (error) {
       console.error('Failed to update profile:', error);
     }
@@ -96,23 +91,23 @@ const EditorSection: React.FC<EditorSectionProps> = ({
               <S.InputBox>
                 <S.EditorInput
                   type='text'
-                  value={username}
-                  onChange={handleusernameChange}
+                  value={username || ''} // 상태 값 바인딩
+                  onChange={handleUsernameChange}
                   maxLength={12}
                   placeholder={username ? username : '닉네임을 작성해주세요.'}
                 />
-                <S.CharCount>{username.length}/12</S.CharCount>
+                <S.CharCount>{username?.length}/12</S.CharCount>
               </S.InputBox>
             ) : (
               <S.InputBox>
                 <S.EditorInput
                   type='text'
-                  value={message}
-                  onChange={handleIntroductionChange}
+                  value={message || ''}
+                  onChange={handleMessageChange}
                   maxLength={20}
                   placeholder={message ? message : '프로필에 자기 소개를 작성해주세요.'}
                 />
-                <S.CharCount>{message.length}/20</S.CharCount>
+                <S.CharCount>{message?.length}/20</S.CharCount>
               </S.InputBox>
             )}
           </S.EditorContainer>
