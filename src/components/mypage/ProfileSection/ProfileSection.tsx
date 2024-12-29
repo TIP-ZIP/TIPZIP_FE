@@ -77,20 +77,27 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
     try {
       const endpoint = `/follow/${writerid}`;
       if (!following) {
+        // Follow the user
         await axiosInstance.post(endpoint, null, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        setFollowing(true);
+        setFollowerCount(followerCount + 1);
       } else {
+        // Unfollow the user
         await axiosInstance.delete(endpoint, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        setFollowing(false);
+        setFollowerCount(followerCount - 1);
       }
     } catch (error) {
       console.error('Error following/unfollowing', error);
+      alert('팔로우 상태를 변경하는데 문제가 발생했습니다.');
     }
   };
 
@@ -167,7 +174,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
         />
       </S.ImgSection>
       <S.InfoSection>
-        <S.NameSection>
+        <S.NameSection $isOwnProfile={isOwnProfile}>
           <S.NameBox>
             <S.Name onClick={onNameClick}>{username}</S.Name>
             {isVerified && <S.Verfied />}

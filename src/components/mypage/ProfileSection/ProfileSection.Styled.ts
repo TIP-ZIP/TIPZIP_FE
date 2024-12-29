@@ -60,16 +60,22 @@ export const InfoSection = styled.div`
   flex-direction: column;
 `;
 
-export const NameSection = styled.div`
+export const NameSection = styled.div<{ $isOwnProfile: boolean }>`
   display: flex;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
-  margin-bottom: 0.8rem;
   gap: 0.8rem;
-  padding: 0.4rem 1rem;
+  margin-bottom: 0.8rem;
   width: fit-content;
   text-align: center;
+
+  ${({ $isOwnProfile, theme }) =>
+    $isOwnProfile &&
+    `
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      background-color: ${theme.colors.TZ_Monochrome[100]};
+  `}
 `;
+
 export const Name = styled.span`
   ${({ theme }) => theme.fontStyles.Header2}
 `;
