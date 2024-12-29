@@ -34,6 +34,10 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
   const [isNewFolderHovered, setIsNewFolderHovered] = useState(false);
   const [newFolderName, setNewFolderName] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
+  const [editFolderName, setEditFolderName] = useState<string>('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     setCategories(initialCategories);
@@ -142,6 +146,44 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
     setIsCreateModalOpen(true);
   };
 
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setIsDropdownOpen(false);
+  };
+
+  const openEditModal = (folderId: number, currentName: string) => {
+    setSelectedFolderId(folderId);
+    setEditFolderName(currentName);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditFolder = async () => {
+    if (!selectedFolderId) return;
+
+    try {
+      const response = await axiosInstance.put(`/folder/${selectedFolderId}`, {
+        folder_name: editFolderName
+      });
+
+      // 로컬 상태 업데이트
+      setCategories(prevCategories =>
+        prevCategories.map(category =>
+          category.id === selectedFolderId
+            ? { ...category, name: response.data.folder_name }
+            : category
+        )
+      );
+
+      setIsEditModalOpen(false);
+      setEditFolderName('');
+      setSelectedFolderId(null);
+      setIsEditMode(false);
+    } catch (error) {
+      console.error('폴더 이름 변경 실패:', error);
+      alert('폴더 이름 변경에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   // 카테고리 ID 매핑
   const CATEGORY_IDS = {
     '정리/공간 활용': 1,
@@ -173,7 +215,10 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
                   </S.IconButton>
                 </S.IconLeft>
                 <S.IconRight>
-                  <S.IconButton>
+                  <S.IconButton onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditClick();
+                  }}>
                     <S.Icon src={EditWhite} alt="edit" />
                   </S.IconButton>
                 </S.IconRight>
@@ -190,7 +235,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
             name={category.name}
             count={category.count}
             type={type}
-            onClick={() => handleFolderClick(index)}
+            onClick={() => isEditMode ? openEditModal(category.id!, category.name) : handleFolderClick(index)}
             isDeleteMode={isDeleteMode}
             onDelete={() => handleFolderDelete(index)}
           />
@@ -209,6 +254,29 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
           </S.NewFolderCard>
         )}
       </S.FoldersContainer>
+      
+      {isEditModalOpen && (
+        <Editor title="서랍 이름 바꾸기" onClose={() => setIsEditModalOpen(false)}>
+          <S.EditorBar />
+          <S.EditorContainer>
+            <S.InputBox>
+              <S.EditorInput
+                type="text"
+                value={editFolderName}
+                onChange={(e) => setEditFolderName(e.target.value)}
+                maxLength={130}
+                placeholder="새로운 이름을 입력하세요"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEditFolder();
+                  }
+                }}
+              />
+              <S.CharCount>{editFolderName.length}/130</S.CharCount>
+            </S.InputBox>
+          </S.EditorContainer>
+        </Editor>
+      )}
       
       {isCreateModalOpen && (
         <Editor title="새 서랍 생성하기" onClose={() => setIsCreateModalOpen(false)}>
