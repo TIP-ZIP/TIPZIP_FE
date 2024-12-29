@@ -151,6 +151,23 @@ export const PostContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+
+  .ql-editor {
+    padding: 0;
+    
+    /* 기존 Quill 스타일 재정의 */
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      margin: 1rem auto;
+      object-fit: contain;
+      display: block;
+    }
+  }
 `;
 
 export const TextContent = styled.div`

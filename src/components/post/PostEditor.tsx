@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import * as S from './PostEditor.styled';
 import axiosInstance from '@api/axios';
 import axios from 'axios';
@@ -14,6 +16,30 @@ const PostEditor: React.FC<PostEditorProps> = ({
     onContentChange,
     onImageUpload,
 }) => {
+    const quillModules = {
+        toolbar: [
+            [{ header: [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ color: [] }, { background: [] }],
+        ],
+    };
+
+    const quillFormats = [
+        'header',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'blockquote',
+        'list',
+        'bullet',
+        'color',
+        'background',
+        'link',
+        'image',
+    ];
+
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (e.target.files && e.target.files[0]) {
@@ -76,14 +102,24 @@ const PostEditor: React.FC<PostEditorProps> = ({
         }
     };
 
+    const handleChange = (value: string) => {
+        console.log('에디터 내용:', value);
+        onContentChange(value);
+    };
+
     return (
         <S.ContentSection>
             <S.ContentLabel>본문 내용</S.ContentLabel>
-            <S.ContentTextarea
-                placeholder="~하게 작성하세요"
-                value={content}
-                onChange={(e) => onContentChange(e.target.value)}
-            />
+            <S.QuillWrapper>
+                <ReactQuill
+                    theme="snow"
+                    value={content}
+                    onChange={handleChange}
+                    modules={quillModules}
+                    formats={quillFormats}
+                    placeholder="~하게 작성하세요"
+                />
+            </S.QuillWrapper>
             <S.MediaButtons>
                 <S.MediaButton type="button">
                     <input
