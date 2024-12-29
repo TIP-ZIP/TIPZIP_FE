@@ -1,33 +1,45 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axiosInstance from '@api/axios';
 import * as S from './ProfileSection.Styled';
+import KAKAOICON from '@assets/svgs/kakaoIcon.svg';
+import NAVERICON from '@assets/svgs/naverIcon.svg';
+import GOOGLEICON from '@assets/svgs/googleIcon.svg';
 
 interface ProfileSectionProps {
-  nickname: string; // 추가
-  introduction: string; // 추가
-  onNameClick: () => void; // 추가
-  onIntroductionClick: () => void; // 추가
-  isOwnProfile: boolean; // 추가
+  username: string;
+  message: string;
+  onNameClick: (newName: string) => void;
+  onIntroductionClick: (newMessage: string) => void;
+  isOwnProfile: boolean;
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({
+  username: initialUsername,
+  message: initialMessage,
   onNameClick,
   onIntroductionClick,
-  isOwnProfile,
 }) => {
-  const [isFollowing, setIsFollowing] = useState(false);
+  const { writerid } = useParams<{ writerid: string }>();
+  const [isOwnProfile, setIsOwnProfile] = useState(true); // 자기 프로필 여부
+  const [following, setFollowing] = useState(false);
   const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [nickname, setNickname] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [username, setUsername] = useState(initialUsername);
+  const [message, setMessage] = useState(initialMessage);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
+  const [socialProvider, setSocialProvider] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
-        const response = await axiosInstance.get('/mypage/', {
+
+        // URL에 writerid가 있으면 해당 writerid로, 없으면 자기 프로필
+        const endpoint = writerid ? `/mypage/${writerid}` : `/mypage/`;
+        const response = await axiosInstance.get(endpoint, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -35,26 +47,86 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
 
         console.log(response.data);
 
-        const { profile_image, username, followerCount, followingCount, message, badge } =
-          response.data;
+        const {
+          profile_image,
+          username,
+          followerCount,
+          followingCount,
+          message,
+          badge,
+          following,
+          social_provider,
+          email,
+        } = response.data;
 
         setProfileImg(profile_image);
-        setNickname(username);
-        setIntroduction(message);
+        setUsername(username || '사용자');
+        setMessage(message);
         setFollowerCount(followerCount);
         setFollowingCount(followingCount);
         setIsVerified(badge);
+        setFollowing(following);
+        setSocialProvider(social_provider);
+        setEmail(email);
+        setIsOwnProfile(!writerid);
       } catch (error) {
         console.error('Failed to fetch profile data:', error);
       }
     };
 
     fetchProfileData();
-  }, []);
+  }, [writerid]);
+  useEffect(() => {
+    setUsername(initialUsername); // username 값이 변경되면 상태 업데이트
+  }, [initialUsername]); // 초기값 변경 시에만 동작하도록 설정
 
-  const handleFollowToggle = (e: React.MouseEvent) => {
+  useEffect(() => {
+    setMessage(initialMessage); // message 값이 변경되면 상태 업데이트
+  }, [initialMessage]);
+  const socialProviderIcons: { [key: string]: string } = {
+    KAKAO: KAKAOICON,
+    NAVER: NAVERICON,
+    GOOGLE: GOOGLEICON,
+  };
+
+  const handleFollowToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsFollowing((prev) => !prev);
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const endpoint = `/follow/${writerid}`;
+      if (!following) {
+        // Follow the user
+        await axiosInstance.post(endpoint, null, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setFollowing(true);
+        setFollowerCount(followerCount + 1);
+      } else {
+        // Unfollow the user
+        await axiosInstance.delete(endpoint, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setFollowing(false);
+        setFollowerCount(followerCount - 1);
+      }
+    } catch (error) {
+      console.error('Error following/unfollowing', error);
+      alert('팔로우 상태를 변경하는데 문제가 발생했습니다.');
+    }
+  };
+  const handleNameClick = (newName: string) => {
+    setUsername(newName); // 상태 업데이트
+    onNameClick(newName); // 상위 컴포넌트에 변경 사항 전달
+  };
+
+  const handleIntroductionClick = (newMessage: string) => {
+    setMessage(newMessage); // 상태 업데이트
+    onIntroductionClick(newMessage); // 상위 컴포넌트에 변경 사항 전달
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +184,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
 
   return (
     <S.ProfileContainer>
-      <S.ImgSection onClick={handleImageClick}>
+      <S.ImgSection onClick={isOwnProfile ? handleImageClick : undefined}>
         {profileImg ? (
           <S.Profile src={profileImg} />
         ) : (
@@ -120,7 +192,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <S.ProfileImg />
           </S.GrayCircle>
         )}
-        <S.plusBtn />
+        {isOwnProfile && <S.plusBtn />}
         <input
           id='image-upload-input'
           type='file'
@@ -130,19 +202,28 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         />
       </S.ImgSection>
       <S.InfoSection>
-        <S.NameSection>
+        <S.NameSection $isOwnProfile={isOwnProfile}>
           <S.NameBox>
-            <S.Name onClick={onNameClick}>{nickname}</S.Name>
+            <S.Name onClick={() => handleNameClick(username)}>{username}</S.Name>
             {isVerified && <S.Verfied />}
           </S.NameBox>
           {!isOwnProfile && (
             <S.FollowButtonContainer>
-              <S.FollowButton onClick={handleFollowToggle} $isFollowing={isFollowing}>
-                {isFollowing ? '팔로잉' : '팔로우'}
+              <S.FollowButton onClick={handleFollowToggle} $isFollowing={following}>
+                {following ? '팔로잉' : '팔로우'}
               </S.FollowButton>
             </S.FollowButtonContainer>
           )}
-        </S.NameSection>
+        </S.NameSection>{' '}
+        <S.SocialSection>
+          {socialProvider && (
+            <S.SocialIcon
+              src={socialProviderIcons[socialProvider]}
+              alt={`${socialProvider} icon`}
+            />
+          )}
+          {email && <S.Email>{email}</S.Email>}
+        </S.SocialSection>
         <S.FollowerInfo>
           <S.FollowBox>
             <S.Follow>팔로워</S.Follow>
@@ -153,10 +234,10 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <S.FollowCount>{followingCount}</S.FollowCount>
           </S.FollowBox>
         </S.FollowerInfo>
-        <S.IntroduceSection onClick={onIntroductionClick}>
-          {!introduction && <S.EditIcon />}
-          <S.InputText $isFilled={!!introduction}>
-            {introduction || '프로필에 자기 소개를 작성해주세요.'}
+        <S.IntroduceSection onClick={() => handleIntroductionClick(message)}>
+          {!message && <S.EditIcon />}
+          <S.InputText $isFilled={!!message}>
+            {message || '프로필에 자기 소개를 작성해주세요.'}
           </S.InputText>
         </S.IntroduceSection>
       </S.InfoSection>
