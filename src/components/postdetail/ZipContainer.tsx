@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as S from './ZipContainer.Styled';
+import axiosInstance from '@api/axios'; // Make sure axios is correctly configured
 
 interface Folder {
   id: number;
@@ -17,30 +18,51 @@ const ZipContainer: React.FC<ZipContainerProps> = ({ postId }) => {
 
   useEffect(() => {
     const fetchFolders = async () => {
-      // 추후 수정
-      const folderData = [
-        { id: 1, name: '갓생 살기', postCount: 3, isScrapped: false },
-        { id: 2, name: '아기 사자의 하루', postCount: 5, isScrapped: false },
-        { id: 3, name: '멋쟁이사자처럼', postCount: 2, isScrapped: false },
-        { id: 4, name: '멋쟁이사자처럼', postCount: 2, isScrapped: false },
-      ];
-      setFolders(folderData);
+      try {
+        // Fetch the folder data from the API
+        const response = await axiosInstance.get('/folder?is_my=true');
+        const folderData = response.data.map(
+          (folder: { folderName: string; count: number }, index: number) => ({
+            id: index + 1, // Assuming the API doesn't provide an ID; adjust as needed
+            name: folder.folderName,
+            postCount: folder.count,
+            isScrapped: false, // Default isScrapped state
+          }),
+        );
+        setFolders(folderData);
+      } catch (error) {
+        console.error('Error fetching folder data', error);
+      }
     };
+
     fetchFolders();
   }, []);
 
-  const handleScrapClick = (folderId: number) => {
-    setFolders((prevFolders) =>
-      prevFolders.map((folder) =>
-        folder.id === folderId
-          ? {
-              ...folder,
-              isScrapped: !folder.isScrapped, // 스크랩 상태 토글
-              postCount: folder.isScrapped ? folder.postCount - 1 : folder.postCount + 1, // 게시물 수 증가/감소
-            }
-          : folder,
-      ),
-    );
+  const handleScrapClick = async (folderId: number, folderName: string) => {
+    try {
+      // Send post data to the /scrap API endpoint
+      const response = await axiosInstance.post('/scrap', {
+        post_id: postId,
+        folder: folderName,
+      });
+
+      if (response.status === 200) {
+        // Update folder state if scrap action is successful
+        setFolders((prevFolders) =>
+          prevFolders.map((folder) =>
+            folder.id === folderId
+              ? {
+                  ...folder,
+                  isScrapped: !folder.isScrapped, // Toggle scrap status
+                  postCount: folder.isScrapped ? folder.postCount - 1 : folder.postCount + 1, // Adjust post count
+                }
+              : folder,
+          ),
+        );
+      }
+    } catch (error) {
+      console.error('Error during scrap action', error);
+    }
   };
 
   return (
@@ -64,9 +86,9 @@ const ZipContainer: React.FC<ZipContainerProps> = ({ postId }) => {
               </S.FolderInfoBox>
             </S.FolderBox>
 
-            {/* 스크랩 버튼 */}
+            {/* Scrap button */}
             <S.ScrapButton
-              onClick={() => handleScrapClick(folder.id)}
+              onClick={() => handleScrapClick(folder.id, folder.name)}
               $isScrap={folder.isScrapped}
             />
           </S.FolderItem>

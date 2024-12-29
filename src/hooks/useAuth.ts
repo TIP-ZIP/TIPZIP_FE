@@ -1,15 +1,20 @@
 import axiosInstance from '@api/axios';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const validateToken = (): boolean => {
+  const validateToken = useCallback((): boolean => {
     const accessToken = localStorage.getItem('accessToken');
     const isValid = !!accessToken;
     setIsAuthenticated(isValid);
     return isValid;
-  };
+  }, []);
+
+  useEffect(() => {
+    console.log('useAuth - 토큰 검증 실행');
+    validateToken();
+  }, [validateToken]);
 
   const logout = useCallback(async (): Promise<void> => {
     try {
