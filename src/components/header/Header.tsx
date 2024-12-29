@@ -31,6 +31,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     // React hook useAuth 내 logout 함수 호출
     logout();
+    setShowLogoutModal(false);
     window.location.href = '/home';
   };
 
