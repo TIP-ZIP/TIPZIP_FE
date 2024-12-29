@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './PostDetail.styled';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import Spinner from '@components/postdetail/Spinner';
 import axiosInstance from '@api/axios';
+import PostManageDropdown from '@components/postdetail/PostManageDropdonw/PostManageDropdown';
 
 interface PostImage {
   image_id: number;
@@ -38,6 +39,9 @@ const PostDetail: React.FC = () => {
   const [isScrapped, setIsScrapped] = useState<boolean | undefined>(undefined);
   const [showEditor, setShowEditor] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null); // Dropdown 컴포넌트 참조
 
   const navigate = useNavigate();
   const { id } = useParams<Params>();
@@ -133,6 +137,27 @@ const PostDetail: React.FC = () => {
     return cleanedContent;
   };
 
+  // 수정/삭제 Dropdown Open
+  const handlePostDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    // 전역 클릭 이벤트 추가
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
   const writerID = postDetail?.user_id;
 
@@ -150,7 +175,10 @@ const PostDetail: React.FC = () => {
             <S.PostDetailHeader>
               <S.LeftArrow onClick={() => navigate(-1)} />
               <S.HeaderTitle>{postDetail?.author || '사용자'}'s Post</S.HeaderTitle>
-              {postDetail?.user_id === parsedUser_id && <S.ElipsisIcon />}
+              {postDetail?.user_id === parsedUser_id && (
+                <S.ElipsisIcon onClick={handlePostDropdown} />
+              )}
+              {isDropdownOpen && <PostManageDropdown ref={dropdownRef} />}
             </S.PostDetailHeader>
 
             {/* Introduction Section */}
