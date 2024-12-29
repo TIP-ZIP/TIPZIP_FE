@@ -1,6 +1,9 @@
 import React from 'react';
 import * as Styled from './Scrap.Styled';
 import ScrapFolderView from './ScrapFolderView';
+import useAuth from '@hooks/useAuth';
+import LoginModalContainer from '@components/home/LoginModalContainer';
+import { useNavigate } from 'react-router-dom';
 
 interface CategoryScrap {
   name: string;
@@ -37,6 +40,25 @@ const personalDummyData = [
 const Scrap: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
   const [categories, setCategories] = React.useState<CategoryScrap[]>(categoryData);
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return (
+      <LoginModalContainer
+        showModal={true}
+        handleClose={() => {
+          console.log('Scrap 페이지 - 모달 닫기');
+          navigate(-1);
+        }}
+        handleLogin={() => {
+          console.log('Scrap 페이지 - 로그인 페이지로 이동');
+          navigate('/login');
+        }}
+      />
+    );
+  }
 
   return (
     <Styled.Container>
