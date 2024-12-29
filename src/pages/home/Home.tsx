@@ -215,6 +215,7 @@ const Home: React.FC = () => {
               posts={posts || []}
               searchQuery={searchQuery || ''}
               selectedTags={selectedTags || []}
+              $isMypage={false}
             />
           )}
         </>

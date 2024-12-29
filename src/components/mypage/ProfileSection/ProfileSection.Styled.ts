@@ -60,11 +60,22 @@ export const InfoSection = styled.div`
   flex-direction: column;
 `;
 
-export const NameSection = styled.div`
+export const NameSection = styled.div<{ $isOwnProfile: boolean }>`
   display: flex;
-  margin-bottom: 0.8rem;
   gap: 0.8rem;
+  margin-bottom: 0.6rem;
+  width: fit-content;
+  text-align: center;
+
+  ${({ $isOwnProfile, theme }) =>
+    $isOwnProfile &&
+    `
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      background-color: ${theme.colors.TZ_Monochrome[100]};
+  `}
 `;
+
 export const Name = styled.span`
   ${({ theme }) => theme.fontStyles.Header2}
 `;
@@ -162,4 +173,21 @@ export const FollowButton = styled.button<{ $isFollowing: boolean }>`
   transition:
     background-color 0.3s,
     color 0.3s;
+`;
+
+export const SocialSection = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+`;
+
+export const SocialIcon = styled.img`
+  width: 1.1rem;
+  height: 1.1rem;
+`;
+
+export const Email = styled.div`
+  ${({ theme }) => theme.fontStyles.Caption7}
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[500]};
+  font-family: 'Pretendard';
 `;

@@ -18,6 +18,7 @@ interface Post {
 interface PostListProps {
   selectedCategory: number[];
   sortOption: string;
+  $isMypage: boolean;
   selectedItem: string;
   handleBookmarkClick: (postId: number) => void;
   isVerify: boolean;
@@ -38,27 +39,29 @@ const PostList: React.FC<PostListProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isMypage = location.pathname === '/mypage';
+  const isMypage = location.pathname.includes('/mypage');
   const [showEditor, setShowEditor] = useState<number | null>(null);
   const [postsData, setPostsData] = useState<Post[]>(posts || []);
   const token = localStorage.getItem('accessToken');
   const isSearchPage = location.pathname.includes('/home/search');
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { isAuthenticated } = useAuth();
-  // 마이페이지 포스트 가져오기
-  const getPostsForMypage = async () => {
-    try {
-      const id = '변희민'; //userid 받아오기
-      const response = await axiosInstance.get(`/post/user/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setPostsData(response.data);
-    } catch (error) {
-      console.error('Error fetching posts for mypage', error);
-    }
-  };
+
+  // // 마이페이지 포스트 가져오기
+  // const getPostsForMypage = async () => {
+  //   try {
+  //     const id = localStorage.getItem('userID');
+  //     const response = await axiosInstance.get(`/posts/user/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     setPostsData(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching posts for mypage', error);
+  //     setPostsData([]);
+  //   }
+  // };
 
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
@@ -108,27 +111,39 @@ const PostList: React.FC<PostListProps> = ({
     }
   };
   useEffect(() => {
-    if (searchQuery || (selectedTags && selectedTags.length > 0)) {
-      console.log(searchQuery || selectedTags);
+    // 마이페이지에서는 이미 넘겨받은 `posts` 데이터를 사용
+    if (isMypage) {
       setPostsData(posts || []);
     } else {
-      if (selectedItem === '팔로잉') {
-        if (isVerify) {
-          getPostsForCertifiedUsers(true); // 팔로잉에서 인증된 유저 보기
-        } else {
-          getPostsForFollowing(); // 팔로잉에서 일반 포스트 보기
+      // 다른 경우에는 API를 호출하여 데이터를 가져옵니다.
+      if (searchQuery || (selectedTags && selectedTags.length > 0)) {
+        setPostsData(posts || []);
+      } else {
+        if (selectedItem === '팔로잉') {
+          if (isVerify) {
+            getPostsForCertifiedUsers(true);
+          } else {
+            getPostsForFollowing();
+          }
+        } else if (selectedItem === '전체') {
+          if (isVerify) {
+            getPostsForCertifiedUsers(false);
+          } else {
+            getPostsForGeneral();
+          }
         }
-      } else if (selectedItem === '전체') {
-        if (isVerify) {
-          getPostsForCertifiedUsers(false); // 전체에서 인증된 유저 보기
-        } else {
-          getPostsForGeneral(); // 전체에서 일반 포스트 보기
-        }
-      } else if (isMypage) {
-        getPostsForMypage(); // 마이페이지 포스트
       }
     }
-  }, [searchQuery, selectedTags, selectedCategory, sortOption, selectedItem, isVerify]);
+  }, [
+    searchQuery,
+    selectedTags,
+    selectedCategory,
+    sortOption,
+    selectedItem,
+    isVerify,
+    isMypage,
+    posts,
+  ]);
 
   const handleBookmarkToggle = async (postId: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();

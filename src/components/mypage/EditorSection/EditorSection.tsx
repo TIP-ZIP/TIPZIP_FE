@@ -5,24 +5,24 @@ import * as S from './EditorSection.Styled';
 
 interface EditorSectionProps {
   showEditor: boolean;
-  editorType: 'nickname' | 'introduction';
-  nickname: string;
-  introduction: string;
-  handleNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleIntroductionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  editorType: 'username' | 'message';
+  username: string;
+  message: string;
+  handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleMessageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   closeEditor: () => void;
-  onUpdate: (updatedValue: { nickname?: string; introduction?: string }) => void; // 추가
+  onUpdate: (updatedValue: { username?: string; message?: string }) => void;
 }
 
 const EditorSection: React.FC<EditorSectionProps> = ({
   showEditor,
   editorType,
-  nickname,
-  introduction,
-  handleNicknameChange,
-  handleIntroductionChange,
+  username,
+  message,
+  handleUsernameChange,
+  handleMessageChange,
   closeEditor,
-  onUpdate, // 추가
+  onUpdate,
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
 
@@ -38,36 +38,33 @@ const EditorSection: React.FC<EditorSectionProps> = ({
     return () => {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, [closeEditor]);
+  }, []);
 
   const handleSave = async () => {
-    const token = localStorage.getItem('accessToken'); // 토큰 가져오기
-
+    const token = localStorage.getItem('accessToken');
     try {
-      if (editorType === 'nickname') {
-        // 닉네임 저장 API 호출
+      if (editorType === 'username' && username) {
         await axiosInstance.patch(
           '/mypage/username',
-          { nickname },
+          { username },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           },
         );
-        onUpdate({ nickname }); // 부모 상태 업데이트
-      } else if (editorType === 'introduction') {
-        // 자기소개 저장 API 호출
+        onUpdate({ username });
+      } else if (editorType === 'message' && message) {
         await axiosInstance.patch(
           '/mypage/message',
-          { introduction },
+          { message },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           },
         );
-        onUpdate({ introduction }); // 부모 상태 업데이트
+        onUpdate({ message });
       }
       closeEditor(); // 저장 후 에디터 닫기
     } catch (error) {
@@ -84,31 +81,32 @@ const EditorSection: React.FC<EditorSectionProps> = ({
     showEditor && (
       <div ref={editorRef}>
         <Editor
-          title={editorType === 'nickname' ? '닉네임 바꾸기' : '자기소개 작성'}
+          title={editorType === 'username' ? '닉네임 바꾸기' : '자기소개 작성'}
           onClose={handleClose}
         >
           <S.EditorBar />
           <S.EditorContainer>
-            {editorType === 'nickname' ? (
+            {editorType === 'username' ? (
               <S.InputBox>
                 <S.EditorInput
                   type='text'
-                  value={nickname}
-                  onChange={handleNicknameChange}
+                  value={username || ''}
+                  onChange={handleUsernameChange}
                   maxLength={12}
+                  placeholder='닉네임을 작성해주세요.'
                 />
-                <S.CharCount>{nickname.length}/12</S.CharCount>
+                <S.CharCount>{username?.length}/12</S.CharCount>
               </S.InputBox>
             ) : (
               <S.InputBox>
                 <S.EditorInput
                   type='text'
-                  value={introduction}
-                  onChange={handleIntroductionChange}
+                  value={message || ''}
+                  onChange={handleMessageChange}
                   maxLength={20}
-                  placeholder={introduction ? '' : '프로필에 자기 소개를 작성해주세요.'}
+                  placeholder='자기 소개를 작성해주세요.'
                 />
-                <S.CharCount>{introduction.length}/20</S.CharCount>
+                <S.CharCount>{message?.length}/20</S.CharCount>
               </S.InputBox>
             )}
           </S.EditorContainer>
