@@ -7,13 +7,27 @@ import PostList from '../../components/home/PostList/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import axiosInstance from '@api/axios';
+
+interface ScrapPost {
+  post_id: number;
+  title: string;
+  scrap: boolean;
+  scrapCount: number;
+  thumbnail_url: string;
+}
 
 const ScrapPostView: React.FC = () => {
   const navigate = useNavigate();
   const { categoryName } = useParams<{ categoryName: string }>();
   const { state } = useLocation();
   const type = state?.type as 'category' | 'personal';
+  const categoryId = state?.categoryId;
   
+  const [posts, setPosts] = useState<ScrapPost[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const decodedCategoryName = useMemo(() => {
     if (!categoryName) return '';
     try {
@@ -55,18 +69,89 @@ const ScrapPostView: React.FC = () => {
     }
   }, [type, decodedCategoryName, categories]);
 
-  // 임시 게시물 데이터
-  const posts = [
-    {
-      id: 1,
-      title: '화장대 정리법 세 가지!',
-      image: '',
-      profileName: '민영일상',
-      bookmarks: 102,
-      isFilled: true
-    },
-    // ... 더 많은 게시물 데이터
-  ];
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      console.log('스크랩 API 호출 시작:', { type, categoryId, categoryName: state?.originalName });
+      
+      try {
+        let response;
+        if (type === 'category' && categoryId) {
+          response = await axiosInstance.get(`/scrap/category/${categoryId}`);
+        } else if (type === 'personal' && state?.originalName) {
+          const encodedFolderName = state.originalName
+            .split('')
+            .map(char => {
+              if (/[a-zA-Z0-9가-힣]/.test(char)) {
+                return char;
+              }
+              return encodeURIComponent(char);
+            })
+            .join('');
+          
+          console.log('나만의 스크랩 API 호출:', { 
+            originalName: state.originalName,
+            encodedName: encodedFolderName,
+            url: `/scrap/${encodedFolderName}`
+          });
+          
+          response = await axiosInstance.get<ScrapPost[]>(`/scrap/${encodedFolderName}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Original-Folder-Name': state.originalName
+            }
+          });
+        } else {
+          console.log('API 호출 중단: 필요한 파라미터 없음', { 
+            type, 
+            categoryId, 
+            folderName: state?.originalName 
+          });
+          return;
+        }
+
+        console.log('스크랩 API 응답:', response);
+        
+        if (Array.isArray(response.data)) {
+          setPosts(response.data);
+          console.log('설정된 포스트:', response.data);
+        } else {
+          console.error('API 응답이 배열이 아님:', response.data);
+          setPosts([]);
+        }
+      } catch (err: any) {
+        console.error('스크랩 API 호출 실패:', err);
+        console.error('에러 상세:', {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+          url: err.config?.url,
+          headers: err.config?.headers,
+          originalName: state?.originalName
+        });
+        setError('게시물을 불러오는데 실패했습니다.');
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [categoryId, type, state?.originalName]);
+
+  const transformedPosts = useMemo(() => {
+    if (!Array.isArray(posts)) return [];
+    
+    return posts.map(post => ({
+      id: post.post_id,
+      title: post.title,
+      image: post.thumbnail_url,
+      profileName: '',
+      bookmarks: post.scrapCount,
+      isFilled: post.scrap
+    }));
+  }, [posts]);
 
   const handleCategoryClick = (category: string) => {
     if (type === 'category') return;
@@ -103,11 +188,17 @@ const ScrapPostView: React.FC = () => {
       </S.HeaderContainer>
 
       <S.ContentContainer>
-        <PostList
-          posts={posts}
-          handleBookmarkClick={handleBookmarkClick}
-          $isMypage={false}
-        />
+        {isLoading ? (
+          <div>로딩 중...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : (
+          <PostList
+            posts={transformedPosts}
+            handleBookmarkClick={handleBookmarkClick}
+            $isMypage={false}
+          />
+        )}
       </S.ContentContainer>
     </S.Container>
   );

@@ -53,6 +53,14 @@ export const MediaButton = styled.button`
   color: ${colors.TZ_Monochrome[500]};
   cursor: pointer;
 
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    ${({ theme }) => theme.fontStyles.Caption8};
+    cursor: pointer;
+  }
+
   &:active {
     opacity: 0.8;
   }
