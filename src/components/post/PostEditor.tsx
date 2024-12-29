@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import * as S from './PostEditor.styled';
 import axiosInstance from '@api/axios';
 import axios from 'axios';
@@ -10,6 +12,32 @@ interface PostEditorProps {
 }
 
 const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onImageUpload }) => {
+  const quillRef = React.useRef<ReactQuill>(null);
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ color: [] }, { background: [] }],
+    ],
+  };
+
+  const quillFormats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'color',
+    'background',
+    'link',
+    'image',
+  ];
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
@@ -44,17 +72,13 @@ const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onIma
         });
         console.log('이미지 업로드 성공:', response.data);
 
-        // 이미지 미리보기를 위한 임시 URL 생성
-        const imagePreviewUrl = URL.createObjectURL(file);
-
-        onContentChange(
-          (prev) =>
-            `${prev}\n<div style="max-width: 100%; margin: 10px 0;">
-              <img src="${response.data.S3url}" alt="${file.name}" style="max-width: 100%; height: auto;" />
-            </div>\n`,
-        );
-
-        onImageUpload(response.data.S3url);
+        // Quill 에디터에 이미지 삽입
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+          const range = quill.getSelection() || { index: quill.getLength(), length: 0 };
+          quill.insertEmbed(range.index, 'image', response.data.S3url);
+          quill.setSelection(range.index + 1, 0);
+        }
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
           console.error('이미지 업로드 실패 상세:', {
@@ -74,14 +98,25 @@ const PostEditor: React.FC<PostEditorProps> = ({ content, onContentChange, onIma
     }
   };
 
+  const handleChange = (value: string) => {
+    console.log('에디터 내용:', value);
+    onContentChange(value);
+  };
+
   return (
     <S.ContentSection>
       <S.ContentLabel>본문 내용</S.ContentLabel>
-      <S.ContentTextarea
-        placeholder={`전달하고자 하는 내용 핵심 위주로 작성해주세요\n(썸네일 미등록 시 이미지를 꼭 첨부해주세요)`}
-        value={content}
-        onChange={(e) => onContentChange(e.target.value)}
-      />
+      <S.QuillWrapper>
+        <ReactQuill
+          ref={quillRef}
+          theme='snow'
+          value={content}
+          onChange={handleChange}
+          modules={quillModules}
+          formats={quillFormats}
+          placeholder={`전달하고자 하는 내용 핵심 위주로 작성해주세요\n(썸네일 미등록 시 이미지를 꼭 첨부해주세요)`}
+        />
+      </S.QuillWrapper>
       <S.MediaButtons>
         <S.MediaButton type='button'>
           <input

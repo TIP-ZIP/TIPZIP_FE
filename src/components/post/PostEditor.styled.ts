@@ -81,3 +81,43 @@ export const VideoIcon = styled.img.attrs({
   width: 1.2rem;
   height: 1.1rem;
 `;
+
+export const QuillWrapper = styled.div`
+  margin-bottom: 1rem;
+
+  .ql-container {
+    min-height: 30rem;
+    max-height: 60rem;
+    background-color: ${colors.TZ_Monochrome[100]};
+    border-radius: 0 0 8px 8px;
+    font-family: inherit;
+  }
+
+  .ql-editor {
+    min-height: 30rem;
+    max-height: 60rem;
+    ${({ theme }) => theme.fontStyles.Caption9};
+    line-height: 1.6;
+
+    &.ql-blank::before {
+      color: ${colors.TZ_Monochrome[300]};
+      font-style: normal;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  .ql-toolbar {
+    border-radius: 8px 8px 0 0;
+    background-color: ${colors.TZ_Monochrome[100]};
+  }
+
+  .ql-toolbar, .ql-container {
+    border: none;
+  }
+`;
