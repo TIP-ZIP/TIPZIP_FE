@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { isAuthenticated, validateToken } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const token = localStorage.getItem('accessToken');
 
@@ -47,10 +47,6 @@ const Home: React.FC = () => {
   };
 
   const apiSortOption = sortMapping[selectedSort];
-
-  useEffect(() => {
-    validateToken();
-  }, [validateToken]);
 
   const handleOption = (option: string) => {
     handleSortOptionClick(option);

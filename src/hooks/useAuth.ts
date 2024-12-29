@@ -1,15 +1,20 @@
 import axiosInstance from '@api/axios';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const validateToken = (): boolean => {
+  const validateToken = useCallback((): boolean => {
     const accessToken = localStorage.getItem('accessToken');
     const isValid = !!accessToken;
     setIsAuthenticated(isValid);
     return isValid;
-  };
+  }, []);
+
+  // useAuth 마운트 시 로그인 상태 관리 Update
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   const logout = useCallback(async (): Promise<number | undefined> => {
     try {
