@@ -142,21 +142,21 @@ const PostDetail: React.FC = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-      setIsDropdownOpen(false);
-    }
-  };
+  // const handleClickOutside = (e: MouseEvent) => {
+  //   if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+  //     setIsDropdownOpen(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    // 전역 클릭 이벤트 추가
-    document.addEventListener('mousedown', handleClickOutside);
+  // useEffect(() => {
+  //   // 전역 클릭 이벤트 추가
+  //   document.addEventListener('mousedown', handleClickOutside);
 
-    // Cleanup 이벤트 리스너 제거
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  //   // Cleanup 이벤트 리스너 제거
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
   const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
   const writerID = postDetail?.user_id;
@@ -178,7 +178,7 @@ const PostDetail: React.FC = () => {
               {postDetail?.user_id === parsedUser_id && (
                 <S.ElipsisIcon onClick={handlePostDropdown} />
               )}
-              {isDropdownOpen && <PostManageDropdown ref={dropdownRef} />}
+              {isDropdownOpen && <PostManageDropdown ref={dropdownRef} postId={postId} />}
             </S.PostDetailHeader>
 
             {/* Introduction Section */}
