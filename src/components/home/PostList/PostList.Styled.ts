@@ -40,11 +40,11 @@ export const Nocontent = styled.div`
   ${fontStyles.Caption3}
 `;
 
-export const PostImage = styled.div<{ imageUrl?: string; $isMypage?: boolean }>`
+export const PostImage = styled.div<{ $imageUrl?: string; $isMypage?: boolean }>`
   width: 16rem;
   height: 16rem;
   border-radius: 0.6rem;
-  background-image: url(${(props) => props.imageUrl || postImg});
+  background-image: url(${(props) => props.$imageUrl || postImg});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -103,14 +103,14 @@ export const ProfileContainer = styled.div`
   z-index: 1;
 `;
 
-export const ProfileImage = styled.div<{ imageUrl?: string }>`
+export const ProfileImage = styled.div<{ $imageUrl?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 1.8rem;
   height: 1.8rem;
   border-radius: 30px;
-  background-image: url(${(props) => props.imageUrl || profileImg});
+  background-image: url(${(props) => props.$imageUrl || profileImg});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

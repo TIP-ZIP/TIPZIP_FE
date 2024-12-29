@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as S from './ZipContainer.Styled';
-import axiosInstance from '@api/axios'; // Make sure axios is correctly configured
+import axiosInstance from '@api/axios';
+import Editor from '@components/mypage/Editor/Editor';
+import * as E from '@pages/Scrap/ScrapFolderView.Styled';
 
 interface Folder {
   id: number;
@@ -15,6 +17,8 @@ interface ZipContainerProps {
 
 const ZipContainer: React.FC<ZipContainerProps> = ({ postId }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [newFolderName, setNewFolderName] = useState<string>('');
+  const [showEditor, setShowEditor] = useState(false);
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -65,37 +69,89 @@ const ZipContainer: React.FC<ZipContainerProps> = ({ postId }) => {
     }
   };
 
+  const handleCreateNewFolder = async () => {
+    try {
+      const response = await axiosInstance.post('/folder', {
+        folder_name: newFolderName,
+      });
+
+      const newFolder: Folder = {
+        id: response.data.id,
+        name: response.data.folderName,
+        postCount: 0,
+        isScrapped: false,
+      };
+
+      setFolders((prevFolders) => [...prevFolders, newFolder]);
+      setNewFolderName('');
+      setShowEditor(false);
+    } catch (error) {
+      console.error('폴더 생성 실패:', error);
+      alert('폴더 생성에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
-    <S.ZipContainer>
-      <S.ZipBar>
-        <S.ZipMessage>스크랩 ZIP</S.ZipMessage>
-        <S.Addbtn>추가하기</S.Addbtn>
-      </S.ZipBar>
+    <>
+      <S.ZipContainer>
+        <S.ZipBar>
+          <S.ZipMessage>스크랩 ZIP</S.ZipMessage>
+          <S.Addbtn onClick={() => setShowEditor(true)}>추가하기</S.Addbtn>
+        </S.ZipBar>
 
-      {folders.map((folder, index) => (
-        <S.FolderContainer key={folder.id}>
-          <S.FolderItem>
-            <S.FolderBox>
-              <S.FolderIcon>
-                <S.FolderName>{folder.name}</S.FolderName>
-              </S.FolderIcon>
+        {folders.map((folder, index) => (
+          <S.FolderContainer key={folder.id}>
+            <S.FolderItem>
+              <S.FolderBox>
+                <S.FolderIcon>
+                  <S.FolderName>{folder.name}</S.FolderName>
+                </S.FolderIcon>
 
-              <S.FolderInfoBox>
-                <S.NameInfo>{folder.name}</S.NameInfo>
-                <S.FolderInfo>게시물 {folder.postCount}개</S.FolderInfo>
-              </S.FolderInfoBox>
-            </S.FolderBox>
+                <S.FolderInfoBox>
+                  <S.NameInfo>{folder.name}</S.NameInfo>
+                  <S.FolderInfo>게시물 {folder.postCount}개</S.FolderInfo>
+                </S.FolderInfoBox>
+              </S.FolderBox>
 
-            {/* Scrap button */}
-            <S.ScrapButton
-              onClick={() => handleScrapClick(folder.id, folder.name)}
-              $isScrap={folder.isScrapped}
-            />
-          </S.FolderItem>
-          {index !== folders.length - 1 && <S.FolderBar />}
-        </S.FolderContainer>
-      ))}
-    </S.ZipContainer>
+              {/* Scrap button */}
+              <S.ScrapButton
+                onClick={() => handleScrapClick(folder.id, folder.name)}
+                $isScrap={folder.isScrapped}
+              />
+            </S.FolderItem>
+            {index !== folders.length - 1 && <S.FolderBar />}
+          </S.FolderContainer>
+        ))}
+      </S.ZipContainer>
+      {showEditor && (
+        <Editor
+          title='새 서랍 생성하기'
+          onClose={() => {
+            handleCreateNewFolder(); // 폴더 생성 함수 호출
+            setShowEditor(false); // 에디터 닫기
+          }}
+        >
+          <E.EditorBar />
+          <E.EditorContainer>
+            <E.InputBox>
+              <E.EditorInput
+                type='text'
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                maxLength={130}
+                placeholder='제목을 입력하세요'
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleCreateNewFolder();
+                  }
+                }}
+              />
+              <E.CharCount>{newFolderName.length}/130</E.CharCount>
+            </E.InputBox>
+          </E.EditorContainer>
+        </Editor>
+      )}
+    </>
   );
 };
 

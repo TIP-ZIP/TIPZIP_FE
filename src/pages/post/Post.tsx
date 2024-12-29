@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '@hooks/useAuth';
 import LoginModalContainer from '@components/home/LoginModalContainer';
 
 import PostHeader from '@components/post/PostHeader';
@@ -8,6 +7,7 @@ import TagSelector from '@components/post/TagSelector';
 import PostEditor from '@components/post/PostEditor';
 import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
+import PostThumbnail from '@components/post/PostThumbnail';
 
 import * as S from './Post.styled';
 import axiosInstance from '@api/axios';
@@ -27,47 +27,46 @@ const Post: React.FC = () => {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [category, setCategory] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [showTags, setShowTags] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
+  const [thumbnail_url, setThumbnailUrl] = useState<string>('');
   const token = localStorage.getItem('accessToken');
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // 컴포넌트 진입 시 로그인 체크 수정
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    
-    // 토큰이 있을 때는 즉시 모달을 닫도록 수정
+
     if (token) {
       setShowLoginModal(false);
       return;
     }
-    
-    // 토큰이 없을 때만 모달 표시
+
     if (!token) {
       console.log('로그인 모달 표시 이유: 토큰 없음');
       setShowLoginModal(true);
     }
-  }, []);  // isAuthenticated 의존성 제거
+  }, []);
 
   const handleImageUpload = (imageUrl: string) => {
-    setImages(prev => [...prev, imageUrl]);
-    
-    if (images.length === 0) {
-        setThumbnailUrl(imageUrl);
-    }
-    
-    setContent(prev => `${prev}\n<img src="${imageUrl}" alt="uploaded" />\n`);
+    setImages((prev) => {
+      const updatedImages = [...prev, imageUrl];
+      if (updatedImages.length === 1) {
+        setThumbnailUrl(imageUrl); // Automatically set the first image as the thumbnail when it is the first image.
+      }
+      return updatedImages;
+    });
+
+    setContent((prev) => `${prev}\n<img src="${imageUrl}" alt="uploaded" />\n`);
+  };
+
+  const handleThumbnailSelect = (url: string) => {
+    setThumbnailUrl(url);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 필수 필드 검증
     if (!title.trim()) {
       alert('제목을 입력해주세요.');
       return;
@@ -85,8 +84,7 @@ const Post: React.FC = () => {
       return;
     }
 
-    // 태그에서 # 제거
-    const processedTags = tags.map(tag => tag.replace('#', ''));
+    const processedTags = tags.map((tag) => tag.replace('#', ''));
 
     const postData: Post = {
       title: title.trim(),
@@ -94,7 +92,7 @@ const Post: React.FC = () => {
       tag: processedTags,
       content: content.trim(),
       link_url: linkUrl.trim() || undefined,
-      thumbnail_url: images[0] || undefined
+      thumbnail_url: thumbnail_url || images[0] || undefined, // Use the thumbnail_url if set, otherwise use the first image
     };
 
     try {
@@ -104,7 +102,7 @@ const Post: React.FC = () => {
       const response = await axiosInstance.post('/posts', postData, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -114,10 +112,13 @@ const Post: React.FC = () => {
       }
     } catch (error: any) {
       console.error('게시글 등록 실패:', error);
-      // 더 자세한 에러 정보 출력
       if (error.response) {
         console.error('Error response:', error.response.data);
+        console.error('Error status:', error.response.status);
+        console.error('Error headers:', error.response.headers);
       }
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
       alert('게시글 등록에 실패했습니다. 다시 시도해주세요.');
     }
   };
@@ -136,9 +137,14 @@ const Post: React.FC = () => {
     }
   };
 
-  // 필수 항목들이 모두 입력되었는지 확인하는 함수 추가
   const isFormValid = () => {
-    return title.trim() !== '' && category !== '' && tags.length > 0 && content.trim() !== '';
+    return (
+      title.trim() !== '' &&
+      category !== '' &&
+      tags.length > 0 &&
+      content.trim() !== '' &&
+      thumbnail_url
+    );
   };
 
   return (
@@ -167,17 +173,19 @@ const Post: React.FC = () => {
             onTagSelect={handleTagSelect}
           />
           <S.Form onSubmit={handleSubmit}>
-            <PostEditor 
-              content={content} 
+            <PostEditor
+              content={content}
               onContentChange={setContent}
               onImageUpload={handleImageUpload}
             />
+            <PostThumbnail
+              images={images}
+              thumbnail_url={thumbnail_url}
+              onThumbnailSelect={handleThumbnailSelect}
+            />
             <PostLink linkUrl={linkUrl} onChange={setLinkUrl} />
             <S.ButtonContainer>
-              <S.StyledSubmitButton
-                type='submit'
-                $isValid={isFormValid()}
-              >
+              <S.StyledSubmitButton type='submit' $isValid={Boolean(isFormValid())}>
                 등록하기
               </S.StyledSubmitButton>
             </S.ButtonContainer>

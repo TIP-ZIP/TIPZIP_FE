@@ -215,9 +215,9 @@ const PostList: React.FC<PostListProps> = ({
         {Array.isArray(postsData) && postsData.length > 0 ? (
           postsData.map((post) => (
             <S.PostItem key={post.id} onClick={() => handlePostClick(post.id)}>
-              <S.PostImage imageUrl={post.thumbnail_url} $isMypage={isMypage}>
+              <S.PostImage $imageUrl={post.thumbnail_url} $isMypage={isMypage}>
                 <S.ProfileContainer>
-                  <S.ProfileImage imageUrl={post.profile_image} />
+                  <S.ProfileImage $imageUrl={post.profile_image} />
                   <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
                 </S.ProfileContainer>
                 <S.BookmarkContainer>
