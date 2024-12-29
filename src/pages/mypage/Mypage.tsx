@@ -53,16 +53,18 @@ const Mypage: React.FC = () => {
     );
   };
 
-  // 닉네임 수정 에디터 열기
   const handleNameClick = () => {
-    setShowEditor(true);
-    setEditorType('username');
+    if (isOwnProfile) {
+      setShowEditor(true);
+      setEditorType('username');
+    }
   };
 
-  // 자기소개 수정 에디터 열기
   const handleIntroductionClick = () => {
-    setShowEditor(true);
-    setEditorType('message');
+    if (isOwnProfile) {
+      setShowEditor(true);
+      setEditorType('message');
+    }
   };
 
   // EditorSection에서 업데이트된 값을 처리
