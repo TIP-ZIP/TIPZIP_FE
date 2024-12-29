@@ -147,7 +147,7 @@ const PostDetail: React.FC = () => {
           <S.PostDetailWrapper>
             <S.PostDetailHeader>
               <S.LeftArrow onClick={() => navigate(-1)} />
-              <S.HeaderTitle>{postDetail?.author}'s Post</S.HeaderTitle>
+              <S.HeaderTitle>{postDetail?.author || '사용자'}'s Post</S.HeaderTitle>
             </S.PostDetailHeader>
             <S.PostDetailMain>
               <S.PostIntroduction>
@@ -155,7 +155,7 @@ const PostDetail: React.FC = () => {
                   <S.PostAuthorDate>
                     <S.ProfileImage src={postDetail?.profile_image} />
                     <S.NameBadgeContainer>
-                      <S.AuthorName>{postDetail?.author}</S.AuthorName>
+                      <S.AuthorName>{postDetail?.author || '사용자'}</S.AuthorName>
                       {postDetail?.badge && <S.CertificationBadge />}
                     </S.NameBadgeContainer>
                     <span>•</span>

@@ -4,8 +4,8 @@ import axiosInstance from '@api/axios';
 import * as S from './ProfileSection.Styled';
 
 interface ProfileSectionProps {
-  nickname: string;
-  introduction: string;
+  username: string;
+  message: string;
   onNameClick: () => void;
   onIntroductionClick: () => void;
   isOwnProfile: boolean;
@@ -14,10 +14,10 @@ interface ProfileSectionProps {
 const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroductionClick }) => {
   const { writerid } = useParams<{ writerid: string }>();
   const [isOwnProfile, setIsOwnProfile] = useState(true); // 자기 프로필 여부
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [following, setFollowing] = useState(false);
   const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [nickname, setNickname] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [username, setUsername] = useState('');
+  const [message, setMessage] = useState('');
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
@@ -39,16 +39,23 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
 
         console.log(response.data);
 
-        const { profile_image, username, followerCount, followingCount, message, badge } =
-          response.data;
+        const {
+          profile_image,
+          username,
+          followerCount,
+          followingCount,
+          message,
+          badge,
+          following,
+        } = response.data;
 
         setProfileImg(profile_image);
-        setNickname(username || '사용자');
-        setIntroduction(message);
+        setUsername(username || '사용자');
+        setMessage(message);
         setFollowerCount(followerCount);
         setFollowingCount(followingCount);
         setIsVerified(badge);
-
+        setFollowing(following);
         // writerid가 없으면 자신의 프로필, 있으면 다른 사람의 프로필
         setIsOwnProfile(!writerid);
       } catch (error) {
@@ -64,16 +71,22 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const endpoint = isFollowing ? `/unfollow/${writerid}` : `/follow/${writerid}`;
-      await axiosInstance.post(endpoint, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      setIsFollowing((prev) => !prev); // 팔로우 상태 업데이트
+      const endpoint = `/follow/${writerid}`;
+      if (!following) {
+        await axiosInstance.post(endpoint, null, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      } else {
+        await axiosInstance.delete(endpoint, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      }
     } catch (error) {
-      console.error('Failed to toggle follow status:', error);
+      console.error('Error following/unfollowing', error);
     }
   };
 
@@ -152,13 +165,13 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
       <S.InfoSection>
         <S.NameSection>
           <S.NameBox>
-            <S.Name onClick={onNameClick}>{nickname}</S.Name>
+            <S.Name onClick={onNameClick}>{username}</S.Name>
             {isVerified && <S.Verfied />}
           </S.NameBox>
           {!isOwnProfile && (
             <S.FollowButtonContainer>
-              <S.FollowButton onClick={handleFollowToggle} $isFollowing={isFollowing}>
-                {isFollowing ? '팔로잉' : '팔로우'}
+              <S.FollowButton onClick={handleFollowToggle} $isFollowing={following}>
+                {following ? '팔로잉' : '팔로우'}
               </S.FollowButton>
             </S.FollowButtonContainer>
           )}
@@ -174,9 +187,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
           </S.FollowBox>
         </S.FollowerInfo>
         <S.IntroduceSection onClick={onIntroductionClick}>
-          {!introduction && <S.EditIcon />}
-          <S.InputText $isFilled={!!introduction}>
-            {introduction || '프로필에 자기 소개를 작성해주세요.'}
+          {!message && <S.EditIcon />}
+          <S.InputText $isFilled={!!message}>
+            {message || '프로필에 자기 소개를 작성해주세요.'}
           </S.InputText>
         </S.IntroduceSection>
       </S.InfoSection>
