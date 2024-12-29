@@ -13,6 +13,7 @@ interface Post {
   author: string | null;
   scrapCount: number;
   scrap: boolean;
+  profile_image: string;
 }
 
 interface PostListProps {
@@ -69,6 +70,7 @@ const PostList: React.FC<PostListProps> = ({
       const categoryQuery = `category=${selectedCategory.join(',')}`;
       const response = await axiosInstance.get(`/posts?sort=${sortOption}&${categoryQuery}`);
       setPostsData(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching posts', error);
     }
@@ -196,9 +198,9 @@ const PostList: React.FC<PostListProps> = ({
         {Array.isArray(postsData) && postsData.length > 0 ? (
           postsData.map((post) => (
             <S.PostItem key={post.id} onClick={() => handlePostClick(post.id)}>
-              <S.PostImage $isMypage={isMypage}>
+              <S.PostImage imageUrl={post.thumbnail_url} $isMypage={isMypage}>
                 <S.ProfileContainer>
-                  <S.ProfileImage />
+                  <S.ProfileImage imageUrl={post.profile_image} />
                   <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
                 </S.ProfileContainer>
                 <S.BookmarkContainer>
