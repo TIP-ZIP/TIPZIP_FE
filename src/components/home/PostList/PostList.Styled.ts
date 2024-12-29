@@ -36,6 +36,7 @@ export const Nocontent = styled.div`
   transform: translate(-50%, -50%);
   align-items: center;
   justify-content: center;
+  ${fontStyles.Caption3}
 `;
 
 export const PostImage = styled.div<{ $isMypage?: boolean }>`

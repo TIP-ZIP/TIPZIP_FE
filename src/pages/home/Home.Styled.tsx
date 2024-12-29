@@ -84,6 +84,7 @@ export const OrangeBubble = styled.div`
   width: 12rem;
   height: 4.4rem;
   padding-top: 0.8rem;
+  z-index: 100;
 `;
 
 export const BubbleText = styled.span`

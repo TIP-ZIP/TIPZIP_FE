@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axiosInstance from '@api/axios';
 import * as S from './ProfileSection.Styled';
 
 interface ProfileSectionProps {
-  nickname: string; // 추가
-  introduction: string; // 추가
-  onNameClick: () => void; // 추가
-  onIntroductionClick: () => void; // 추가
-  isOwnProfile: boolean; // 추가
+  nickname: string;
+  introduction: string;
+  onNameClick: () => void;
+  onIntroductionClick: () => void;
+  isOwnProfile: boolean;
 }
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({
-  onNameClick,
-  onIntroductionClick,
-  isOwnProfile,
-}) => {
+const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroductionClick }) => {
+  const { writerid } = useParams<{ writerid: string }>();
+  const [isOwnProfile, setIsOwnProfile] = useState(true); // 자기 프로필 여부
   const [isFollowing, setIsFollowing] = useState(false);
   const [profileImg, setProfileImg] = useState<string | null>(null);
   const [nickname, setNickname] = useState('');
@@ -27,7 +26,12 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
     const fetchProfileData = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
-        const response = await axiosInstance.get('/mypage/', {
+        const loggedInUserID = localStorage.getItem('userID');
+        const loggedinUserName = localStorage.getItem('userName');
+
+        // URL에 writerid가 있으면 해당 writerid로, 없으면 자기 프로필
+        const endpoint = writerid ? `/mypage/${writerid}` : `/mypage/`;
+        const response = await axiosInstance.get(endpoint, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -39,22 +43,38 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           response.data;
 
         setProfileImg(profile_image);
-        setNickname(username);
+        setNickname(username || '사용자');
         setIntroduction(message);
         setFollowerCount(followerCount);
         setFollowingCount(followingCount);
         setIsVerified(badge);
+
+        // writerid가 없으면 자신의 프로필, 있으면 다른 사람의 프로필
+        setIsOwnProfile(!writerid);
       } catch (error) {
         console.error('Failed to fetch profile data:', error);
       }
     };
 
     fetchProfileData();
-  }, []);
+  }, [writerid]);
 
-  const handleFollowToggle = (e: React.MouseEvent) => {
+  const handleFollowToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsFollowing((prev) => !prev);
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const endpoint = isFollowing ? `/unfollow/${writerid}` : `/follow/${writerid}`;
+      await axiosInstance.post(endpoint, null, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      setIsFollowing((prev) => !prev); // 팔로우 상태 업데이트
+    } catch (error) {
+      console.error('Failed to toggle follow status:', error);
+    }
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +140,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <S.ProfileImg />
           </S.GrayCircle>
         )}
-        <S.plusBtn />
+        {isOwnProfile && <S.plusBtn />}
         <input
           id='image-upload-input'
           type='file'

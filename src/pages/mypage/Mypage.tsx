@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import * as S from './Mypage.Styled';
-import { postsData } from '@constants/PostData';
 import ProfileSection from '@components/mypage/ProfileSection/ProfileSection';
 import PostSection from '@components/mypage/PostSection/PostSection';
 import EditorSection from '@components/mypage/EditorSection/EditorSection';
+import axiosInstance from '@api/axios';
 
 const Mypage: React.FC = () => {
-  const [posts, setPosts] = useState(postsData);
+  const { writerid } = useParams<{ writerid: string }>();
+  const [posts, setPosts] = useState<any[]>([]);
   const [showEditor, setShowEditor] = useState(false);
   const [editorType, setEditorType] = useState<'nickname' | 'introduction'>('nickname');
   const [nickname, setNickname] = useState('아기 사자 🦁');
   const [introduction, setIntroduction] = useState('');
+
+  // writerid가 없으면 로컬스토리지에서 userId를 가져옴
+  const userId = writerid || localStorage.getItem('userID');
+  console.log(userId);
+
+  // 포스트 데이터 불러오기
+  useEffect(() => {
+    if (userId) {
+      axiosInstance
+        .get(`/posts/user/${userId}`)
+        .then((response) => {
+          setPosts(response.data);
+          console.log(posts);
+        })
+        .catch((error) => {
+          console.error('포스트 데이터를 가져오는 중 오류 발생:', error);
+        });
+    }
+  }, [userId]);
 
   // 북마크 클릭 핸들러
   const handleBookmarkClick = (postId: number) => {
