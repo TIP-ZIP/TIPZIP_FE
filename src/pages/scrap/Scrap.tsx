@@ -2,16 +2,30 @@ import React from 'react';
 import * as Styled from './Scrap.Styled';
 import ScrapFolderView from './ScrapFolderView';
 
-const categoryDummyData = [
-  { name: '로컬', count: '30' },
-  { name: '주방', count: '31' },
-  { name: '건강', count: '12' },
-  { name: '뷰티 & 패션', count: '41' },
-  { name: '기타', count: '30' },
-  { name: '정리 / 공간 활용', count: '13' },
-  { name: '청소', count: '52' },
-  { name: 'IT', count: '40' },
-  { name: '여가 & 휴식', count: '55' },
+interface CategoryScrap {
+  name: string;
+  count: string;
+  id: number;
+}
+
+interface ScrapPost {
+  post_id: number;
+  title: string;
+  scrap: boolean;
+  scrapCount: number;
+  thumbnail_url: string;
+}
+
+const categoryData: CategoryScrap[] = [
+  { name: '정리/공간 활용', count: '0', id: 1 },
+  { name: '주방', count: '0', id: 2 },
+  { name: '청소', count: '0', id: 3 },
+  { name: '건강', count: '0', id: 4 },
+  { name: 'IT', count: '0', id: 5 },
+  { name: '뷰티&패션', count: '0', id: 6 },
+  { name: '여가&휴식', count: '0', id: 7 },
+  { name: '로컬', count: '0', id: 8 },
+  { name: '기타', count: '0', id: 9 },
 ];
 
 const personalDummyData = [
@@ -22,6 +36,7 @@ const personalDummyData = [
 
 const Scrap: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
+  const [categories, setCategories] = React.useState<CategoryScrap[]>(categoryData);
 
   return (
     <Styled.Container>
@@ -47,7 +62,7 @@ const Scrap: React.FC = () => {
       
       <ScrapFolderView 
         type={activeTab}
-        categories={activeTab === 'category' ? categoryDummyData : personalDummyData}
+        categories={activeTab === 'category' ? categories : personalDummyData}
       />
     </Styled.Container>
   );

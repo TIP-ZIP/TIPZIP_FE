@@ -7,13 +7,27 @@ import PostList from '../../components/home/PostList/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import axios from 'axios';
+
+interface ScrapPost {
+  post_id: number;
+  title: string;
+  scrap: boolean;
+  scrapCount: number;
+  thumbnail_url: string;
+}
 
 const ScrapPostView: React.FC = () => {
   const navigate = useNavigate();
   const { categoryName } = useParams<{ categoryName: string }>();
   const { state } = useLocation();
   const type = state?.type as 'category' | 'personal';
+  const categoryId = state?.categoryId;
   
+  const [posts, setPosts] = useState<ScrapPost[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const decodedCategoryName = useMemo(() => {
     if (!categoryName) return '';
     try {
@@ -55,18 +69,43 @@ const ScrapPostView: React.FC = () => {
     }
   }, [type, decodedCategoryName, categories]);
 
-  // 임시 게시물 데이터
-  const posts = [
-    {
-      id: 1,
-      title: '화장대 정리법 세 가지!',
-      image: '',
-      profileName: '민영일상',
-      bookmarks: 102,
-      isFilled: true
-    },
-    // ... 더 많은 게시물 데이터
-  ];
+  useEffect(() => {
+    const fetchCategoryPosts = async () => {
+      if (type !== 'category' || !categoryId) return;
+      
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`/api/scrap/category/${categoryId}`);
+        if (Array.isArray(response.data)) {
+          setPosts(response.data);
+        } else {
+          console.error('API response is not an array:', response.data);
+          setPosts([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch category posts:', err);
+        setError('게시물을 불러오는데 실패했습니다.');
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategoryPosts();
+  }, [categoryId, type]);
+
+  const transformedPosts = useMemo(() => {
+    if (!Array.isArray(posts)) return [];
+    
+    return posts.map(post => ({
+      id: post.post_id,
+      title: post.title,
+      image: post.thumbnail_url,
+      profileName: '',
+      bookmarks: post.scrapCount,
+      isFilled: post.scrap
+    }));
+  }, [posts]);
 
   const handleCategoryClick = (category: string) => {
     if (type === 'category') return;
@@ -103,11 +142,17 @@ const ScrapPostView: React.FC = () => {
       </S.HeaderContainer>
 
       <S.ContentContainer>
-        <PostList
-          posts={posts}
-          handleBookmarkClick={handleBookmarkClick}
-          $isMypage={false}
-        />
+        {isLoading ? (
+          <div>로딩 중...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : (
+          <PostList
+            posts={transformedPosts}
+            handleBookmarkClick={handleBookmarkClick}
+            $isMypage={false}
+          />
+        )}
       </S.ContentContainer>
     </S.Container>
   );

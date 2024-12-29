@@ -12,7 +12,7 @@ import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
-  categories: Array<{ name: string; count: string }>;
+  categories: Array<{ name: string; count: string; id?: number }>;
 }
 
 const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: initialCategories }) => {
@@ -45,14 +45,17 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
 
   const handleFolderClick = (index: number) => {
     setSelectedCategory(index);
-    const categoryName = categories[index].name;
-    const normalizedName = categoryName.replace(/ /g, '');
+    const category = categories[index];
+    const normalizedName = category.name.replace(/ /g, '');
     const encodedName = encodeURIComponent(normalizedName);
     
-    navigate(`/scrap/${type}/${encodedName}`, { state: { 
-      type,
-      originalName: categoryName
-    }});
+    navigate(`/scrap/${type}/${encodedName}`, { 
+      state: { 
+        type,
+        originalName: category.name,
+        categoryId: category.id
+      }
+    });
   };
 
   const handleCreateNewFolder = () => {
