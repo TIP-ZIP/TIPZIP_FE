@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import * as S from './MyPage.Styled';
+
+import axiosInstance from '@api/axios';
+
 import ProfileSection from '@components/mypage/ProfileSection/ProfileSection';
 import PostSection from '@components/mypage/PostSection/PostSection';
 import EditorSection from '@components/mypage/EditorSection/EditorSection';
-import axiosInstance from '@api/axios';
+
+import * as S from './Mypage.Styled';
 
 const MyPage: React.FC = () => {
   const { writerid } = useParams<{ writerid: string }>();

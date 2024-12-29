@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, validateToken } = useAuth();
 
   const token = localStorage.getItem('accessToken');
 
@@ -106,12 +106,16 @@ const Home: React.FC = () => {
     setIsClicked((prev) => !prev);
   };
 
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
+
   const handleBubbleClick = () => {
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
+      navigate('/post/new');
+    } else {
       setShowModal(true);
       setIsClicked(false);
-    } else {
-      navigate('/post/new');
     }
   };
 

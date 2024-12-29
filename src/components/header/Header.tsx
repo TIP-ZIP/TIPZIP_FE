@@ -18,10 +18,6 @@ const Header: React.FC = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoColor = location.pathname === '/mypage' ? 'black' : '';
 
-  useEffect(() => {
-    validateToken();
-  }, [validateToken]);
-
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
   };
@@ -37,6 +33,10 @@ const Header: React.FC = () => {
       window.location.href = '/home';
     }
   };
+
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   const handleLoginRequired = useCallback(
     (callback: () => void) => {

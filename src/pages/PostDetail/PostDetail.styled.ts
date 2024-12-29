@@ -5,6 +5,7 @@ import leftArrow from '@assets/svgs/ArrowLeft.svg?react';
 import certificationBadge from '@assets/svgs/certificationBadge.svg?react';
 import bookMark from '@assets/svgs/EmptyBlackBookmark.svg?react';
 import linkIcon from '@assets/svgs/link.svg?react';
+import elipsisIcon from '@assets/svgs/elipsisIcon.svg?react';
 
 export const PostDetailWrapper = styled.div`
   width: 100%;
@@ -41,6 +42,15 @@ export const LeftArrow = styled(leftArrow)`
 export const HeaderTitle = styled.h2`
   ${({ theme }) => theme.fontStyles.Header2}
   color: ${colors.TZ_Monochrome[1000]};
+`;
+
+export const ElipsisIcon = styled(elipsisIcon)`
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  right: 2.2rem;
+
+  cursor: pointer;
 `;
 
 // Main Section
