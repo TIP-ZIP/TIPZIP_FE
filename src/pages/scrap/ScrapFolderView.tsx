@@ -48,11 +48,27 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
     setIsDropdownOpen(false);
   };
 
-  const handleFolderDelete = (indexToDelete: number) => {
-    setCategories(prevCategories => 
-      prevCategories.filter((_, index) => index !== indexToDelete)
-    );
-    setIsDeleteMode(false);
+  const handleFolderDelete = async (indexToDelete: number) => {
+    try {
+      const folderToDelete = categories[indexToDelete];
+      
+      if (!folderToDelete.id) {
+        console.error('폴더 ID가 없습니다.');
+        return;
+      }
+
+      // DELETE 요청 보내기
+      await axiosInstance.delete(`/folder/${folderToDelete.id}`);
+      
+      // 성공적으로 삭제되면 로컬 상태 업데이트
+      setCategories(prevCategories => 
+        prevCategories.filter((_, index) => index !== indexToDelete)
+      );
+      setIsDeleteMode(false);
+    } catch (error) {
+      console.error('폴더 삭제 실패:', error);
+      alert('폴더 삭제에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleFolderClick = async (index: number) => {
