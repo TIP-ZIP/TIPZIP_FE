@@ -138,7 +138,13 @@ const Post: React.FC = () => {
   };
 
   const isFormValid = () => {
-    return title.trim() !== '' && category !== '' && tags.length > 0 && content.trim() !== '';
+    return (
+      title.trim() !== '' &&
+      category !== '' &&
+      tags.length > 0 &&
+      content.trim() !== '' &&
+      thumbnail_url
+    );
   };
 
   return (
