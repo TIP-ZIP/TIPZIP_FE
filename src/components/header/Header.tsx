@@ -28,11 +28,14 @@ const Header: React.FC = () => {
   const handleCloseModal = () => {
     setShowLogoutModal(false);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // React hook useAuth 내 logout 함수 호출
-    logout();
-    setShowLogoutModal(false);
-    window.location.href = '/home';
+    const responseStatus = await logout();
+
+    if (responseStatus === 200) {
+      setShowLogoutModal(false);
+      window.location.href = '/home';
+    }
   };
 
   const handleLoginRequired = useCallback(

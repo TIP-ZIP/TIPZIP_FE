@@ -11,7 +11,7 @@ const useAuth = () => {
     return isValid;
   };
 
-  const logout = useCallback(async (): Promise<void> => {
+  const logout = useCallback(async (): Promise<number | undefined> => {
     try {
       // DB 내 Refresh Token 삭제
       const response = await axiosInstance.post('/auth/logout');
@@ -25,6 +25,8 @@ const useAuth = () => {
 
       // isAuthenticated 로그인 관리 State 업데이트
       setIsAuthenticated(false);
+
+      return response.status;
     } catch (error) {
       console.error('Logout failed: ', error);
     }
