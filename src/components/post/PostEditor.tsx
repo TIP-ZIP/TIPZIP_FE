@@ -16,6 +16,8 @@ const PostEditor: React.FC<PostEditorProps> = ({
     onContentChange,
     onImageUpload,
 }) => {
+    const quillRef = React.useRef<ReactQuill>(null);
+
     const quillModules = {
         toolbar: [
             [{ header: [1, 2, 3, false] }],
@@ -74,15 +76,13 @@ const PostEditor: React.FC<PostEditorProps> = ({
                 });
                 console.log('이미지 업로드 성공:', response.data);
                 
-                // 이미지 미리보기를 위한 임시 URL 생성
-                const imagePreviewUrl = URL.createObjectURL(file);
-                
-                // 에디터에 이미지 추가
-                onContentChange(prev => 
-                    `${prev}\n<div style="max-width: 100%; margin: 10px 0;"><img src="${response.data.S3url}" alt="${file.name}" style="max-width: 100%; height: auto;" /></div>\n`
-                );
-                
-                onImageUpload(response.data.S3url);
+                // Quill 에디터에 이미지 삽입
+                const quill = quillRef.current?.getEditor();
+                if (quill) {
+                    const range = quill.getSelection() || { index: quill.getLength(), length: 0 };
+                    quill.insertEmbed(range.index, 'image', response.data.S3url);
+                    quill.setSelection(range.index + 1, 0);
+                }
             } catch (error: unknown) {
                 if (axios.isAxiosError(error)) {
                     console.error('이미지 업로드 실패 상세:', {
@@ -112,6 +112,7 @@ const PostEditor: React.FC<PostEditorProps> = ({
             <S.ContentLabel>본문 내용</S.ContentLabel>
             <S.QuillWrapper>
                 <ReactQuill
+                    ref={quillRef}
                     theme="snow"
                     value={content}
                     onChange={handleChange}

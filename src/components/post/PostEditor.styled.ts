@@ -83,6 +83,8 @@ export const VideoIcon = styled.img.attrs({
 `;
 
 export const QuillWrapper = styled.div`
+  margin-bottom: 1rem;
+
   .ql-container {
     min-height: 30rem;
     max-height: 60rem;
@@ -100,6 +102,13 @@ export const QuillWrapper = styled.div`
     &.ql-blank::before {
       color: ${colors.TZ_Monochrome[300]};
       font-style: normal;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
     }
   }
 
