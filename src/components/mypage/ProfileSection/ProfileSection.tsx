@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@api/axios';
 import * as S from './ProfileSection.Styled';
+import KAKAOICON from '@assets/svgs/kakaoIcon.svg';
+import NAVERICON from '@assets/svgs/naverIcon.svg';
+import GOOGLEICON from '@assets/svgs/googleIcon.svg';
 
 interface ProfileSectionProps {
   username: string;
@@ -21,7 +24,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
-  const [social_provider, setSocialProvider] = useState('');
+  const [socialProvider, setSocialProvider] = useState('');
   const [email, setEmail] = useState('');
 
   useEffect(() => {
@@ -60,7 +63,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
         setFollowingCount(followingCount);
         setIsVerified(badge);
         setFollowing(following);
-        // writerid가 없으면 자신의 프로필, 있으면 다른 사람의 프로필
+        setSocialProvider(social_provider);
+        setEmail(email);
         setIsOwnProfile(!writerid);
       } catch (error) {
         console.error('Failed to fetch profile data:', error);
@@ -69,6 +73,12 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
 
     fetchProfileData();
   }, [writerid]);
+
+  const socialProviderIcons: { [key: string]: string } = {
+    KAKAO: KAKAOICON,
+    NAVER: NAVERICON,
+    GOOGLE: GOOGLEICON,
+  };
 
   const handleFollowToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -195,7 +205,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
               </S.FollowButton>
             </S.FollowButtonContainer>
           )}
-        </S.NameSection>
+        </S.NameSection>{' '}
+        <S.SocialSection>
+          {socialProvider && (
+            <S.SocialIcon
+              src={socialProviderIcons[socialProvider]}
+              alt={`${socialProvider} icon`}
+            />
+          )}
+          {email && <S.Email>{email}</S.Email>}
+        </S.SocialSection>
         <S.FollowerInfo>
           <S.FollowBox>
             <S.Follow>팔로워</S.Follow>

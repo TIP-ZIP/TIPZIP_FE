@@ -63,7 +63,7 @@ export const InfoSection = styled.div`
 export const NameSection = styled.div<{ $isOwnProfile: boolean }>`
   display: flex;
   gap: 0.8rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   width: fit-content;
   text-align: center;
 
@@ -173,4 +173,21 @@ export const FollowButton = styled.button<{ $isFollowing: boolean }>`
   transition:
     background-color 0.3s,
     color 0.3s;
+`;
+
+export const SocialSection = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+`;
+
+export const SocialIcon = styled.img`
+  width: 1.1rem;
+  height: 1.1rem;
+`;
+
+export const Email = styled.div`
+  ${({ theme }) => theme.fontStyles.Caption7}
+  color: ${({ theme }) => theme.colors.TZ_Monochrome[500]};
+  font-family: 'Pretendard';
 `;
