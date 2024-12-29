@@ -62,8 +62,13 @@ export const InfoSection = styled.div`
 
 export const NameSection = styled.div`
   display: flex;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
   margin-bottom: 0.8rem;
   gap: 0.8rem;
+  padding: 0.4rem 1rem;
+  width: fit-content;
+  text-align: center;
 `;
 export const Name = styled.span`
   ${({ theme }) => theme.fontStyles.Header2}

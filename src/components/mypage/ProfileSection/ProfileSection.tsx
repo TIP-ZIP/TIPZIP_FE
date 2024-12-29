@@ -21,6 +21,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
+  const [social_provider, setSocialProvider] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -47,6 +49,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ onNameClick, onIntroduc
           message,
           badge,
           following,
+          social_provider,
+          email,
         } = response.data;
 
         setProfileImg(profile_image);
