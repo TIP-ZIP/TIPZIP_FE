@@ -83,6 +83,8 @@ export const VideoIcon = styled.img.attrs({
 `;
 
 export const QuillWrapper = styled.div`
+  margin-bottom: 1rem;
+
   .ql-container {
     min-height: 30rem;
     max-height: 60rem;
