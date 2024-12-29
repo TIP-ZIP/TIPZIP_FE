@@ -145,3 +145,40 @@ export const PlusIcon = styled.img`
   left: 50%;
   transform: translate(-50%, -50%);
 `;
+
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+`;
+
+export const Button = styled.button`
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+`;

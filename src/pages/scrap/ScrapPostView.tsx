@@ -7,7 +7,7 @@ import PostList from '../../components/home/PostList/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import axiosInstance from '../../api/axios';
+import axiosInstance from '@api/axios';
 
 interface ScrapPost {
   post_id: number;
@@ -70,20 +70,66 @@ const ScrapPostView: React.FC = () => {
   }, [type, decodedCategoryName, categories]);
 
   useEffect(() => {
-    const fetchCategoryPosts = async () => {
-      if (type !== 'category' || !categoryId) return;
-      
+    const fetchPosts = async () => {
       setIsLoading(true);
+      console.log('스크랩 API 호출 시작:', { type, categoryId, categoryName: state?.originalName });
+      
       try {
-        const response = await axiosInstance.get(`/scrap/category/${categoryId}`);
+        let response;
+        if (type === 'category' && categoryId) {
+          response = await axiosInstance.get(`/scrap/category/${categoryId}`);
+        } else if (type === 'personal' && state?.originalName) {
+          const encodedFolderName = state.originalName
+            .split('')
+            .map(char => {
+              if (/[a-zA-Z0-9가-힣]/.test(char)) {
+                return char;
+              }
+              return encodeURIComponent(char);
+            })
+            .join('');
+          
+          console.log('나만의 스크랩 API 호출:', { 
+            originalName: state.originalName,
+            encodedName: encodedFolderName,
+            url: `/scrap/${encodedFolderName}`
+          });
+          
+          response = await axiosInstance.get<ScrapPost[]>(`/scrap/${encodedFolderName}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Original-Folder-Name': state.originalName
+            }
+          });
+        } else {
+          console.log('API 호출 중단: 필요한 파라미터 없음', { 
+            type, 
+            categoryId, 
+            folderName: state?.originalName 
+          });
+          return;
+        }
+
+        console.log('스크랩 API 응답:', response);
+        
         if (Array.isArray(response.data)) {
           setPosts(response.data);
+          console.log('설정된 포스트:', response.data);
         } else {
-          console.error('API response is not an array:', response.data);
+          console.error('API 응답이 배열이 아님:', response.data);
           setPosts([]);
         }
-      } catch (err) {
-        console.error('Failed to fetch category posts:', err);
+      } catch (err: any) {
+        console.error('스크랩 API 호출 실패:', err);
+        console.error('에러 상세:', {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+          url: err.config?.url,
+          headers: err.config?.headers,
+          originalName: state?.originalName
+        });
         setError('게시물을 불러오는데 실패했습니다.');
         setPosts([]);
       } finally {
@@ -91,8 +137,8 @@ const ScrapPostView: React.FC = () => {
       }
     };
 
-    fetchCategoryPosts();
-  }, [categoryId, type]);
+    fetchPosts();
+  }, [categoryId, type, state?.originalName]);
 
   const transformedPosts = useMemo(() => {
     if (!Array.isArray(posts)) return [];

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import newScrapFolder from '@assets/svgs/newScrapFolder.svg'
 import plusSign from '@assets/pngs/plusSign.png'
 import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
+import axiosInstance from '@api/axios';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -22,6 +23,8 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [categories, setCategories] = useState(initialCategories);
   const [isNewFolderHovered, setIsNewFolderHovered] = useState(false);
+  const [newFolderName, setNewFolderName] = useState<string>('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     setCategories(initialCategories);
@@ -49,6 +52,15 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
     const normalizedName = category.name.replace(/ /g, '');
     const encodedName = encodeURIComponent(normalizedName);
     
+    console.log('폴더 클릭:', {
+      index,
+      category,
+      normalizedName,
+      encodedName,
+      type,
+      categoryId: category.id
+    });
+    
     navigate(`/scrap/${type}/${encodedName}`, { 
       state: { 
         type,
@@ -58,8 +70,29 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
     });
   };
 
-  const handleCreateNewFolder = () => {
-    console.log('Create new folder');
+  const handleCreateNewFolder = async () => {
+    try {
+      const response = await axiosInstance.post('/folder', {
+        folder_name: newFolderName
+      });
+
+      const newFolder = {
+        name: response.data.folderName,
+        count: '0',
+        id: response.data.id
+      };
+
+      setCategories(prev => [...prev, newFolder]);
+      setNewFolderName('');
+      setIsCreateModalOpen(false);
+    } catch (error) {
+      console.error('폴더 생성 실패:', error);
+      alert('폴더 생성에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true);
   };
 
   return (
@@ -104,7 +137,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
         ))}
         {type === 'personal' && (
           <S.NewFolderCard 
-            onClick={handleCreateNewFolder}
+            onClick={openCreateModal}
             onMouseEnter={() => setIsNewFolderHovered(true)}
             onMouseLeave={() => setIsNewFolderHovered(false)}
           >
@@ -116,6 +149,22 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
           </S.NewFolderCard>
         )}
       </S.FoldersContainer>
+      
+      {isCreateModalOpen && (
+        <S.Modal>
+          <S.ModalContent>
+            <S.Input
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+              placeholder="폴더 이름을 입력하세요"
+            />
+            <S.ButtonContainer>
+              <S.Button onClick={handleCreateNewFolder}>생성</S.Button>
+              <S.Button onClick={() => setIsCreateModalOpen(false)}>취소</S.Button>
+            </S.ButtonContainer>
+          </S.ModalContent>
+        </S.Modal>
+      )}
     </S.Container>
   );
 };
