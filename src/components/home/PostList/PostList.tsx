@@ -3,7 +3,7 @@ import * as S from './PostList.Styled';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import LoginModalContainer from '../LoginModalContainer';
-import useAuth from '@hooks/useAuth';
+import useCategory from '@hooks/home/useCategory';
 import axiosInstance from '@api/axios';
 
 interface Post {
@@ -13,6 +13,8 @@ interface Post {
   author: string | null;
   scrapCount: number;
   scrap: boolean;
+  profile_image: string;
+  category: number;
 }
 
 interface PostListProps {
@@ -20,18 +22,22 @@ interface PostListProps {
   sortOption: string;
   $isMypage: boolean;
   selectedItem: string;
-  handleBookmarkClick: (postId: number) => void;
   isVerify: boolean;
   posts: Post[]; // 기존 prop 정의 수정
   searchQuery: string;
   selectedTags: string[];
 }
 
+interface ScrapData {
+  post_id: number;
+  folder: string | null; // optional
+  category: number | null; // optional
+}
+
 const PostList: React.FC<PostListProps> = ({
   selectedCategory,
   sortOption,
   selectedItem,
-  handleBookmarkClick,
   isVerify,
   searchQuery,
   posts,
@@ -42,26 +48,11 @@ const PostList: React.FC<PostListProps> = ({
   const isMypage = location.pathname.includes('/mypage');
   const [showEditor, setShowEditor] = useState<number | null>(null);
   const [postsData, setPostsData] = useState<Post[]>(posts || []);
+  const [scrapData, setScrapData] = useState<ScrapData[]>([]);
   const token = localStorage.getItem('accessToken');
   const isSearchPage = location.pathname.includes('/home/search');
   const [showLoginModal, setShowLoginModal] = useState(false);
-
-  // // 마이페이지 포스트 가져오기
-  // const getPostsForMypage = async () => {
-  //   try {
-  //     const id = localStorage.getItem('userID');
-  //     const response = await axiosInstance.get(`/posts/user/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     setPostsData(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching posts for mypage', error);
-  //     setPostsData([]);
-  //   }
-  // };
+  const { categoryMap } = useCategory();
 
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
@@ -145,31 +136,59 @@ const PostList: React.FC<PostListProps> = ({
     posts,
   ]);
 
-  const handleBookmarkToggle = async (postId: number, e: React.MouseEvent, scrap: boolean) => {
+  const handleBookmarkToggle = async (post_id: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();
 
     try {
-      // 요청 데이터 설정
-      const requestData = { postId, folder_name: null };
+      const requestData = { post_id, folder: null };
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
+
+      let response;
       if (scrap) {
-        // DELETE 요청에서 'data'는 두 번째 인자에 포함
-        const response = await axiosInstance.delete('/scrap', { ...config, data: requestData });
+        response = await axiosInstance.delete('/scrap', { ...config, data: requestData });
       } else {
-        // POST 요청에서 'data'는 본문에 포함
-        const response = await axiosInstance.post('/scrap', requestData, config);
+        response = await axiosInstance.post('/scrap', requestData, config);
       }
 
-      handleBookmarkClick(postId);
-      if (scrap) {
-        setShowEditor(null);
-      } else {
-        setShowEditor(postId);
-      }
+      const updatedScrapData: ScrapData = response.data;
+
+      // postsData에서 해당 포스트의 북마크 상태와 숫자 업데이트
+      setPostsData((prevPostsData) =>
+        prevPostsData.map((post) =>
+          post.id === post_id
+            ? {
+                ...post,
+                scrap: !scrap, // 북마크 상태 반전
+                scrapCount: scrap ? post.scrapCount - 1 : post.scrapCount + 1, // 숫자 증가/감소
+              }
+            : post,
+        ),
+      );
+
+      // 기존 scrapData 상태 업데이트
+      setScrapData((prevScrapData) => {
+        if (!Array.isArray(prevScrapData)) {
+          return [updatedScrapData];
+        }
+
+        const existingScrapIndex = prevScrapData.findIndex((data) => data.post_id === post_id);
+        if (existingScrapIndex >= 0) {
+          const newScrapData = [...prevScrapData];
+          newScrapData[existingScrapIndex] = updatedScrapData;
+          return newScrapData;
+        } else {
+          return [...prevScrapData, updatedScrapData];
+        }
+      });
+
+      // 북마크 클릭 핸들러 호출
+
+      // 에디터 열기
+      setShowEditor(scrap ? null : post_id);
     } catch (error) {
       console.error('Error toggling bookmark', error);
       alert('북마크 처리 중 오류가 발생했습니다.');
@@ -196,15 +215,15 @@ const PostList: React.FC<PostListProps> = ({
         {Array.isArray(postsData) && postsData.length > 0 ? (
           postsData.map((post) => (
             <S.PostItem key={post.id} onClick={() => handlePostClick(post.id)}>
-              <S.PostImage $isMypage={isMypage}>
+              <S.PostImage imageUrl={post.thumbnail_url} $isMypage={isMypage}>
                 <S.ProfileContainer>
-                  <S.ProfileImage />
+                  <S.ProfileImage imageUrl={post.profile_image} />
                   <S.ProfileName>{post.author ? post.author : '사용자'}</S.ProfileName>
                 </S.ProfileContainer>
                 <S.BookmarkContainer>
                   <S.BookmarkIcon
                     $isFilled={post.scrap}
-                    onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)} // 클릭 시 스크랩 상태에 따라 에디터 제어
+                    onClick={(e) => handleBookmarkToggle(post.id, e, post.scrap)}
                   />
                   <S.BookmarkCount>{post.scrapCount}</S.BookmarkCount>
                 </S.BookmarkContainer>
@@ -216,15 +235,20 @@ const PostList: React.FC<PostListProps> = ({
           <S.Nocontent>조회할 수 있는 글이 없어요!</S.Nocontent>
         )}
       </S.PostList>
-      {showEditor !== null && (
-        <ScrapEditorSection
-          showEditor={true}
-          closeEditor={closeEditor}
-          postid={showEditor}
-          thumbnail={postsData.find((post) => post.id === showEditor)?.thumbnail_url}
-          category='' // Ensure category is properly passed or updated dynamically
-        />
-      )}
+
+      {showEditor !== null &&
+        (() => {
+          const selectedPost = postsData.find((post) => post.id === showEditor);
+          return (
+            <ScrapEditorSection
+              showEditor={true}
+              closeEditor={closeEditor}
+              postid={showEditor}
+              thumbnail={selectedPost?.thumbnail_url || ''}
+              category={selectedPost?.category || 1}
+            />
+          );
+        })()}
 
       {showLoginModal && (
         <LoginModalContainer

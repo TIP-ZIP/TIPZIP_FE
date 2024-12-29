@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import postImg from '@assets/svgs/postexample.svg';
+// 여기 디폴트 이미지 바꾸면 됨
 import { fontStyles } from '@styles/theme/typography';
 import plus from '@assets/svgs/plus.svg';
 import filled from '@assets/svgs/FilledBookmark.svg';
@@ -39,13 +40,14 @@ export const Nocontent = styled.div`
   ${fontStyles.Caption3}
 `;
 
-export const PostImage = styled.div<{ $isMypage?: boolean }>`
+export const PostImage = styled.div<{ imageUrl?: string; $isMypage?: boolean }>`
   width: 16rem;
   height: 16rem;
   border-radius: 0.6rem;
-  background: url(${postImg});
+  background-image: url(${(props) => props.imageUrl || postImg});
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   position: relative;
   object-fit: cover;
 
@@ -101,15 +103,17 @@ export const ProfileContainer = styled.div`
   z-index: 1;
 `;
 
-export const ProfileImage = styled.div`
+export const ProfileImage = styled.div<{ imageUrl?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 1.8rem;
   height: 1.8rem;
-  background-image: url(${profileImg});
+  border-radius: 30px;
+  background-image: url(${(props) => props.imageUrl || profileImg});
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
+  background-position: center;
 `;
 
 export const ProfileName = styled.span`

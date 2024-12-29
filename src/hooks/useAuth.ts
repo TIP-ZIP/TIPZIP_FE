@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from 'react';
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // 토큰 검증 함수
   const validateToken = useCallback((): boolean => {
     const accessToken = localStorage.getItem('accessToken');
     const isValid = !!accessToken;
@@ -12,7 +11,6 @@ const useAuth = () => {
     return isValid;
   }, []);
 
-  // 컴포넌트 마운트 시 자동으로 토큰 검증
   useEffect(() => {
     console.log('useAuth - 토큰 검증 실행');
     validateToken();
