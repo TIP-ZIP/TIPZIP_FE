@@ -7,7 +7,7 @@ import PostList from '../../components/home/PostList/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axios';
 
 interface ScrapPost {
   post_id: number;
@@ -75,7 +75,7 @@ const ScrapPostView: React.FC = () => {
       
       setIsLoading(true);
       try {
-        const response = await axios.get(`/api/scrap/category/${categoryId}`);
+        const response = await axiosInstance.get(`/scrap/category/${categoryId}`);
         if (Array.isArray(response.data)) {
           setPosts(response.data);
         } else {
