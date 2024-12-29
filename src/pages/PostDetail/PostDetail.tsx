@@ -4,6 +4,7 @@ import * as S from './PostDetail.styled';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import Spinner from '@components/postdetail/Spinner';
 import axiosInstance from '@api/axios';
+import 'react-quill/dist/quill.snow.css';
 
 interface PostImage {
   image_id: number;
@@ -171,10 +172,10 @@ const PostDetail: React.FC = () => {
 
               <S.PostContentWrapper>
                 <S.PostContentContainer>
-                  <S.TextContent>{cleanedContent}</S.TextContent>
-                  {contentImages.map((imageUrl, index) => (
-                    <img key={index} src={imageUrl} alt={`image-${index}`} />
-                  ))}
+                  <div 
+                    className="ql-editor"
+                    dangerouslySetInnerHTML={{ __html: postDetail?.content || '' }}
+                  />
                 </S.PostContentContainer>
                 <S.PostHastagContainer>
                   {postDetail?.tag.map((tagItem, index) => (
