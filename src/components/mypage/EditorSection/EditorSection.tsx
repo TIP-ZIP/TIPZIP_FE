@@ -29,7 +29,8 @@ const EditorSection: React.FC<EditorSectionProps> = ({
   useEffect(() => {
     const handleClickOutside = async (e: PointerEvent) => {
       if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
-        await handleClose(); // 외부 클릭 시 저장 후 닫기
+        await handleSave(); // 저장 호출
+        closeEditor(); // 에디터 닫기
       }
     };
 

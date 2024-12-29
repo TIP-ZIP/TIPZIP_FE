@@ -17,17 +17,17 @@ export const EditorWrapper = styled.div<{ $showEditor: boolean }>`
       animation: ${slideUp} 1s ease-out;
     `}
 
-  position: absolute;
-  width: 100%;
+  position: fixed;
   bottom: 0;
-  left: 0%;
+  left: 0;
+  width: 100%;
   height: 50rem;
   z-index: 100;
   transform: ${(props) => (props.$showEditor ? 'translateY(0)' : 'translateY(50rem)')};
   opacity: ${(props) => (props.$showEditor ? 1 : 0)};
   transition:
     transform 1s ease-out,
-    opacity 1s ease-out; /* Smooth transition for non-animated state changes */
+    opacity 1s ease-out;
 `;
 
 export const EditorContainer = styled.div`

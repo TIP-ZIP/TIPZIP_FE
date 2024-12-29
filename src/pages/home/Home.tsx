@@ -62,39 +62,6 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleBookmarkClick = async (postId: number) => {
-    if (!isAuthenticated) {
-      setShowModal(true);
-      return;
-    }
-    try {
-      const response = await axiosInstance.post(
-        '/scrap',
-        { postId, folder_name: null },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      if (response.status === 200) {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId
-              ? {
-                  ...post,
-                  isFilled: !post.isFilled,
-                  bookmarks: post.isFilled ? post.bookmarks - 1 : post.bookmarks + 1,
-                }
-              : post,
-          ),
-        );
-      }
-    } catch (error) {
-      console.error('API 호출 중 오류가 발생했습니다.', error);
-    }
-  };
-
   const handlePlusClick = () => {
     setIsClicked((prev) => !prev);
   };
@@ -210,7 +177,6 @@ const Home: React.FC = () => {
               selectedCategory={selectedCategoryNumbers || []}
               sortOption={selectedSort}
               selectedItem={selectedItem}
-              handleBookmarkClick={handleBookmarkClick}
               isVerify={selectedVerify}
               posts={posts || []}
               searchQuery={searchQuery || ''}
