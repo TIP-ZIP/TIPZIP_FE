@@ -10,6 +10,7 @@ import newScrapFolder from '@assets/svgs/newScrapFolder.svg'
 import plusSign from '@assets/pngs/plusSign.png'
 import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 import axiosInstance from '@api/axios';
+import Editor from '@components/mypage/Editor/Editor';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -151,19 +152,26 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: ini
       </S.FoldersContainer>
       
       {isCreateModalOpen && (
-        <S.Modal>
-          <S.ModalContent>
-            <S.Input
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="폴더 이름을 입력하세요"
-            />
-            <S.ButtonContainer>
-              <S.Button onClick={handleCreateNewFolder}>생성</S.Button>
-              <S.Button onClick={() => setIsCreateModalOpen(false)}>취소</S.Button>
-            </S.ButtonContainer>
-          </S.ModalContent>
-        </S.Modal>
+        <Editor title="새 서랍 생성하기" onClose={() => setIsCreateModalOpen(false)}>
+          <S.EditorBar />
+          <S.EditorContainer>
+            <S.InputBox>
+              <S.EditorInput
+                type="text"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                maxLength={12}
+                placeholder="제목을 입력하세요"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleCreateNewFolder();
+                  }
+                }}
+              />
+              <S.CharCount>{newFolderName.length}/130</S.CharCount>
+            </S.InputBox>
+          </S.EditorContainer>
+        </Editor>
       )}
     </S.Container>
   );
