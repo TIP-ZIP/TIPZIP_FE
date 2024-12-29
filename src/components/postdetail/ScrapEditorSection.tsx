@@ -7,7 +7,7 @@ interface ScrapEditorSectionProps {
   showEditor: boolean;
   closeEditor: () => void;
   thumbnail?: string;
-  category?: string;
+  category?: number;
   postid?: number;
 }
 
