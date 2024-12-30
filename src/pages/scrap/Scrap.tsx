@@ -61,24 +61,18 @@ const Scrap: React.FC = () => {
           },
         });
 
-        const formattedData = response.data.map((folder) => ({
-          name: folder.folderName,
-          count: String(folder.count),
-          id: folder.folderName,
-        }));
-
         if (isMyFolder) {
           const personalData = response.data.map((folder) => ({
             folder_name: folder.folderName,
             count: String(folder.count),
-            folder_id: Number(folder.folderName)
+            folder_id: Number(folder.folderName),
           }));
           setPersonalFolders(personalData);
         } else {
           const categoryData = response.data.map((folder) => ({
             name: folder.folderName,
             count: String(folder.count),
-            id: Number(folder.folderName)
+            id: Number(folder.folderName),
           }));
           setCategories(categoryData);
         }
@@ -133,13 +127,15 @@ const Scrap: React.FC = () => {
 
       <ScrapFolderView
         type={activeTab}
-        categories={activeTab === 'category' 
-          ? categories 
-          : personalFolders.map(folder => ({
-              name: folder.folder_name,
-              count: folder.count,
-              id: folder.folder_id
-            }))}
+        categories={
+          activeTab === 'category'
+            ? categories
+            : personalFolders.map((folder) => ({
+                name: folder.folder_name,
+                count: folder.count,
+                id: folder.folder_id,
+              }))
+        }
       />
     </Styled.Container>
   );

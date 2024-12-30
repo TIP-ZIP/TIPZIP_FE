@@ -204,10 +204,10 @@ const ScrapPostView: React.FC = () => {
             handleBookmarkClick={handleBookmarkClick}
             $isMypage={false}
             selectedCategory={[]}
-            sortOption=""
-            selectedItem=""
+            sortOption=''
+            selectedItem=''
             isVerify={false}
-            searchQuery=""
+            searchQuery=''
             selectedTags={[]}
           />
         )}
