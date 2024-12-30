@@ -1,6 +1,7 @@
-import { fontStyles } from '@styles/theme/typography';
 import styled from 'styled-components';
-import deleteIcon from '@assets/svgs/DeleteModal.svg';
+import { fontStyles } from '@styles/theme/typography';
+
+import deleteIcon from '@assets/svgs/DeleteModal.svg?react';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -65,16 +66,16 @@ export const ModalButton1 = styled.button`
   cursor: pointer;
 `;
 
-export const CloseButton = styled.button`
+export const CloseButton = styled(deleteIcon)`
   position: absolute;
   top: 1.5rem;
   right: 1rem;
+  
   width: 0.8rem;
   height: 0.8rem;
-  background: url(${deleteIcon});
-  background-repeat: no-repeat;
-  background-size: contain;
+
   border: none;
-  cursor: pointer;
   transform: scale(1.2);
+
+  cursor: pointer;
 `;

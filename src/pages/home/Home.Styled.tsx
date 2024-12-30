@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { colors } from '@styles/theme/colors';
+
 import star from '@assets/svgs/star.svg?react';
 import whitestar from '@assets/svgs/whiteStar.svg?react';
 import plus from '@assets/svgs/PlusPost.svg?react';
-import orangeplus from '@assets/svgs/OrangePlusPost.svg?react';
-import orangebubble from '@assets/svgs/orangebubble.svg?react';
+import orangebubble from '@assets/svgs/orange-bubble.svg?react';
 import edit from '@assets/svgs/WhiteEdit.svg?react';
 
 export const HomeLayout = styled.div`
@@ -59,31 +60,35 @@ export const VerifyText = styled.div<{ $selectedVerify: boolean }>`
 `;
 
 export const PlusBtn = styled(plus)<{ $isClicked: boolean }>`
-  position: fixed;
-  bottom: 1.8rem;
-  right: 2rem;
-  content: url(${(props) => (props.$isClicked ? orangeplus : plus)});
-  background-repeat: no-repeat;
-  background-size: contain;
   width: 4rem;
   height: 4rem;
+
+  position: fixed;
+  right: 2rem;
+  bottom: 1.8rem;
+
+  background-repeat: no-repeat;
+  background-size: contain;
   cursor: pointer;
+
+  circle {
+    fill: ${({ $isClicked }) =>
+      $isClicked ? colors.TZ_Signature[500] : colors.TZ_Monochrome[1000]};
+  }
 `;
 
-export const OrangeBubble = styled.div`
+export const OrangeBubble = styled(orangebubble)`
+  width: 12rem;
+  height: 4.4rem;
+
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
   gap: 0.8rem;
+
   position: fixed;
   bottom: 5.5rem;
   right: 2rem;
-  background: url(${orangebubble});
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 12rem;
-  height: 4.4rem;
-  padding-top: 0.8rem;
+
   z-index: 100;
 
   cursor: pointer;

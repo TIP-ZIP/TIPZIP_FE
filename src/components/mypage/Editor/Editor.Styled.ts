@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import close from '@assets/svgs/closemodal.svg';
+
+import close from '@assets/svgs/closemodal.svg?react';
 
 export const EditorContainer = styled.div`
   position: fixed;
@@ -33,16 +34,15 @@ export const EditorHeader = styled.div`
   width: 100%;
 `;
 
-export const CloseBtn = styled.div`
-  background: url(${close});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const CloseBtn = styled(close)`
   width: 1.6rem;
-  top: 1.9rem;
-  cursor: pointer;
-  left: 2.5rem;
-  position: absolute;
   height: 1.6rem;
+
+  position: absolute;
+  top: 1.9rem;
+  left: 2.5rem;
+
+  cursor: pointer;
 `;
 
 export const EditorBody = styled.div`

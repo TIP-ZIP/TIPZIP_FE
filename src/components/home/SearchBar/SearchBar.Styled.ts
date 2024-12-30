@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import search from '@assets/svgs/Search.svg';
+import search from '@assets/svgs/Search.svg?react';
 
 export const SearchBar = styled.div<{ $hasTags: boolean }>`
   display: flex;
@@ -13,13 +13,11 @@ export const SearchBar = styled.div<{ $hasTags: boolean }>`
     $hasTags ? 'transparent' : theme.colors.TZ_Monochrome[100]};
 `;
 
-export const SearchIcon = styled.div`
-  background: url(${search});
+export const SearchIcon = styled(search)`
   width: 1.4rem;
   height: 1.4rem;
   margin-right: 1.2rem;
-  background-size: contain;
-  background-repeat: no-repeat;
+
   cursor: pointer;
 `;
 

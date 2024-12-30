@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import folder from '@assets/svgs/EmptyFolder.svg';
+
+import folder from '@assets/svgs/EmptyFolder.svg?react';
 import bookmark from '@assets/svgs/EmptyGrayBookmark.svg';
 import filledbookmark from '@assets/svgs/FilledGrayBookmark.svg';
 
@@ -42,14 +43,13 @@ export const FolderInfoBox = styled.div`
   flex-direction: column;
 `;
 
-export const FolderIcon = styled.div`
-  display: flex;
-  align-items: center;
+export const FolderIcon = styled(folder)`
   width: 9.1rem;
   height: 6.8rem;
-  background: url(${folder});
-  background-size: contain;
-  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+
   position: relative;
 `;
 
