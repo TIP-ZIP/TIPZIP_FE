@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import grayprofile from '@assets/svgs/grayProfile.svg';
-import changeImg from '@assets/svgs/Plus.svg';
-import edit from '@assets/svgs/Edit.svg';
-import shield from '@assets/svgs/shield.svg';
+import grayprofile from '@assets/svgs/grayProfile.svg?react';
+import changeImg from '@assets/svgs/Plus.svg?react';
+import edit from '@assets/svgs/Edit.svg?react';
+import shield from '@assets/svgs/shield.svg?react';
 
 export const ProfileContainer = styled.div`
   display: flex;
@@ -29,19 +29,13 @@ export const GrayCircle = styled.div`
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
 `;
 
-export const ProfileImg = styled.div`
-  background: url(${grayprofile});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const ProfileImg = styled(grayprofile)`
   width: 5.35rem;
   cursor: pointer;
   height: 5.35rem;
 `;
 
-export const plusBtn = styled.div`
-  background: url(${changeImg});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const plusBtn = styled(changeImg)`
   position: absolute;
   right: 0.001rem;
   bottom: 0;
@@ -80,10 +74,7 @@ export const Name = styled.span`
   ${({ theme }) => theme.fontStyles.Header2}
 `;
 
-export const Verfied = styled.span`
-  background: url(${shield});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const Verfied = styled(shield)`
   width: 1.6rem;
   height: 1.6rem;
 `;
@@ -137,10 +128,7 @@ export const InputText = styled.div<{ $isFilled: boolean }>`
   font-size: 0.7rem;
 `;
 
-export const EditIcon = styled.div`
-  background: url(${edit});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const EditIcon = styled(edit)`
   width: 0.675rem;
   cursor: pointer;
   height: 0.675rem;

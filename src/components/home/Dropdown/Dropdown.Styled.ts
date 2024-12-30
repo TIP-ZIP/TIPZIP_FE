@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ArrowDown from '@assets/svgs/ArrowDown.svg';
+import arrowDown from '@assets/svgs/ArrowDown.svg?react';
 
 export const DropdownContainer = styled.div`
   position: relative;
@@ -35,10 +35,7 @@ export const DropdownButton = styled.button`
   }
 `;
 
-export const Arrow = styled.div<{ $isOpen: boolean }>`
-  background: url(${ArrowDown});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const Arrow = styled(arrowDown)<{ $isOpen: boolean }>`
   width: 1rem;
   height: 0.6rem;
   ${({ $isOpen }) =>

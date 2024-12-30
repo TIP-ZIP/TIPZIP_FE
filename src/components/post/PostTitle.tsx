@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './posttitle.styled';
 
-const MAX_TITLE_LENGTH = 22;
+const MAX_TITLE_LENGTH = 50;
 
 interface PostTitleProps {
     title: string;

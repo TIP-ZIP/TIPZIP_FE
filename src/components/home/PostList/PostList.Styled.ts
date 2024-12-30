@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import postImg from '@assets/svgs/postexample.svg';
 // 여기 디폴트 이미지 바꾸면 됨
 import { fontStyles } from '@styles/theme/typography';
-import plus from '@assets/svgs/plus.svg';
-import filled from '@assets/svgs/FilledBookmark.svg';
-import empty from '@assets/svgs/EmptyBookmark.svg';
-import profileImg from '@assets/svgs/defaultProfile.svg';
+import plus from '@assets/svgs/plus.svg?react';
+import filled from '@assets/svgs/FilledBookmark.svg?react';
+import empty from '@assets/svgs/EmptyBookmark.svg?react';
+import profileImg from '@assets/svgs/defaultProfile.svg?react';
 
 export const PostList = styled.div<{ $isMypage?: boolean; $isSearchPage?: boolean }>`
   display: grid;
@@ -76,12 +76,9 @@ export const PostTitle = styled.span<{ $isMypage?: boolean }>`
   }
 `;
 
-export const Plus = styled.div`
+export const Plus = styled(plus)`
   display: flex;
   position: fixed;
-  background: url(${plus});
-  background-repeat: no-repeat;
-  background-size: contain;
   width: 4rem;
   height: 4rem;
   border-radius: 100%;
@@ -103,15 +100,14 @@ export const ProfileContainer = styled.div`
   z-index: 1;
 `;
 
-export const ProfileImage = styled.div<{ $imageUrl?: string }>`
+export const ProfileImage = styled(profileImg)<{ $imageUrl?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 1.8rem;
   height: 1.8rem;
   border-radius: 30px;
-  background-image: url(${(props) => props.$imageUrl || profileImg});
-  background-repeat: no-repeat;
+  content: url(${(props) => props.$imageUrl || ''});
   background-size: cover;
   background-position: center;
 `;
