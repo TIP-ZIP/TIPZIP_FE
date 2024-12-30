@@ -30,7 +30,7 @@ interface PostListProps {
 
 interface ScrapData {
   post_id: number;
-  folder: string | null; // optional
+  folder_name: string | null; // optional
   category: number | null; // optional
 }
 
@@ -139,8 +139,20 @@ const PostList: React.FC<PostListProps> = ({
   const handleBookmarkToggle = async (post_id: number, e: React.MouseEvent, scrap: boolean) => {
     e.stopPropagation();
 
+    setPostsData((prevPostsData) =>
+      prevPostsData.map((post) =>
+        post.id === post_id
+          ? {
+              ...post,
+              scrap: !scrap,
+              scrapCount: scrap ? post.scrapCount - 1 : post.scrapCount + 1,
+            }
+          : post,
+      ),
+    );
+
     try {
-      const requestData = { post_id, folder: null };
+      const requestData = { post_id, folder_name: null };
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -154,43 +166,25 @@ const PostList: React.FC<PostListProps> = ({
         response = await axiosInstance.post('/scrap', requestData, config);
       }
 
+      setShowEditor(scrap ? null : post_id);
       const updatedScrapData: ScrapData = response.data;
+      setScrapData((prevScrapData) => [...prevScrapData, updatedScrapData]);
+    } catch (error) {
+      console.error('Error toggling bookmark', error);
 
-      // postsData에서 해당 포스트의 북마크 상태와 숫자 업데이트
+      // 롤백
       setPostsData((prevPostsData) =>
         prevPostsData.map((post) =>
           post.id === post_id
             ? {
                 ...post,
-                scrap: !scrap, // 북마크 상태 반전
-                scrapCount: scrap ? post.scrapCount - 1 : post.scrapCount + 1, // 숫자 증가/감소
+                scrap: scrap,
+                scrapCount: scrap ? post.scrapCount + 1 : post.scrapCount - 1,
               }
             : post,
         ),
       );
 
-      // 기존 scrapData 상태 업데이트
-      setScrapData((prevScrapData) => {
-        if (!Array.isArray(prevScrapData)) {
-          return [updatedScrapData];
-        }
-
-        const existingScrapIndex = prevScrapData.findIndex((data) => data.post_id === post_id);
-        if (existingScrapIndex >= 0) {
-          const newScrapData = [...prevScrapData];
-          newScrapData[existingScrapIndex] = updatedScrapData;
-          return newScrapData;
-        } else {
-          return [...prevScrapData, updatedScrapData];
-        }
-      });
-
-      // 북마크 클릭 핸들러 호출
-
-      // 에디터 열기
-      setShowEditor(scrap ? null : post_id);
-    } catch (error) {
-      console.error('Error toggling bookmark', error);
       alert('북마크 처리 중 오류가 발생했습니다.');
     }
   };

@@ -32,6 +32,7 @@ const MyPage: React.FC = () => {
       .get(endpoint, config)
       .then((response) => {
         setPosts(response.data);
+        console.log(posts);
       })
       .catch((error) => {
         console.error('포스트 데이터를 가져오는 중 오류 발생:', error);

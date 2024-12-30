@@ -57,14 +57,14 @@ const Scrap: React.FC = () => {
         const isMyFolder = activeTab === 'personal';
         const response = await axiosInstance.get<FolderResponse[]>(`/folder`, {
           params: {
-            is_my: isMyFolder
-          }
+            is_my: isMyFolder,
+          },
         });
 
         const formattedData = response.data.map((folder) => ({
           name: folder.folderName,
           count: String(folder.count),
-          id: folder.folderName
+          id: folder.folderName,
         }));
 
         if (isMyFolder) {
@@ -120,8 +120,8 @@ const Scrap: React.FC = () => {
           </Styled.TabTextInactive>
         </Styled.TabContainer>
       </Styled.Header>
-      
-      <ScrapFolderView 
+
+      <ScrapFolderView
         type={activeTab}
         categories={activeTab === 'category' ? categories : personalFolders}
       />
