@@ -23,7 +23,7 @@ const ScrapPostView: React.FC = () => {
   const { state } = useLocation();
   const type = state?.type as 'category' | 'personal';
   const categoryId = state?.categoryId;
-  
+
   const [posts, setPosts] = useState<ScrapPost[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,18 +37,28 @@ const ScrapPostView: React.FC = () => {
     }
   }, [categoryName]);
 
-  const categories = useMemo(() => [
-    '정리/공간 활용', '주방', '청소', '건강', 'IT', 
-    '뷰티&패션', '로컬', '여가&휴식', '기타'
-  ], []);
+  const categories = useMemo(
+    () => [
+      '정리/공간 활용',
+      '주방',
+      '청소',
+      '건강',
+      'IT',
+      '뷰티&패션',
+      '로컬',
+      '여가&휴식',
+      '기타',
+    ],
+    [],
+  );
 
   const [selectedCategory, setSelectedCategory] = useState<string[]>(() => {
     if (type === 'category' && decodedCategoryName) {
-      const matchedCategory = categories.find(category => {
+      const matchedCategory = categories.find((category) => {
         const normalizedCategory = category.replace(/\s+/g, '');
         return normalizedCategory === decodedCategoryName;
       });
-      
+
       if (matchedCategory) {
         return [matchedCategory];
       }
@@ -58,11 +68,11 @@ const ScrapPostView: React.FC = () => {
 
   useEffect(() => {
     if (type === 'category' && decodedCategoryName) {
-      const matchedCategory = categories.find(category => {
+      const matchedCategory = categories.find((category) => {
         const normalizedCategory = category.replace(/\s+/g, '');
         return normalizedCategory === decodedCategoryName;
       });
-      
+
       if (matchedCategory) {
         setSelectedCategory([matchedCategory]);
       }
@@ -73,7 +83,7 @@ const ScrapPostView: React.FC = () => {
     const fetchPosts = async () => {
       setIsLoading(true);
       console.log('스크랩 API 호출 시작:', { type, categoryId, categoryName: state?.originalName });
-      
+
       try {
         let response;
         if (type === 'category' && categoryId) {
@@ -88,31 +98,31 @@ const ScrapPostView: React.FC = () => {
               return encodeURIComponent(char);
             })
             .join('');
-          
-          console.log('나만의 스크랩 API 호출:', { 
+
+          console.log('나만의 스크랩 API 호출:', {
             originalName: state.originalName,
             encodedName: encodedFolderName,
-            url: `/scrap/${encodedFolderName}`
+            url: `/scrap/${encodedFolderName}`,
           });
-          
+
           response = await axiosInstance.get<ScrapPost[]>(`/scrap/${encodedFolderName}`, {
             headers: {
               'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'X-Original-Folder-Name': state.originalName
-            }
+              Accept: 'application/json',
+              'X-Original-Folder-Name': state.originalName,
+            },
           });
         } else {
-          console.log('API 호출 중단: 필요한 파라미터 없음', { 
-            type, 
-            categoryId, 
-            folderName: state?.originalName 
+          console.log('API 호출 중단: 필요한 파라미터 없음', {
+            type,
+            categoryId,
+            folderName: state?.originalName,
           });
           return;
         }
 
         console.log('스크랩 API 응답:', response);
-        
+
         if (Array.isArray(response.data)) {
           setPosts(response.data);
           console.log('설정된 포스트:', response.data);
@@ -121,16 +131,6 @@ const ScrapPostView: React.FC = () => {
           setPosts([]);
         }
       } catch (err: any) {
-        console.error('스크랩 API 호출 실패:', err);
-        console.error('에러 상세:', {
-          status: err.response?.status,
-          data: err.response?.data,
-          message: err.message,
-          url: err.config?.url,
-          headers: err.config?.headers,
-          originalName: state?.originalName
-        });
-        setError('게시물을 불러오는데 실패했습니다.');
         setPosts([]);
       } finally {
         setIsLoading(false);
@@ -141,6 +141,8 @@ const ScrapPostView: React.FC = () => {
   }, [categoryId, type, state?.originalName]);
 
   const transformedPosts = useMemo(() => {
+    if (!Array.isArray(posts)) return [];
+
     return posts.map((post) => ({
       id: post.post_id,
       title: post.title,
@@ -150,6 +152,10 @@ const ScrapPostView: React.FC = () => {
       category: 0,
       scrapCount: post.scrapCount,
       scrap: post.scrap,
+      image: post.thumbnail_url,
+      profileName: '',
+      bookmarks: post.scrapCount,
+      isFilled: post.scrap,
     }));
   }, [posts]);
 
@@ -167,15 +173,15 @@ const ScrapPostView: React.FC = () => {
     <S.Container>
       <S.HeaderContainer>
         <S.HeaderImageWrapper>
-          <S.HeaderBackground src={ScrapHeaderImage} alt="header" />
+          <S.HeaderBackground src={ScrapHeaderImage} alt='header' />
           <S.BackIconWrapper>
             <S.BackButton onClick={() => navigate(-1)}>
-              <img src={ArrowLeftWhite} alt="back" />
+              <img src={ArrowLeftWhite} alt='back' />
             </S.BackButton>
           </S.BackIconWrapper>
           <S.HeaderText>{decodedCategoryName}</S.HeaderText>
         </S.HeaderImageWrapper>
-        
+
         <S.HeaderCategoryBar>
           <CategoryList
             $maxWidth='calc(100% - 2rem)'

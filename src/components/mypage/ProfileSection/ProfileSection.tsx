@@ -164,14 +164,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
               },
             });
 
-            if (response.data.profile_image) {
-              setProfileImg(response.data.profile_image); // 서버에서 받은 프로필 이미지로 업데이트
+            // 서버에서 받은 프로필 이미지 URL 확인
+            if (response.status === 200) {
+              setProfileImg(response.data.imageUrl); // 서버에서 받은 프로필 이미지로 업데이트
             } else {
               throw new Error('Invalid response from server');
             }
           } catch (error) {
             console.error('Failed to update profile image:', error);
-            alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+            alert('이미지 최대 크기를 초과하였습니다.');
             setProfileImg(originalProfileImg); // 기존 이미지로 복구
           }
         }
@@ -237,11 +238,19 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <S.FollowCount>{followingCount}</S.FollowCount>
           </S.FollowBox>
         </S.FollowerInfo>
-        <S.IntroduceSection onClick={() => handleIntroductionClick(message)}>
-          {!message && <S.EditIcon />}
-          <S.InputText $isFilled={!!message}>
-            {message || '프로필에 자기 소개를 작성해주세요.'}
-          </S.InputText>
+        <S.IntroduceSection
+          onClick={isOwnProfile ? () => handleIntroductionClick(message) : undefined}
+        >
+          {message ? (
+            <S.InputText $isFilled={!!message}>{message}</S.InputText>
+          ) : isOwnProfile ? (
+            <>
+              <S.EditIcon />
+              <S.InputText $isFilled={false}>프로필에 자기 소개를 작성해주세요.</S.InputText>
+            </>
+          ) : (
+            <S.InputText $isFilled={false}>소개글이 없습니다.</S.InputText>
+          )}
         </S.IntroduceSection>
       </S.InfoSection>
     </S.ProfileContainer>

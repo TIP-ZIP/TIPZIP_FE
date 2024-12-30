@@ -35,7 +35,6 @@ const PostSection: React.FC<PostSectionProps> = ({
       </S.PostInfo>
       <PostList
         posts={posts}
-        handleBookmarkClick={handleBookmarkClick}
         $isMypage={location.pathname === '/mypage/'}
         selectedCategory={selectedCategory}
         sortOption={sortOption}
