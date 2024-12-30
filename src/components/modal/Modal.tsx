@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './Modal.Styled';
+import * as S from './modal.styled';
 
 interface ModalProps {
   showModal: boolean;

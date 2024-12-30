@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from './PostHeader.styled';
+import * as S from './postheader.styled';
 
 interface PostHeaderProps {
   title: string;

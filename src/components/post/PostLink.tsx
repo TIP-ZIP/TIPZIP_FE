@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './PostLink.styled';
+import * as S from './postlink.styled';
 
 interface PostLinkProps {
     linkUrl: string;

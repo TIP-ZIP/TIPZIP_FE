@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './SearchBar.Styled';
+import * as S from './searchbar.styled';
 import { useNavigate } from 'react-router-dom';
 
 interface SearchBarProps {
@@ -9,7 +9,7 @@ interface SearchBarProps {
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
   handleSearchSubmit: () => void;
 }
-
+  
 const SearchBar: React.FC<SearchBarProps> = ({
   searchQuery,
   setSearchQuery,

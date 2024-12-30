@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import * as S from './PostEditor.styled';
+import * as S from './posteditor.styled';
 import axiosInstance from '@api/axios';
 import axios from 'axios';
 

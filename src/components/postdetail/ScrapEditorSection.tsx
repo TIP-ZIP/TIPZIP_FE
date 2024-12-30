@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import Editor from '@components/mypage/Editor/Editor';
-import * as S from '@components/mypage/EditorSection/EditorSection.Styled';
+import Editor from '@components/mypage/editor/Editor';
+import * as S from '@components/mypage/editorsection/editorsection.styled';
 import ZipContainer from './ZipContainer';
 
 interface ScrapEditorSectionProps {

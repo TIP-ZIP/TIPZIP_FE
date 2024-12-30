@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import * as S from './Dropdown.Styled';
+import * as S from './dropdown.styled';
 
 interface DropdownProps {
   isOpen: boolean;

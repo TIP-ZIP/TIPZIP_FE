@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './Editor.Styled';
+import * as S from './editor.styled';
 
 interface EditorProps {
   title?: string | undefined;

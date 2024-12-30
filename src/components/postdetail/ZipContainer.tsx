@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import * as S from './ZipContainer.Styled';
+import * as S from './zipcontainer.styled';
 import axiosInstance from '@api/axios';
-import Editor from '@components/mypage/Editor/Editor';
-import * as E from '@pages/Scrap/ScrapFolderView.Styled';
+import Editor from '@components/mypage/editor/Editor';
+import * as E from '@pages/scrap/scrapfolderview.styled';
 
 interface Folder {
   id: number;

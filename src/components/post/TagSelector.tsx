@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
-import * as S from './TagSelector.styled';
+import * as S from './tagselector.styled';
 import { CATEGORIES } from '@constants/TagData';
 import { CATEGORY_TAGS } from '@constants/TagData';
 

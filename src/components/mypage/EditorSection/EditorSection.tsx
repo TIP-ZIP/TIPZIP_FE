@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import Editor from '@components/mypage/Editor/Editor';
+import Editor from '@components/mypage/editor/Editor';
 import axiosInstance from '@api/axios';
-import * as S from './EditorSection.Styled';
+import * as S from './editorsection.styled';
 
 interface EditorSectionProps {
   showEditor: boolean;

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './PostTitle.styled';
+import * as S from './posttitle.styled';
 
 const MAX_TITLE_LENGTH = 22;
 

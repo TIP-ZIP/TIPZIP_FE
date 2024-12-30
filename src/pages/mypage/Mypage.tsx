@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom';
 
 import axiosInstance from '@api/axios';
 
-import ProfileSection from '@components/mypage/ProfileSection/ProfileSection';
-import PostSection from '@components/mypage/PostSection/PostSection';
-import EditorSection from '@components/mypage/EditorSection/EditorSection';
+import ProfileSection from '@components/mypage/profilesection/ProfileSection';
+import PostSection from '@components/mypage/postsection/PostSection';
+import EditorSection from '@components/mypage/editorsection/EditorSection';
 
-import * as S from './Mypage.Styled';
+import * as S from './mypage.styled';
 
 const MyPage: React.FC = () => {
   const { writerid } = useParams<{ writerid: string }>();

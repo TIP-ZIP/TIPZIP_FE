@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import * as S from './PostList.Styled';
+import * as S from './postlist.styled';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import LoginModalContainer from '../LoginModalContainer';
-import useCategory from '@hooks/home/useCategory';
+// import useCategory from '@hooks/home/useCategory';
 import axiosInstance from '@api/axios';
 
 interface Post {
@@ -23,9 +24,10 @@ interface PostListProps {
   $isMypage: boolean;
   selectedItem: string;
   isVerify: boolean;
-  posts: Post[]; // 기존 prop 정의 수정
+  posts: Post[];
   searchQuery: string;
   selectedTags: string[];
+  handleBookmarkClick?: (postId: number) => void;
 }
 
 interface ScrapData {
@@ -48,11 +50,11 @@ const PostList: React.FC<PostListProps> = ({
   const isMypage = location.pathname.includes('/mypage');
   const [showEditor, setShowEditor] = useState<number | null>(null);
   const [postsData, setPostsData] = useState<Post[]>(posts || []);
-  const [scrapData, setScrapData] = useState<ScrapData[]>([]);
+  const [_scrapData, setScrapData] = useState<ScrapData[]>([]);
   const token = localStorage.getItem('accessToken');
   const isSearchPage = location.pathname.includes('/home/search');
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { categoryMap } = useCategory();
+//  const { categoryMap } = useCategory();
 
   // 일반 포스트 가져오기
   const getPostsForGeneral = async () => {
