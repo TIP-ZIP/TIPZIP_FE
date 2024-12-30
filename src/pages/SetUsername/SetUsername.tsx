@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import checkDuplicate from '@api/username/checkDuplicate';
 import setUsername from '@api/username/setUsername';
 
-import * as S from './SetUsername.styled';
+import * as S from './setusername.styled';
 
 const SetUsername = () => {
   const navigate = useNavigate();
