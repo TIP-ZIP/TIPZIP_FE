@@ -62,15 +62,13 @@ export const PlusBtn = styled(plus)<{ $isClicked: boolean }>`
   position: fixed;
   bottom: 1.8rem;
   right: 2rem;
-  content: url(${(props) => (props.$isClicked ? orangeplus : plus)});
-  background-repeat: no-repeat;
-  background-size: contain;
+  content: ${(props) => (props.$isClicked ? `url(${orangeplus})` : `url(${plus})`)};
   width: 4rem;
   height: 4rem;
   cursor: pointer;
 `;
 
-export const OrangeBubble = styled.div`
+export const OrangeBubble = styled(orangebubble)`
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -78,9 +76,6 @@ export const OrangeBubble = styled.div`
   position: fixed;
   bottom: 5.5rem;
   right: 2rem;
-  background: url(${orangebubble});
-  background-repeat: no-repeat;
-  background-size: contain;
   width: 12rem;
   height: 4.4rem;
   padding-top: 0.8rem;

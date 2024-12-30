@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import folder from '@assets/svgs/EmptyFolder.svg';
-import bookmark from '@assets/svgs/EmptyGrayBookmark.svg';
-import filledbookmark from '@assets/svgs/FilledGrayBookmark.svg';
+import folder from '@assets/svgs/EmptyFolder.svg?react';
+import bookmark from '@assets/svgs/EmptyGrayBookmark.svg?react';
+import filledbookmark from '@assets/svgs/FilledGrayBookmark.svg?react';
 
 export const ZipContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.TZ_Monochrome[100]};
@@ -42,14 +42,11 @@ export const FolderInfoBox = styled.div`
   flex-direction: column;
 `;
 
-export const FolderIcon = styled.div`
+export const FolderIcon = styled(folder)`
   display: flex;
   align-items: center;
   width: 9.1rem;
   height: 6.8rem;
-  background: url(${folder});
-  background-size: contain;
-  background-repeat: no-repeat;
   position: relative;
 `;
 
@@ -78,10 +75,8 @@ export const FolderInfo = styled.span`
   font-weight: 300;
 `;
 
-export const ScrapButton = styled.span<{ $isScrap: boolean }>`
-  background: ${(props) => (props.$isScrap ? `url(${filledbookmark})` : `url(${bookmark})`)};
-  background-repeat: no-repeat;
-  background-size: contain;
+export const ScrapButton = styled(bookmark)<{ $isScrap: boolean }>`
+  content: ${(props) => (props.$isScrap ? `url(${filledbookmark})` : `url(${bookmark})`)};
   width: 2.8rem;
   height: 2.8rem;
   cursor: pointer;
