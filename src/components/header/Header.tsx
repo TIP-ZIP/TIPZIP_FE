@@ -7,7 +7,7 @@ import LoginModalContainer from '@components/home/LoginModalContainer';
 import { LogoutModal } from '@components/modal/LogoutModal';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
-import * as S from './Header.Styled';
+import * as S from './header.styled';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();

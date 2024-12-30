@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import bookmark from '@assets/svgs/Bookmark.svg';
-import profile from '@assets/svgs/Profile.svg';
-import logout from '@assets/svgs/Logout.svg';
+import bookmark from '@assets/svgs/Bookmark.svg?react';
+import profile from '@assets/svgs/Profile.svg?react';
+import logout from '@assets/svgs/Logout.svg?react';
 
 export const Container = styled.div`
   width: 100%;
@@ -40,30 +40,21 @@ export const Icon = styled.div`
   align-items: center;
 `;
 
-export const LogoutIcon = styled.div`
-  background: url(${logout});
-  background-size: contain;
-  background-repeat: no-repeat;
+export const LogoutIcon = styled(logout)`
   width: 1.58rem;
   height: 1.54rem;
   cursor: pointer;
   transform: scale(1.2);
 `;
 
-export const BookmarkIcon = styled.div`
-  background: url(${bookmark});
-  background-size: contain;
-  background-repeat: no-repeat;
+export const BookmarkIcon = styled(bookmark)`
   width: 1.29rem;
   height: 1.6rem;
   cursor: pointer;
   transform: scale(1.2);
 `;
 
-export const ProfileIcon = styled.div`
-  background: url(${profile});
-  background-size: contain;
-  background-repeat: no-repeat;
+export const ProfileIcon = styled(profile)`
   width: 1.2rem;
   height: 1.6rem;
   cursor: pointer;

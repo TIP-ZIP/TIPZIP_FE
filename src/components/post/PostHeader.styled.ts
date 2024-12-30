@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import leftArrow from '@assets/svgs/leftarrow.svg';
+import leftArrow from '@assets/svgs/leftarrow.svg?react';
 
 export const Header = styled.header`
     position: relative;
@@ -9,12 +9,11 @@ export const Header = styled.header`
     margin-bottom: 2.2rem;
 `;
 
-export const BackButton = styled.button`
+export const BackButton = styled(leftArrow)`
   position: absolute;
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 1rem;
-  background: url(${leftArrow}) center/contain no-repeat;
   border: none;
   cursor: pointer;
 `;

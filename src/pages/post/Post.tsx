@@ -9,7 +9,7 @@ import PostTitle from '@components/post/PostTitle';
 import PostLink from '@components/post/PostLink';
 import PostThumbnail from '@components/post/PostThumbnail';
 
-import * as S from './Post.styled';
+import * as S from './post.styled';
 import axiosInstance from '@api/axios';
 
 interface Post {

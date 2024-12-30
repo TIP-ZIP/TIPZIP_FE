@@ -3,7 +3,7 @@ import axiosInstance from '@api/axios';
 
 import PostDeleteModal from '@components/modal/PostDeleteModal';
 
-import * as S from './PostMangeDropdown.styled';
+import * as S from './postmanagedropdown.styled';
 
 type DropdownProps = {
   postId: number | null;

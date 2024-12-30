@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Styled from './Scrap.Styled';
+import * as Styled from './scrap.styled';
 import ScrapFolderView from './ScrapFolderView';
 import useAuth from '@hooks/useAuth';
 import LoginModalContainer from '@components/home/LoginModalContainer';
@@ -18,13 +18,13 @@ interface PersonalScrap {
   folder_id: number;
 }
 
-interface MyPostDTO {
-  post_id: number;
-  title: string;
-  scrap: boolean;
-  scrapCount: number;
-  thumbnail_url: string;
-}
+// interface MyPostDTO {
+//   post_id: number;
+//   title: string;
+//   scrap: boolean;
+//   scrapCount: number;
+//   thumbnail_url: string;
+// }
 
 interface FolderResponse {
   folderName: string;
@@ -47,7 +47,7 @@ const Scrap: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<'category' | 'personal'>('category');
   const [categories, setCategories] = React.useState<CategoryScrap[]>(categoryData);
   const [personalFolders, setPersonalFolders] = React.useState<PersonalScrap[]>([]);
-  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  // const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -61,16 +61,20 @@ const Scrap: React.FC = () => {
           }
         });
 
-        const formattedData = response.data.map((folder) => ({
-          name: folder.folderName,
-          count: String(folder.count),
-          id: folder.folderName
-        }));
-
         if (isMyFolder) {
-          setPersonalFolders(formattedData);
+          const personalData = response.data.map((folder) => ({
+            folder_name: folder.folderName,
+            count: String(folder.count),
+            folder_id: Number(folder.folderName)
+          }));
+          setPersonalFolders(personalData);
         } else {
-          setCategories(formattedData);
+          const categoryData = response.data.map((folder) => ({
+            name: folder.folderName,
+            count: String(folder.count),
+            id: Number(folder.folderName)
+          }));
+          setCategories(categoryData);
         }
       } catch (error) {
         console.error(`${activeTab === 'personal' ? '개인' : '카테고리'} 폴더 조회 실패:`, error);
@@ -123,7 +127,13 @@ const Scrap: React.FC = () => {
       
       <ScrapFolderView 
         type={activeTab}
-        categories={activeTab === 'category' ? categories : personalFolders}
+        categories={activeTab === 'category' 
+          ? categories 
+          : personalFolders.map(folder => ({
+              name: folder.folder_name,
+              count: folder.count,
+              id: folder.folder_id
+            }))}
       />
     </Styled.Container>
   );

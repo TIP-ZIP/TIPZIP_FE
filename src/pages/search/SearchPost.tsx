@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as S from './SearchPost.Styled';
+import * as S from './searchpost.styled';
 import { useNavigate } from 'react-router-dom';
 import { CATEGORY_TAGS } from '@constants/TagData';
 
@@ -7,7 +7,7 @@ const SearchPost: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedSort, setSelectedSort] = useState('최신순');
+  const [selectedSort, _setSelectedSort] = useState('최신순');
   const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

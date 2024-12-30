@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as S from './ScrapFolderView.Styled';
+import * as S from './scrapfolderview.styled';
 import ScrapOption from '@assets/svgs/scrapOption.svg'
 import ScrapOptionDropdown from '@assets/svgs/scrapOptionDropdown.svg'
 import DeleteWhite from '@assets/svgs/DeleteWhite.svg'
@@ -10,7 +10,7 @@ import newScrapFolder from '@assets/svgs/newScrapFolder.svg'
 import plusSign from '@assets/pngs/plusSign.png'
 import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 import axiosInstance from '@api/axios';
-import Editor from '@components/mypage/Editor/Editor';
+import Editor from '@components/mypage/editor/Editor';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -27,7 +27,7 @@ interface MyPostDTO {
 
 const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({ type, categories: initialCategories }) => {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [_selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [categories, setCategories] = useState(initialCategories);

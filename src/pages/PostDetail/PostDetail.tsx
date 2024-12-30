@@ -7,9 +7,9 @@ import axiosInstance from '@api/axios';
 
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import Spinner from '@components/postdetail/Spinner';
-import PostManageDropdown from '@components/postdetail/PostManageDropdonw/PostManageDropdown';
+import PostManageDropdown from '@components/postdetail/postmanagedropdown/PostManageDropdown';
 
-import * as S from './PostDetail.styled';
+import * as S from './postdetail.styled';
 
 interface PostImage {
   image_id: number;
@@ -112,35 +112,35 @@ const PostDetail: React.FC = () => {
   const closeEditor = () => {
     setShowEditor(false);
   };
-  const extractImages = (htmlContent: string) => {
-    const imgRegex = /<img[^>]+src="([^">]+)"/g;
-    let images: string[] = [];
-    let match;
+  //const extractImages = (htmlContent: string) => {
+  //   const imgRegex = /<img[^>]+src="([^">]+)"/g;
+  //   let images: string[] = [];
+  //   let match;
 
     // 이미지 src를 찾아 배열에 추가
-    while ((match = imgRegex.exec(htmlContent)) !== null) {
-      images.push(match[1]);
-    }
+  //   while ((match = imgRegex.exec(htmlContent)) !== null) {
+  //     images.push(match[1]);
+  //   }
 
-    // 이미지를 제외한 나머지 텍스트를 반환
-    const textWithoutImages = htmlContent.replace(imgRegex, '');
-    return { text: textWithoutImages, images };
-  };
+  //   // 이미지를 제외한 나머지 텍스트를 반환
+  //   const textWithoutImages = htmlContent.replace(imgRegex, '');
+  //   return { text: textWithoutImages, images };
+  // };
 
-  const { text: contentText, images: contentImages } = postDetail
-    ? extractImages(postDetail.content)
-    : { text: '', images: [] };
+  // const { text: contentText, images: contentImages } = postDetail
+  //   ? extractImages(postDetail.content)
+  //   : { text: '', images: [] };
 
-  const cleanContent = (htmlContent: string) => {
-    // 이미지 태그를 제거하고, 스타일을 포함한 다른 태그도 제거
-    const cleanedContent = htmlContent
-      .replace(/<img[^>]*>/g, '') // 모든 이미지 태그 제거
-      .replace(/<div[^>]*>/g, '') // div 태그 제거
-      .replace(/<\/div>/g, '') // div 닫는 태그 제거
-      .replace(/<[^>]+>/g, ''); // 나머지 HTML 태그 모두 제거
+  // const cleanContent = (htmlContent: string) => {
+  //   // 이미지 태그를 제거하고, 스타일을 포함한 다른 태그도 제거
+  //   const cleanedContent = htmlContent
+  //     .replace(/<img[^>]*>/g, '') // 모든 이미지 태그 제거
+  //     .replace(/<div[^>]*>/g, '') // div 태그 제거
+  //     .replace(/<\/div>/g, '') // div 닫는 태그 제거
+  //     .replace(/<[^>]+>/g, ''); // 나머지 HTML 태그 모두 제거
 
-    return cleanedContent;
-  };
+  //   return cleanedContent;
+  // };
 
   // 수정/삭제 Dropdown Open
   const handlePostDropdown = () => {
@@ -163,7 +163,8 @@ const PostDetail: React.FC = () => {
   //   };
   // }, []);
 
-  const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
+  // const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
+
   const writerID = postDetail?.user_id;
 
   const user_id = localStorage.getItem('user_id');
@@ -245,7 +246,7 @@ const PostDetail: React.FC = () => {
               showEditor={showEditor}
               closeEditor={closeEditor}
               thumbnail={postDetail?.thumbnail_url}
-              category={postDetail?.category}
+              category={Number(postDetail?.category)}
               postid={postDetail?.post_id}
             />
           )}

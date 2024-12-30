@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import * as S from './OnBoarding.styled';
+import * as S from './onboarding.styled';
+
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 const OnBoarding: React.FC = () => {

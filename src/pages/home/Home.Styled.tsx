@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import star from '@assets/svgs/star.svg';
-import whitestar from '@assets/svgs/whiteStar.svg';
-import plus from '@assets/svgs/PlusPost.svg';
-import orangeplus from '@assets/svgs/OrangePlusPost.svg';
-import orangebubble from '@assets/svgs/orangebubble.svg';
-import edit from '@assets/svgs/WhiteEdit.svg';
+import star from '@assets/svgs/star.svg?react';
+import whitestar from '@assets/svgs/whiteStar.svg?react';
+import plus from '@assets/svgs/PlusPost.svg?react';
+import orangeplus from '@assets/svgs/OrangePlusPost.svg?react';
+import orangebubble from '@assets/svgs/orangebubble.svg?react';
+import edit from '@assets/svgs/WhiteEdit.svg?react';
 
 export const HomeLayout = styled.div`
   width: 100%;
@@ -58,11 +58,11 @@ export const VerifyText = styled.div<{ $selectedVerify: boolean }>`
   font-size: 0.8rem;
 `;
 
-export const PlusBtn = styled.div<{ $isClicked: boolean }>`
+export const PlusBtn = styled(plus)<{ $isClicked: boolean }>`
   position: fixed;
   bottom: 1.8rem;
   right: 2rem;
-  background: url(${(props) => (props.$isClicked ? orangeplus : plus)});
+  content: url(${(props) => (props.$isClicked ? orangeplus : plus)});
   background-repeat: no-repeat;
   background-size: contain;
   width: 4rem;
@@ -97,10 +97,7 @@ export const BubbleText = styled.span`
   height: 1.7rem;
 `;
 
-export const WhiteEdit = styled.div`
-  background: url(${edit});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const WhiteEdit = styled(edit)`
   width: 1.6rem;
   height: 1.6rem;
 `;

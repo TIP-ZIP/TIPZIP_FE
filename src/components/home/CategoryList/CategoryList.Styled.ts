@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 
-interface TagItemProps {
-  $selectedtag?: boolean;
-}
+// interface TagItemProps {
+//   $selectedtag?: boolean;
+// }
 
 export const CategoryList = styled.div<{ $maxWidth?: string }>`
   display: flex;

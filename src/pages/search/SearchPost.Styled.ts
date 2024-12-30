@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import search from '@assets/svgs/Search.svg';
-import arrowLeft from '@assets/svgs/ArrowLeft.svg';
+import search from '@assets/svgs/Search.svg?react';
+import arrowLeft from '@assets/svgs/ArrowLeft.svg?react';
 import { fontStyles } from '@styles/theme/typography';
-import whitesearch from '@assets/svgs/whiteSearch.svg';
+import whitesearch from '@assets/svgs/whiteSearch.svg?react';
 
 export const Container = styled.div`
   display: flex;
@@ -24,10 +24,7 @@ export const SearchBox = styled.div`
   gap: 0.8rem;
 `;
 
-export const BackBtn = styled.div`
-  background: url(${arrowLeft});
-  background-repeat: no-repeat;
-  background-size: contain;
+export const BackBtn = styled(arrowLeft)`
   width: 1.4rem;
   height: 1.4rem;
   transform: scale(1.5);
@@ -47,14 +44,11 @@ export const SearchBar = styled.div<{ $isFocused: boolean }>`
   background-color: ${({ $isFocused }) => ($isFocused ? '#FDF9F4' : '#f1f1f1')};
 `;
 
-export const SearchIcon = styled.div`
-  background: url(${search});
+export const SearchIcon = styled(search)`
   width: 1.4rem;
   height: 1.4rem;
   margin-top: 0.2rem;
   margin-right: 1.6rem;
-  background-size: contain;
-  background-repeat: no-repeat;
   cursor: pointer;
 `;
 
@@ -108,14 +102,11 @@ export const TagOptionText = styled.span<{ $active?: boolean }>`
   transition: color 0.2s ease;
 `;
 
-export const WhiteSearchIcon = styled.div`
-  background: url(${whitesearch});
+export const WhiteSearchIcon = styled(whitesearch)`
   width: 0.7rem;
   margin-top: 0.1rem;
   height: 0.7rem;
   transform: scale(1.1);
-  background-size: contain;
-  background-repeat: no-repeat;
 `;
 
 export const TagContainer = styled.div`
