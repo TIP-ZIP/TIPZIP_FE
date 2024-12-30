@@ -85,6 +85,8 @@ export const OrangeBubble = styled.div`
   height: 4.4rem;
   padding-top: 0.8rem;
   z-index: 100;
+
+  cursor: pointer;
 `;
 
 export const BubbleText = styled.span`
@@ -95,7 +97,7 @@ export const BubbleText = styled.span`
   height: 1.7rem;
 `;
 
-export const Whiteedit = styled.div`
+export const WhiteEdit = styled.div`
   background: url(${edit});
   background-repeat: no-repeat;
   background-size: contain;

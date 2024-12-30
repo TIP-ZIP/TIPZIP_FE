@@ -18,22 +18,25 @@ const Header: React.FC = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoColor = location.pathname === '/mypage' ? 'black' : '';
 
-  useEffect(() => {
-    validateToken();
-  }, [validateToken]);
-
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
   };
   const handleCloseModal = () => {
     setShowLogoutModal(false);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // React hook useAuth 내 logout 함수 호출
-    logout();
-    setShowLogoutModal(false);
-    window.location.href = '/home';
+    const responseStatus = await logout();
+
+    if (responseStatus === 200) {
+      setShowLogoutModal(false);
+      window.location.href = '/home';
+    }
   };
+
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   const handleLoginRequired = useCallback(
     (callback: () => void) => {

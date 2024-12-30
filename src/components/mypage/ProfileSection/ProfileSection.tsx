@@ -39,6 +39,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
 
         // URL에 writerid가 있으면 해당 writerid로, 없으면 자기 프로필
         const endpoint = writerid ? `/mypage/${writerid}` : `/mypage/`;
+
         const response = await axiosInstance.get(endpoint, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -46,6 +47,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         });
 
         console.log(response.data);
+
+        localStorage.setItem('user_id', response.data.user_id);
 
         const {
           profile_image,

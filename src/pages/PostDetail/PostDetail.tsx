@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import * as S from './PostDetail.styled';
+
+import 'react-quill/dist/quill.snow.css';
+
+import axiosInstance from '@api/axios';
+
 import ScrapEditorSection from '@components/postdetail/ScrapEditorSection';
 import Spinner from '@components/postdetail/Spinner';
-import axiosInstance from '@api/axios';
-import 'react-quill/dist/quill.snow.css';
+import PostManageDropdown from '@components/postdetail/PostManageDropdonw/PostManageDropdown';
+
+import * as S from './PostDetail.styled';
 
 interface PostImage {
   image_id: number;
@@ -39,6 +44,9 @@ const PostDetail: React.FC = () => {
   const [isScrapped, setIsScrapped] = useState<boolean | undefined>(undefined);
   const [showEditor, setShowEditor] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null); // Dropdown 컴포넌트 참조
 
   const navigate = useNavigate();
   const { id } = useParams<Params>();
@@ -80,16 +88,13 @@ const PostDetail: React.FC = () => {
     if (postId !== null) {
       const fetchPostDetail = async () => {
         try {
-          const token = localStorage.getItem('accessToken');
-          const response = await axiosInstance.get(`/posts/${postId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await axiosInstance.get(`/posts/${postId}`);
           const postDetailData = response.data;
 
           // Format the createdAt date
           postDetailData.createdAt = formatDate(postDetailData.createdAt);
+
+          console.log(postDetailData);
 
           setPostDetail(postDetailData);
           setIsScrapped(postDetailData.is_scrapped);
@@ -137,8 +142,33 @@ const PostDetail: React.FC = () => {
     return cleanedContent;
   };
 
+  // 수정/삭제 Dropdown Open
+  const handlePostDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  // const handleClickOutside = (e: MouseEvent) => {
+  //   if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+  //     setIsDropdownOpen(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // 전역 클릭 이벤트 추가
+  //   document.addEventListener('mousedown', handleClickOutside);
+
+  //   // Cleanup 이벤트 리스너 제거
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
+
   const cleanedContent = postDetail ? cleanContent(postDetail.content) : '';
   const writerID = postDetail?.user_id;
+
+  const user_id = localStorage.getItem('user_id');
+  const parsedUser_id = user_id ? parseInt(user_id, 10) : null;
+
   return (
     <>
       {isLoading ? (
@@ -146,10 +176,17 @@ const PostDetail: React.FC = () => {
       ) : (
         <>
           <S.PostDetailWrapper>
+            {/* Header Section */}
             <S.PostDetailHeader>
               <S.LeftArrow onClick={() => navigate(-1)} />
               <S.HeaderTitle>{postDetail?.author || '사용자'}'s Post</S.HeaderTitle>
+              {postDetail?.user_id === parsedUser_id && (
+                <S.ElipsisIcon onClick={handlePostDropdown} />
+              )}
+              {isDropdownOpen && <PostManageDropdown ref={dropdownRef} postId={postId} />}
             </S.PostDetailHeader>
+
+            {/* Introduction Section */}
             <S.PostDetailMain>
               <S.PostIntroduction>
                 <S.PostInfosContainer>
@@ -170,13 +207,17 @@ const PostDetail: React.FC = () => {
                 <S.PostCategory>{postDetail?.category}</S.PostCategory>
               </S.PostIntroduction>
 
+              {/* Post Content Section (게시글 수정, 삭제 구현 부분) */}
               <S.PostContentWrapper>
+                {/* 글, 이미지 Section */}
                 <S.PostContentContainer>
-                  <div 
-                    className="ql-editor"
+                  <div
+                    className='ql-editor'
                     dangerouslySetInnerHTML={{ __html: postDetail?.content || '' }}
                   />
                 </S.PostContentContainer>
+
+                {/* Hashtag Section */}
                 <S.PostHastagContainer>
                   {postDetail?.tag.map((tagItem, index) => (
                     <S.HashtagButton key={index}>#{tagItem}</S.HashtagButton>
@@ -184,6 +225,7 @@ const PostDetail: React.FC = () => {
                 </S.PostHastagContainer>
               </S.PostContentWrapper>
 
+              {/* Post Footer Section */}
               <S.PostDetailFooter>
                 <S.BookmarkContainer>
                   <S.BookmarkIcon $isScrapped={isScrapped} onClick={handleScrapClick} />
