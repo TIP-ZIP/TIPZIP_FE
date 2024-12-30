@@ -7,13 +7,13 @@ import useCategory from '@hooks/home/useCategory';
 import useAuth from '@hooks/useAuth';
 
 import LoginModalContainer from '@components/home/LoginModalContainer';
-import SearchBar from '@components/home/SearchBar/SearchBar';
-import SelectBar from '@components/home/SelectBar/SelectBar';
-import CategoryList from '@components/home/CategoryList/CategoryList';
-import PostList from '@components/home/PostList/PostList';
-import Dropdown from '@components/home/Dropdown/DropDown';
+import SearchBar from '@components/home/searchbar/SearchBar';
+import SelectBar from '@components/home/selectbar/SelectBar';
+import CategoryList from '@components/home/categorylist/CategoryList';
+import PostList from '@components/home/postlist/PostList';
+import Dropdown from '@components/home/dropdown/DropDown';
 
-import * as S from './Home.Styled';
+import * as S from './home.styled';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVerify, setSelectedVerify] = useState(false);
   const [selectedItem, setSelectedItem] = useState('전체');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [_isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false); // 검색 여부 상태
   const [isClicked, setIsClicked] = useState(false);
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
   const { isAuthenticated, validateToken } = useAuth();
 
-  const token = localStorage.getItem('accessToken');
+  // const token = localStorage.getItem('accessToken');
 
   const { selectedCategory, handleCategoryClick, categoryList, selectedCategoryNumbers } =
     useCategory();

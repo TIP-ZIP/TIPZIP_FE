@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './SelectBar.Styled';
+import * as S from './selectbar.styled';
 
 interface SelectBarProps {
   selectedItem: string;

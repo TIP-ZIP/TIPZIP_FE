@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@api/axios';
-import * as S from './ProfileSection.Styled';
+import * as S from './profilesection.styled';
 import KAKAOICON from '@assets/svgs/kakaoIcon.svg';
 import NAVERICON from '@assets/svgs/naverIcon.svg';
 import GOOGLEICON from '@assets/svgs/googleIcon.svg';

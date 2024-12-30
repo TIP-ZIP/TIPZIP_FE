@@ -1,5 +1,5 @@
 import { matchPath, Outlet, useLocation } from 'react-router-dom';
-import * as S from './Layout.Styled';
+import * as S from './layout.styled';
 import Header from '@components/header/Header';
 
 export default function Layout() {

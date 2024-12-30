@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import PostList from '@components/home/PostList/PostList';
-import * as S from './PostSection.Styled';
+import PostList from '@components/home/postlist/PostList';
+import * as S from './postsection.styled';
 
 interface PostSectionProps {
   posts: any[];

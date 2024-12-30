@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as S from './Login.styled';
+import * as S from './login.styled';
 import { TipZipLogo } from '@components/Icons/TipZipLogo';
 
 import KakaoIcon from '@assets/pngs/kakao-icon.png';

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import * as S from './ScrapFolder.Styled';
+import * as S from './scrapfolder.styled';
 import PersonalScrapFolderImage from '@assets/svgs/personalScrapFolder.svg';
 import ScrapFolderImage from '@assets/svgs/scrapFolder.svg';
 import ColoredBookmark from '@assets/svgs/ColoredBookmark.svg';
 import ScrapDelete from '@assets/svgs/ScrapDelete.svg';
 import PersonalScrapFolderSelected from '@assets/svgs/personalScrapFolderSelected.svg';
 import ScrapFolderSelected from '@assets/svgs/scrapFolderSelected.svg';
-import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
+
+// import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 
 interface ScrapFolderProps {
   name: string;

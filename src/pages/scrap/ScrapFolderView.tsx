@@ -10,7 +10,7 @@ import newScrapFolder from '@assets/svgs/newScrapFolder.svg';
 import plusSign from '@assets/pngs/plusSign.png';
 import NewScrapFolderSelected from '@assets/svgs/newScrapFolderSelected.svg';
 import axiosInstance from '@api/axios';
-import Editor from '@components/mypage/Editor/Editor';
+import Editor from '@components/mypage/editor/Editor';
 
 interface ScrapFolderViewProps {
   type: 'category' | 'personal';
@@ -30,7 +30,7 @@ const ScrapFolderView: React.FC<ScrapFolderViewProps> = ({
   categories: initialCategories,
 }) => {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [_selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [categories, setCategories] = useState(initialCategories);

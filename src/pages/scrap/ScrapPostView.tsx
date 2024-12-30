@@ -1,9 +1,9 @@
 // ScrapPostView.tsx
 
 import React, { useState, useEffect, useMemo } from 'react';
-import * as S from './ScrapPostView.Styled';
-import CategoryList from '../../components/home/CategoryList/CategoryList';
-import PostList from '../../components/home/PostList/PostList';
+import * as S from './scrappostview.styled';
+import CategoryList from '../../components/home/categorylist/CategoryList';
+import PostList from '../../components/home/postlist/PostList';
 import ScrapHeaderImage from '@assets/svgs/ScrapHeader.svg';
 import ArrowLeftWhite from '@assets/svgs/ArrowLeftWhite.svg';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
@@ -91,7 +91,7 @@ const ScrapPostView: React.FC = () => {
         } else if (type === 'personal' && state?.originalName) {
           const encodedFolderName = state.originalName
             .split('')
-            .map((char) => {
+            .map((char: string) => {
               if (/[a-zA-Z0-9가-힣]/.test(char)) {
                 return char;
               }
@@ -141,15 +141,15 @@ const ScrapPostView: React.FC = () => {
   }, [categoryId, type, state?.originalName]);
 
   const transformedPosts = useMemo(() => {
-    if (!Array.isArray(posts)) return [];
-
     return posts.map((post) => ({
       id: post.post_id,
       title: post.title,
-      image: post.thumbnail_url,
-      profileName: '',
-      bookmarks: post.scrapCount,
-      isFilled: post.scrap,
+      thumbnail_url: post.thumbnail_url,
+      author: '',
+      profile_image: '',
+      category: 0,
+      scrapCount: post.scrapCount,
+      scrap: post.scrap,
     }));
   }, [posts]);
 
@@ -197,6 +197,12 @@ const ScrapPostView: React.FC = () => {
             posts={transformedPosts}
             handleBookmarkClick={handleBookmarkClick}
             $isMypage={false}
+            selectedCategory={[]}
+            sortOption=''
+            selectedItem=''
+            isVerify={false}
+            searchQuery=''
+            selectedTags={[]}
           />
         )}
       </S.ContentContainer>

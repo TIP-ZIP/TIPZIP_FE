@@ -5,23 +5,23 @@ import setVhProperty from '@utils/setVhProperty';
 
 import Layout from './layout/Layout';
 
-import OnBoarding from '@pages/OnBoarding/OnBoarding';
-import Home from '@pages/Home/Home';
+import OnBoarding from '@pages/onboarding/Onboarding';
+import Home from '@pages/home/Home';
 
-import Login from '@pages/Login/Login';
+import Login from '@pages/login/Login';
 import KakaoRedirect from '@auth/redirects/KakaoRedirect';
 import GoogleRedirect from '@auth/redirects/GoogleRedirect';
 import NaverRedirect from '@auth/redirects/NaverRedirect';
-import SetUsername from '@pages/SetUsername/SetUsername';
+import SetUsername from '@pages/setusername/SetUsername';
 
-import SearchPost from '@pages/Search/SearchPost';
-import Post from '@pages/Post/Post';
-import PostDetail from '@pages/PostDetail/PostDetail';
+import SearchPost from '@pages/search/SearchPost';
+import Post from '@pages/post/Post';
+import PostDetail from '@pages/postdetail/PostDetail';
 
-import MyPage from '@pages/MyPage/MyPage';
+import MyPage from '@pages/mypage/Mypage';
 
-import Scrap from '@pages/Scrap/Scrap';
-import ScrapPostView from '@pages/Scrap/ScrapPostView';
+import Scrap from '@pages/scrap/Scrap';
+import ScrapPostView from '@pages/scrap/ScrapPostView';
 
 function App() {
   useEffect(() => {

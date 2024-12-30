@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as S from './PostThumbnail.Styled';
+import * as S from './postthumbnail.styled';
 import axiosInstance from '@api/axios';
 import { AxiosError } from 'axios';
 
