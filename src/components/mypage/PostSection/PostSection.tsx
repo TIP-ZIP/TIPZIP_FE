@@ -16,7 +16,7 @@ interface PostSectionProps {
 
 const PostSection: React.FC<PostSectionProps> = ({
   posts,
-  handleBookmarkClick,
+  //handleBookmarkClick,
   selectedCategory = [],
   sortOption = '',
   selectedItem = '',

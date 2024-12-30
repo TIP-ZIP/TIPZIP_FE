@@ -26,7 +26,7 @@ const ScrapPostView: React.FC = () => {
 
   const [posts, setPosts] = useState<ScrapPost[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, _setError] = useState<string | null>(null);
 
   const decodedCategoryName = useMemo(() => {
     if (!categoryName) return '';
