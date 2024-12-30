@@ -88,7 +88,6 @@ export const OrangeBubble = styled(orangebubble)`
   position: fixed;
   bottom: 5.5rem;
   right: 2rem;
-
   z-index: 100;
 
   cursor: pointer;

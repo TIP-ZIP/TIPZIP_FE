@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import close from '@assets/svgs/closemodal.svg?react';
 
 export const EditorContainer = styled.div`

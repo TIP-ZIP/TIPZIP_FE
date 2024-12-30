@@ -17,7 +17,8 @@ export const SearchIcon = styled(search)`
   width: 1.4rem;
   height: 1.4rem;
   margin-right: 1.2rem;
-
+  background-size: contain;
+  background-repeat: no-repeat;
   cursor: pointer;
 `;
 
