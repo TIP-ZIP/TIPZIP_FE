@@ -1,52 +1,55 @@
-# React + TypeScript + Vite
+# TIP.ZIP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About Service
 
-Currently, two official plugins are available:
+### 나에게 필요한 모든 팁을 한번에 모아! - TIP.ZIP
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![팜플렛](/public/pamphlet/tip-zip.jpg)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![기능](/public/pamphlet/tip-zip-function.jpg)
 
-- Configure the top-level `parserOptions` property like this:
+## Git Commit Convention
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+## 1. Branch Naming Rule
+
+**Branch 이름**은 **작업 목적과 연관된 이슈 번호를 포함하는 방식**
+
+```php
+<타입>/<이슈 번호>-<간단한 설명>
+
+- feature/1234-add-user-login
+- bugfix/5678-fix-login-error
+- release/1.2.0
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Branch Type
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+- **feature/ - 새로운 기능 개발 시**
+- **bugfix/ -** **버그 수정** 시
+- **hotfix/ -** **긴급한 버그 수정** 시 (보통 프로덕션 환경에서 발생)
+- **release/ -** **릴리즈 준비 시**
+- **chore/ -** 빌드 및 기타 작업 자동화, 문서 작업 등 **코드와 관련 없는 작업**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
+---
+
+## 2. Git Commit Message Rule
+
+```php
+<타입>(<모듈>): <변경 내용 요약> (#이슈 번호)
+
+- feat(auth): add login functionality (#1234)
+- fix(profile): correct user profile update error (#5678)
+- docs: update README with new instructions (#91011)
 ```
 
-# TIPZIP_FE
+### Commit Type
+
+- **feat -** 새로운 기능 추가
+- **fix -** 버그 수정
+- **refactor -** **코드 리팩토링 (기능 변경 없이 구조 개선)**
+- **style -** 코드 포맷팅, 세미콜론 누락 등 (비즈니스 로직에 영향이 없는 변경)
+- **test -** 테스트 추가 또는 수정
+- **docs -** 문서 추가 및 수정
+- **chore -** 빌드 작업, 패키지 관리 등
